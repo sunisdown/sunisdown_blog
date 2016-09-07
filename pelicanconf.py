@@ -24,8 +24,8 @@ AUTHOR_FEED_RSS = None
 
 
 # Social widget
-SOCIAL = (('github', 'https://github.com/alexandrevicenzi'),
-          ('twitter', 'https://twitter.com/alxvicenzi'))
+SOCIAL = (('github', 'https://github.com/sunisdown'),
+          ('twitter', 'https://twitter.com/SunisD0wn'))
 
 MENUITEMS = (('Blog', '/index.html'),
             ('Archives', '/archives.html'),
