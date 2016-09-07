@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>SunisDown</title><link href="http://www.sunisdown.me/" rel="alternate"></link><link href="http://www.sunisdown.me/feeds/articles.atom.xml" rel="self"></link><id>http://www.sunisdown.me/</id><updated>2016-02-02T00:00:00+08:00</updated><entry><title>One Year</title><link href="http://www.sunisdown.me/one-year.html" rel="alternate"></link><published>2016-02-02T00:00:00+08:00</published><author><name>Sunisdown</name></author><id>tag:www.sunisdown.me,2016-02-02:one-year.html</id><summary type="html">&lt;p&gt;看一下其实有一年没有更新 Blog。再不写点什么对不起自己域名ˊㅅˋ&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>SunisDown</title><link href="http://sunisdown.me/" rel="alternate"></link><link href="http://sunisdown.me/feeds/articles.atom.xml" rel="self"></link><id>http://sunisdown.me/</id><updated>2016-02-02T00:00:00+08:00</updated><entry><title>One Year</title><link href="http://sunisdown.me/one-year.html" rel="alternate"></link><published>2016-02-02T00:00:00+08:00</published><author><name>Sunisdown</name></author><id>tag:sunisdown.me,2016-02-02:one-year.html</id><summary type="html">&lt;p&gt;看一下其实有一年没有更新 Blog。再不写点什么对不起自己域名ˊㅅˋ&lt;/p&gt;
 &lt;p&gt;再过几天应该就来豆厂一周年了，豆厂大把的业余时间我都拿来做自己感兴趣的事儿。
 比如看 v6 代码，研究了下 paxos（然后并没有卵用，还是不懂）。&lt;/p&gt;
 &lt;p&gt;认真想一下其实很难写出什么高质量的 Blog，在豆瓣一年，貌似工作中并没有形成成体系的内容。而平时自己折腾的东西，也很难形成体系，写不出很高质量的 Blog。
@@ -11,7 +11,7 @@
 &lt;p&gt;之前来豆瓣面试的时候，也曾经表示过自己想要进 DAE 或者做 anti，但是日军哥哥跟我说 anti 跟我现在组用的是同一套东西，技术上基本上是通的的。
 于是我来了现在这个组 O_O，经过这一年的接触，我发现还是喜欢 anti 或者 DAE 更多一些。&lt;/p&gt;
 &lt;p&gt;所以还是安安静静的做自己的事儿，安安静静做自己感兴趣的事儿。&lt;/p&gt;
-</summary></entry><entry><title>理解 Python 的 LEGB</title><link href="http://www.sunisdown.me/li-jie-python-de-legb.html" rel="alternate"></link><published>2015-02-03T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:www.sunisdown.me,2015-02-03:li-jie-python-de-legb.html</id><summary type="html">&lt;div class="section" id="id1"&gt;
+</summary></entry><entry><title>理解 Python 的 LEGB</title><link href="http://sunisdown.me/li-jie-python-de-legb.html" rel="alternate"></link><published>2015-02-03T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2015-02-03:li-jie-python-de-legb.html</id><summary type="html">&lt;div class="section" id="id1"&gt;
 &lt;h2&gt;名字空间&lt;/h2&gt;
 &lt;p&gt;Python 的名字空间是 Python 一个非常核心的内容。 其他语言中如 C
 中，变量名是内存地址的别名，而在 Python
@@ -162,7 +162,7 @@ Python3下面才可以正常运行的：&lt;/p&gt;
 builtins
 的名字空间，将名字&lt;tt class="docutils literal"&gt;b&lt;/tt&gt;与值&lt;tt class="docutils literal"&gt;&amp;quot;builtins&amp;quot;&lt;/tt&gt;进行关联，就可以正常调用了。这种非常规用法不建议使用。&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="python"></category><category term="legb"></category></entry><entry><title>Python 之 GIL</title><link href="http://www.sunisdown.me/python-zhi-gil.html" rel="alternate"></link><published>2015-02-03T00:00:00+08:00</published><author><name>Sunisdown</name></author><id>tag:www.sunisdown.me,2015-02-03:python-zhi-gil.html</id><summary type="html">&lt;p&gt;注: 本篇 Blog 是参照
+</summary><category term="python"></category><category term="legb"></category></entry><entry><title>Python 之 GIL</title><link href="http://sunisdown.me/python-zhi-gil.html" rel="alternate"></link><published>2015-02-03T00:00:00+08:00</published><author><name>Sunisdown</name></author><id>tag:sunisdown.me,2015-02-03:python-zhi-gil.html</id><summary type="html">&lt;p&gt;注: 本篇 Blog 是参照
 &lt;a class="reference external" href="http://book.douban.com/subject/3117898/"&gt;Python源码剖析&lt;/a&gt;过的 Python 源
 码,内容算是读书笔记吧,中间还不小心翻错了分支,翻到了3.4版本,不过看起来3.4的 GIL
 处理要比2.7的优雅一些.总之,感谢陈孺大神&lt;/p&gt;
@@ -357,7 +357,7 @@ GIL.总之,`PyEval_InitThreads
 会通过&lt;a class="reference external" href="https://github.com/python/cpython/blob/2.7/Python/ceval.c#L254"&gt;PyThread_acquire_lock&lt;/a&gt;
 来获取 GIL.&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="Python"></category><category term="GIL"></category></entry><entry><title>Python 元类</title><link href="http://www.sunisdown.me/python-yuan-lei.html" rel="alternate"></link><published>2014-12-29T00:00:00+08:00</published><author><name>Sunisdown</name></author><id>tag:www.sunisdown.me,2014-12-29:python-yuan-lei.html</id><summary type="html">&lt;p&gt;&lt;tt class="docutils literal"&gt;Python&lt;/tt&gt;中有三个概念比较难懂，分别是：&lt;/p&gt;
+</summary><category term="Python"></category><category term="GIL"></category></entry><entry><title>Python 元类</title><link href="http://sunisdown.me/python-yuan-lei.html" rel="alternate"></link><published>2014-12-29T00:00:00+08:00</published><author><name>Sunisdown</name></author><id>tag:sunisdown.me,2014-12-29:python-yuan-lei.html</id><summary type="html">&lt;p&gt;&lt;tt class="docutils literal"&gt;Python&lt;/tt&gt;中有三个概念比较难懂，分别是：&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;装饰器&lt;/li&gt;
 &lt;li&gt;描述符&lt;/li&gt;
@@ -501,7 +501,7 @@ Python 笔记&lt;/a&gt;,&lt;/p&gt;
 &lt;p&gt;这种简单方便的
 API，用户可以直接使用，而后面负责的逻辑，就隐藏在元类之中。&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="python"></category></entry><entry><title>如何利用决策树来决定去不去年会</title><link href="http://www.sunisdown.me/ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html" rel="alternate"></link><published>2014-11-06T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:www.sunisdown.me,2014-11-06:ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html</id><summary type="html">&lt;p&gt;又到一年年会时,吸引大家去年会的,要么是冲奖品去,要么是为了看表演的妹子,作为一个好青年我排除掉看妹子的选项,仅用奖品来做价值来决定&lt;strong&gt;到底年会值不值得去!!!&lt;/strong&gt;&lt;/p&gt;
+</summary><category term="python"></category></entry><entry><title>如何利用决策树来决定去不去年会</title><link href="http://sunisdown.me/ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html" rel="alternate"></link><published>2014-11-06T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-11-06:ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html</id><summary type="html">&lt;p&gt;又到一年年会时,吸引大家去年会的,要么是冲奖品去,要么是为了看表演的妹子,作为一个好青年我排除掉看妹子的选项,仅用奖品来做价值来决定&lt;strong&gt;到底年会值不值得去!!!&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;如果我们去年会的话,有可能得到一个
 iMac,如果我们不去,那我们可能什么都得不到.但是
 如果去年会,我们需要花路费,假设我们需要坐一次公交￥1,然后再坐一次地铁￥3,现在帝都公交地
@@ -614,7 +614,7 @@ iMac,其他的奖品也还是不错的~但是前提是你 人品要好.这是一
 &lt;p&gt;嗯,通过最终的简化图,我们可以看到,如果去年会,我们会有￥32.85
 的收益,对我们是有好处的.So,还是去吧~&lt;/p&gt;
 &lt;p&gt;当然,如果是周末开年会的话,计算的时候就需要再加上时间成本,小伙伴们自己来算吧:)&lt;/p&gt;
-</summary></entry><entry><title>一致性哈希</title><link href="http://www.sunisdown.me/yi-zhi-xing-ha-xi.html" rel="alternate"></link><published>2014-11-06T00:00:00+08:00</published><author><name>Sunisdown</name></author><id>tag:www.sunisdown.me,2014-11-06:yi-zhi-xing-ha-xi.html</id><summary type="html">&lt;p&gt;&lt;em&gt;一致性哈希&lt;/em&gt;，顾名思义，是一种哈希算法。比较常用的哈希算法应该是取模，通常在数据库需要分库的时候，大家都会用取模哈希。但是取模有一个缺点，就是，就是增加或者删除一个槽位的时候，几乎需要对所有的关键字进行重新映射，而分库的时候用这种方法，则所有的数据都需要重新录入。&lt;/p&gt;
+</summary></entry><entry><title>一致性哈希</title><link href="http://sunisdown.me/yi-zhi-xing-ha-xi.html" rel="alternate"></link><published>2014-11-06T00:00:00+08:00</published><author><name>Sunisdown</name></author><id>tag:sunisdown.me,2014-11-06:yi-zhi-xing-ha-xi.html</id><summary type="html">&lt;p&gt;&lt;em&gt;一致性哈希&lt;/em&gt;，顾名思义，是一种哈希算法。比较常用的哈希算法应该是取模，通常在数据库需要分库的时候，大家都会用取模哈希。但是取模有一个缺点，就是，就是增加或者删除一个槽位的时候，几乎需要对所有的关键字进行重新映射，而分库的时候用这种方法，则所有的数据都需要重新录入。&lt;/p&gt;
 &lt;p&gt;在我们做分布式缓存的时候，我们需要把对 A 的请求，映射到某一个节点
 node_a，如果是取模来做哈希，假设我们是资源
 6，集群中有4个几点，取4的模为，则资源缓存到
@@ -753,7 +753,7 @@ node40上，并不能够做到均衡，从而导致数据倾斜。为了解决�
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;long&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hexdigest&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="mi"&gt;16&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;
 &lt;/div&gt;
-</summary><category term="Python"></category><category term="GIL"></category><category term="Hash"></category></entry><entry><title>Emacs 速查手册</title><link href="http://www.sunisdown.me/emacs-su-cha-shou-ce.html" rel="alternate"></link><published>2014-10-24T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:www.sunisdown.me,2014-10-24:emacs-su-cha-shou-ce.html</id><summary type="html">&lt;p&gt;&lt;em&gt;注：&lt;/em&gt;&lt;/p&gt;
+</summary><category term="Python"></category><category term="GIL"></category><category term="Hash"></category></entry><entry><title>Emacs 速查手册</title><link href="http://sunisdown.me/emacs-su-cha-shou-ce.html" rel="alternate"></link><published>2014-10-24T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-10-24:emacs-su-cha-shou-ce.html</id><summary type="html">&lt;p&gt;&lt;em&gt;注：&lt;/em&gt;&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
 本文是从 Emacs 官方文档 的 help-with-tutorial中文版摘抄而来的速查手册，译者名单见文章末尾
 &lt;/pre&gt;
@@ -1269,7 +1269,7 @@ incremental search    渐进式搜索 [3]
     择将“incremental search”译作“渐进式搜索”。
 &lt;/pre&gt;
 &lt;/div&gt;
-</summary><category term="emacs"></category></entry><entry><title>Unix/Linux终端下代理快速设置</title><link href="http://www.sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html" rel="alternate"></link><published>2014-10-22T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:www.sunisdown.me,2014-10-22:unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html</id><summary type="html">&lt;p&gt;最近开始从 Vim 往 Emacs，这是一个痛苦的过程，不过好在有
+</summary><category term="emacs"></category></entry><entry><title>Unix/Linux终端下代理快速设置</title><link href="http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html" rel="alternate"></link><published>2014-10-22T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-10-22:unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html</id><summary type="html">&lt;p&gt;最近开始从 Vim 往 Emacs，这是一个痛苦的过程，不过好在有
 evil-mode，让这个迁移的过程不至于夭折。别问我为什么要背叛 Vim 。&lt;/p&gt;
 &lt;p&gt;像我这种 Emacs 新手难免会需要下载插件，而下载插件就需要FUCK GFW。笨笨用&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;http_proxy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;http://host:port emacs -nw
@@ -1311,7 +1311,7 @@ Proxy environment variable removed.
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;友情提示，请将 http://host:port 替换成自己的代理地址
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</summary><category term="linux"></category><category term="unix"></category><category term="proxy"></category></entry><entry><title>白话Python 进程，线程，协程</title><link href="http://www.sunisdown.me/bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html" rel="alternate"></link><published>2014-10-19T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:www.sunisdown.me,2014-10-19:bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html</id><summary type="html">&lt;p&gt;Python被人诟病最多的大概就是性能差，在这里讲一下 Python
+</summary><category term="linux"></category><category term="unix"></category><category term="proxy"></category></entry><entry><title>白话Python 进程，线程，协程</title><link href="http://sunisdown.me/bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html" rel="alternate"></link><published>2014-10-19T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-10-19:bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html</id><summary type="html">&lt;p&gt;Python被人诟病最多的大概就是性能差，在这里讲一下 Python
 的多进程，多线程与协程。首先声明这不是教程，看完这篇文章，大概能够对
 Python 的多进程与多线程有一定的了解。&lt;/p&gt;
 &lt;img alt="" src="images/process_thread.png" /&gt;
@@ -1339,7 +1339,7 @@ Python 中，则通过软件模拟这种中断，来实现线程调度。&lt;/p&
 &lt;h2&gt;总结&lt;/h2&gt;
 &lt;p&gt;在 Python中，使用协程来做并发是对于系统资源消耗最小，可以最大化的做高并发，但是，需要我们自己来做调度，操作系统不会主动调度任务。&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="process"></category><category term="thread"></category><category term="coroutine"></category><category term="python"></category></entry><entry><title>Mininet Walkthrough</title><link href="http://www.sunisdown.me/mininet-walkthrough.html" rel="alternate"></link><published>2014-10-16T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:www.sunisdown.me,2014-10-16:mininet-walkthrough.html</id><summary type="html">&lt;p&gt;译者注： 这篇 Blog 是在学习 SDN 过程中翻译的Mininet
+</summary><category term="process"></category><category term="thread"></category><category term="coroutine"></category><category term="python"></category></entry><entry><title>Mininet Walkthrough</title><link href="http://sunisdown.me/mininet-walkthrough.html" rel="alternate"></link><published>2014-10-16T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-10-16:mininet-walkthrough.html</id><summary type="html">&lt;p&gt;译者注： 这篇 Blog 是在学习 SDN 过程中翻译的Mininet
 官方的文档。文档主要是介绍了 Mininet
 的简单用法。会分成几个部分放出来，&lt;a class="reference external" href="http://mininet.org/walkthrough/#test-connectivity-between-hosts"&gt;原文&lt;/a&gt;。下面是正文&lt;/p&gt;
 &lt;div class="section" id="part-1-everyday-mininet-usage"&gt;
@@ -2139,7 +2139,7 @@ Defaults        !env_reset
 &lt;p&gt;使运行sudo的时候的环境变量的设置不会改变。&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-</summary><category term="sdn"></category><category term="mininet"></category></entry><entry><title>Python 装饰器之 functools.wraps</title><link href="http://www.sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html" rel="alternate"></link><published>2013-07-08T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:www.sunisdown.me,2013-07-08:python-zhuang-shi-qi-zhi-functoolswraps.html</id><summary type="html">&lt;p&gt;在看 Bottle 代码中看见 functools.wraps 这种用法。&lt;/p&gt;
+</summary><category term="sdn"></category><category term="mininet"></category></entry><entry><title>Python 装饰器之 functools.wraps</title><link href="http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html" rel="alternate"></link><published>2013-07-08T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2013-07-08:python-zhuang-shi-qi-zhi-functoolswraps.html</id><summary type="html">&lt;p&gt;在看 Bottle 代码中看见 functools.wraps 这种用法。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;make_default_app_wrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot; Return a callable that relays calls to the current default app. &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
     &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Bottle&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -2325,7 +2325,7 @@ stackoverflow 里面的栗子&lt;/p&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-</summary><category term="python"></category><category term="decorator"></category></entry><entry><title>python之 unicode_literals</title><link href="http://www.sunisdown.me/pythonzhi-unicode_literals.html" rel="alternate"></link><published>2013-06-03T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:www.sunisdown.me,2013-06-03:pythonzhi-unicode_literals.html</id><summary type="html">&lt;p&gt;在邮件列表中看见有人在讨论github上面的内容,然后看见一阁大牛说&amp;quot;看见别人的python代码没有from
+</summary><category term="python"></category><category term="decorator"></category></entry><entry><title>python之 unicode_literals</title><link href="http://sunisdown.me/pythonzhi-unicode_literals.html" rel="alternate"></link><published>2013-06-03T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2013-06-03:pythonzhi-unicode_literals.html</id><summary type="html">&lt;p&gt;在邮件列表中看见有人在讨论github上面的内容,然后看见一阁大牛说&amp;quot;看见别人的python代码没有from
 __future__ import unicode_literals就想fork改掉…&amp;quot;&lt;/p&gt;
 &lt;p&gt;之前代码中确实没有加这个,嗯,受教啦&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
@@ -2341,7 +2341,7 @@ In [5]: a = '你好'
 In [6]: a
 Out[6]: u'\u4f60\u597d'
 &lt;/pre&gt;
-</summary><category term="python"></category><category term="unicode"></category><category term="str"></category></entry><entry><title>Python 之 enumerate</title><link href="http://www.sunisdown.me/python-zhi-enumerate.html" rel="alternate"></link><published>2013-06-01T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:www.sunisdown.me,2013-06-01:python-zhi-enumerate.html</id><summary type="html">&lt;p&gt;今天看到enumerate 这个函数,然后Google之,发现limodou大牛写过enumerate了~&lt;/p&gt;
+</summary><category term="python"></category><category term="unicode"></category><category term="str"></category></entry><entry><title>Python 之 enumerate</title><link href="http://sunisdown.me/python-zhi-enumerate.html" rel="alternate"></link><published>2013-06-01T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2013-06-01:python-zhi-enumerate.html</id><summary type="html">&lt;p&gt;今天看到enumerate 这个函数,然后Google之,发现limodou大牛写过enumerate了~&lt;/p&gt;
 &lt;p&gt;enumerate 主要是用再类似的场景:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;In &lt;span class="o"&gt;[&lt;/span&gt;20&lt;span class="o"&gt;]&lt;/span&gt;:for i in xrange&lt;span class="o"&gt;(&lt;/span&gt;len&lt;span class="o"&gt;(&lt;/span&gt;a&lt;span class="o"&gt;))&lt;/span&gt;:
                     print i, a&lt;span class="o"&gt;[&lt;/span&gt;i&lt;span class="o"&gt;]&lt;/span&gt;
