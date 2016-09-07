@@ -138,7 +138,7 @@ GIL.
 我们跟踪\ ``PyEval_InitThreads()``\ 到\ `ceval.c <https://github.com/python/cpython/blob/2.7/Python/ceval.c#L249>`__,可以看到创建
 GIL 的代码:
 
-::
+.. code-block:: c
 
     static PyThread_type_lock interpreter_lock = 0; /* This is the GIL */
 
@@ -166,7 +166,7 @@ GIL 的代码:
 从前面的代码中,我们看到是由\ ``PyThread_allocate_lock``\ 来创建GIL
 的,而\ ``PyThread_allocate_lock``\ 则是针对各个平台来做的具体实现,这里我们看\ `Posix标准 <https://github.com/python/cpython/blob/2.7/Python/thread_pthread.h#L360>`__\ 的实现:
 
-::
+.. code-block:: c
 
     PyThread_allocate_lock(void)
     {
@@ -204,8 +204,8 @@ GIL 的代码:
 机制,最后返回一个\ ``pthread_lock``,这就是我们的 GIL
 了,\ `线程互斥的锁 <https://github.com/python/cpython/blob/2.7/Python/thread_pthread.h#L113>`__:
 
-::
 
+.. code-block:: c
 
     typedef struct {
         char             locked; /* 0=unlocked, 1=locked */
