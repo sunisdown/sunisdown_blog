@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="zh" itemscope itemtype="http://schema.org/Person">
+<head>
+  <meta charset="utf-8">
+  <!-- Site Meta Data -->
+  <title>理解 Python 的 LEGB</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="sunisdown">
+
+  <link rel="shortcut icon" href="">
+
+  <!-- schema.org -->
+  <meta itemprop="name" content="SunisDown">
+  <meta itemprop="image" content="">
+  <meta itemprop="description" content="">
+
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+  <!-- Style Meta Data -->
+  <link rel="stylesheet" href="http://www.sunisdown.me/theme/css/style.css" type="text/css" />
+  <link rel="stylesheet" href="http://www.sunisdown.me/theme/css/pygments.css" type="text/css" />
+
+  <!-- Feed Meta Data -->
+    <link href="http://www.sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="SunisDown ATOM Feed" />
+
+  <!-- Twitter Feed -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="">
+  <meta name="twitter:image" content="">
+
+<meta name="twitter:creator" content="">
+<meta name="twitter:url" content="http://www.sunisdown.me/li-jie-python-de-legb.html">
+<meta name="twitter:title" content="SunisDown ~ 理解 Python 的 LEGB">
+<meta name="twitter:description" content="<div class="section" id="id1">
+<h2>名字空间</h2>
+<p>Python 的名字空间是 Python 一个非常核心的内容。 其他语言中如 C
+中，变量名是内存地址的别名，而在 Python
+中，名字是一个字符串对象，它与他指向的对象构成一个{name:object}关联。
+Python 由很多名字空间，而 LEGB 则是名字空间的一种查找规则。</p>
+</div>
+<div class="section" id="id2">
+<h2>作用域</h2>
+<p>Python
+中<tt class="docutils literal"><span class="pre">name-object</span></tt>的关联存储在不同的作用域中，各个不同的作用域是相互独立的。而我们就在不同的作用域中搜索<tt class="docutils literal"><span class="pre">name-object</span></tt>。</p>
+<p>举个栗子，来说明作用域是相互独立的。</p>
+<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;G&quot;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span>
+            <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;in locals&quot;</span>
+   <span class="o">....</span><span class="p">:</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">test</span><span class="p">()</span>
+        <span class="n">L ...</span></pre></div></div>">
+
+<!-- Facebook Meta Data -->
+<meta property="og:title" content="SunisDown ~ 理解 Python 的 LEGB" />
+<meta property="og:description" content="<div class="section" id="id1">
+<h2>名字空间</h2>
+<p>Python 的名字空间是 Python 一个非常核心的内容。 其他语言中如 C
+中，变量名是内存地址的别名，而在 Python
+中，名字是一个字符串对象，它与他指向的对象构成一个{name:object}关联。
+Python 由很多名字空间，而 LEGB 则是名字空间的一种查找规则。</p>
+</div>
+<div class="section" id="id2">
+<h2>作用域</h2>
+<p>Python
+中<tt class="docutils literal"><span class="pre">name-object</span></tt>的关联存储在不同的作用域中，各个不同的作用域是相互独立的。而我们就在不同的作用域中搜索<tt class="docutils literal"><span class="pre">name-object</span></tt>。</p>
+<p>举个栗子，来说明作用域是相互独立的。</p>
+<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;G&quot;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span>
+            <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;in locals&quot;</span>
+   <span class="o">....</span><span class="p">:</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">test</span><span class="p">()</span>
+        <span class="n">L ...</span></pre></div></div>" />
+<meta property="og:image" content="" />
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <aside>
+    <!--<center><a href="http://www.sunisdown.me"><img id="avatar" src=""></a></center>-->
+    <h1>SunisDown</h1>
+    <br>
+
+
+    <nav class="nav">
+      <ul class="list-bare">
+      
+          <li><a class="nav__link" href="/index.html">Blog</a></li>
+          <li><a class="nav__link" href="/archives.html">Archives</a></li>
+          <li><a class="nav__link" href="/tags.html">Tags</a></li>
+         
+          <li><a class="nav__link" href="http://www.sunisdown.me/pages/about.html">About</a></li>
+         
+      </ul>
+    </nav>
+
+    <p class="social">
+        <a href="https://github.com/alexandrevicenzi" target="_blank" ><img src="http://www.sunisdown.me/theme/images/icons/github.png"></a>
+        <a href="https://twitter.com/alxvicenzi" target="_blank" ><img src="http://www.sunisdown.me/theme/images/icons/twitter.png"></a>
+      <a href="http://www.sunisdown.me/feeds/all.atom.xml" rel="alternate">
+        <img src="http://www.sunisdown.me/theme/images/icons/rss.png"></a>
+    </p>
+
+    <!--
+    <h2>Categories</h2>
+    <ul class="navbar">
+      <li class="active"><a href="http://www.sunisdown.me/category/articles.html">articles</a></li>
+    </ul> 
+    -->
+  </aside>
+
+  <!-- Content -->
+  <article>
+<section id="content">
+    <article>
+        <h2 class="post_title post_detail"><a href="http://www.sunisdown.me/li-jie-python-de-legb.html" rel="bookmark" title="Permalink to 理解 Python 的 LEGB">理解 Python 的 LEGB</a></h2>
+        <div class="entry-content blog-post">
+            <div class="section" id="id1">
+<h2>名字空间</h2>
+<p>Python 的名字空间是 Python 一个非常核心的内容。 其他语言中如 C
+中，变量名是内存地址的别名，而在 Python
+中，名字是一个字符串对象，它与他指向的对象构成一个{name:object}关联。
+Python 由很多名字空间，而 LEGB 则是名字空间的一种查找规则。</p>
+</div>
+<div class="section" id="id2">
+<h2>作用域</h2>
+<p>Python
+中<tt class="docutils literal"><span class="pre">name-object</span></tt>的关联存储在不同的作用域中，各个不同的作用域是相互独立的。而我们就在不同的作用域中搜索<tt class="docutils literal"><span class="pre">name-object</span></tt>。</p>
+<p>举个栗子，来说明作用域是相互独立的。</p>
+<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;G&quot;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span>
+            <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;in locals&quot;</span>
+   <span class="o">....</span><span class="p">:</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">test</span><span class="p">()</span>
+        <span class="n">L</span> <span class="ow">in</span> <span class="nb">locals</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;in globals&quot;</span>
+        <span class="n">G</span> <span class="ow">in</span> <span class="nb">globals</span>
+</pre></div>
+<p>在上面的栗子中，我们定义了两次 i，在 test 函数中是 i-L,在外面是
+i-G。为什么在 test 函数中，我们 i 指向的是对象 L，而在外面，i 指向的则是
+G？这就是 LEGB 的作用。</p>
+</div>
+<div class="section" id="id3">
+<h2>简述</h2>
+<p>简而言之，LEGB 代表名字查找顺序:
+<tt class="docutils literal">locals <span class="pre">-&gt;</span> enclosing function <span class="pre">-&gt;</span> globals <span class="pre">-&gt;</span> __builtins__</tt></p>
+<ul class="simple">
+<li>locals 是函数内的名字空间，包括局部变量和形参</li>
+<li>enclosing 外部嵌套函数的名字空间（闭包中常见）</li>
+<li>globals 全局变量，函数定义所在模块的名字空间</li>
+<li>builtins 内置模块的名字空间</li>
+</ul>
+<p>所以，在 Python 中检索一个变量的时候，优先回到 locals
+里面来检索，检索不到的情况下会检索 enclosing ，enclosing 没有则到
+globals 全局变量里面检索，最后是到 builtins 里面来检索。</p>
+<p>当然，因为 builtins 的特殊性，我们可以直接在 builtins
+里面添加变量，这样就可以在任意模块中访问变量，不过这种方法太过于变态，不推荐这么做。</p>
+</div>
+<div class="section" id="locals-globals">
+<h2>locals，globals</h2>
+<p>函数的形参跟内部变量都存储在 locals 中。</p>
+<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">a</span> <span class="o">=</span> <span class="n">x</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">print</span> <span class="n">a</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">print</span> <span class="nb">locals</span><span class="p">()</span>
+   <span class="o">...</span><span class="p">:</span>
+
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">f</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="n">hello</span>
+<span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="s1">&#39;hello&#39;</span><span class="p">}</span>
+</pre></div>
+<p>不过在函数内部调用global 声明的时候，可以将变量存储在 globals 中</p>
+<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">global</span> <span class="n">a</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">a</span> <span class="o">=</span> <span class="n">x</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">print</span> <span class="n">a</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">print</span> <span class="nb">locals</span><span class="p">()</span>
+   <span class="o">...</span><span class="p">:</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">f</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="n">hello</span>
+<span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="s1">&#39;hello&#39;</span><span class="p">}</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="k">print</span> <span class="n">a</span>
+<span class="n">hello</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="k">print</span> <span class="n">x</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span>                                 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">9</span><span class="o">-</span><span class="mi">2</span><span class="n">d264e11d975</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="k">print</span> <span class="n">x</span>
+
+<span class="ne">NameError</span><span class="p">:</span> <span class="n">name</span> <span class="s1">&#39;x&#39;</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">defined</span>
+</pre></div>
+<p>如上面栗子中那样，在函数中声明 a 为全局变量，则函数 f 的 locals只有参数
+x，而没有变量，而在外部可以使用变量 a，而使用 x
+的时候则是<tt class="docutils literal">NameError</tt></p>
+</div>
+<div class="section" id="enclosed">
+<h2>Enclosed</h2>
+<p>Enclosing 是外部嵌套函数的名字空间。我们经常在闭包中用到。在
+Python3中提供了一个
+nonlocal关键字来修改外部嵌套函数的名字空间，但是要使用
+Python3才有，我等使用 Python2的只能眼馋一下。</p>
+<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">outer</span><span class="p">():</span>
+   <span class="o">....</span><span class="p">:</span>     <span class="n">a_var</span> <span class="o">=</span> <span class="s1">&#39;enclosed value&#39;</span>
+   <span class="o">....</span><span class="p">:</span>     <span class="k">print</span> <span class="n">a_var</span>
+   <span class="o">....</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">inner</span><span class="p">():</span>
+   <span class="o">....</span><span class="p">:</span>         <span class="n">a_var</span> <span class="o">=</span> <span class="s1">&#39;local value&#39;</span>
+   <span class="o">....</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="n">a_var</span><span class="p">)</span>
+   <span class="o">....</span><span class="p">:</span>     <span class="n">inner</span><span class="p">()</span>
+   <span class="o">....</span><span class="p">:</span>     <span class="k">print</span> <span class="n">a_var</span>
+   <span class="o">....</span><span class="p">:</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="n">outer</span><span class="p">()</span>
+<span class="n">enclosed</span> <span class="n">value</span>
+<span class="n">local</span> <span class="n">value</span>
+<span class="n">enclosed</span> <span class="n">value</span>
+</pre></div>
+<p>下面的栗子简单示范一下 nonlocal 的用法，实在
+Python3下面才可以正常运行的：</p>
+<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">a_var</span> <span class="o">=</span> <span class="s1">&#39;global value&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">outer</span><span class="p">():</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">a_var</span> <span class="o">=</span> <span class="s2">&quot;local value&quot;</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="s2">&quot;outer befor&quot;</span><span class="p">,</span> <span class="n">a_var</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">def</span> <span class="nf">inner</span><span class="p">():</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="n">nonlocal</span> <span class="n">a_var</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="n">a_var</span> <span class="o">=</span> <span class="s2">&quot;inner value&quot;</span>
+   <span class="o">...</span><span class="p">:</span>         <span class="k">print</span><span class="p">(</span><span class="s2">&quot;in inner():&quot;</span><span class="p">,</span> <span class="n">a_var</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="n">inner</span><span class="p">()</span>
+   <span class="o">...</span><span class="p">:</span>     <span class="k">print</span><span class="p">(</span><span class="s2">&quot;outer inner:&quot;</span><span class="p">,</span> <span class="n">a_var</span><span class="p">)</span>
+   <span class="o">...</span><span class="p">:</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">outer</span><span class="p">()</span>
+<span class="n">outer</span> <span class="n">befor</span> <span class="n">local</span> <span class="n">value</span>
+<span class="ow">in</span> <span class="n">inner</span><span class="p">():</span> <span class="n">inner</span> <span class="n">value</span>
+<span class="n">outer</span> <span class="n">inner</span><span class="p">:</span> <span class="n">inner</span> <span class="n">value</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="k">print</span><span class="p">(</span><span class="n">a_var</span><span class="p">)</span>
+<span class="k">global</span> <span class="n">value</span>
+</pre></div>
+</div>
+<div class="section" id="builtins">
+<h2>builtins</h2>
+<p>builtins 则是内置模块，轻易不要修改</p>
+<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">19</span><span class="p">]:</span> <span class="n">b</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span>                                 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="mi">3</span><span class="n">b5d5c371295</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">b</span>
+
+<span class="ne">NameError</span><span class="p">:</span> <span class="n">name</span> <span class="s1">&#39;b&#39;</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">defined</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">20</span><span class="p">]:</span> <span class="n">__builtins__</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="s2">&quot;builtins&quot;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">21</span><span class="p">]:</span> <span class="n">b</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">21</span><span class="p">]:</span> <span class="s1">&#39;builtins&#39;</span>
+</pre></div>
+<p>上面栗子中在第一次调用<tt class="docutils literal">b</tt>的时候报错<tt class="docutils literal">NameError</tt>，之后我们修改
+builtins
+的名字空间，将名字<tt class="docutils literal">b</tt>与值<tt class="docutils literal">&quot;builtins&quot;</tt>进行关联，就可以正常调用了。这种非常规用法不建议使用。</p>
+</div>
+
+        </div>
+        <div class="post_list">
+            <span>By </span>
+            <a href="http://www.sunisdown.me/author/sunisdown.html">@SunisDown</a>
+            <span> in </span>
+            <span class="post_category"><a href="http://www.sunisdown.me/category/articles.html" rel="bookmark" title="Permalink to articles">[ articles ]</a></span>
+            <span class="post_date">Tue 03 February 2015</span>
+            <div><span>Tags : </span>
+                <span><a href="http://www.sunisdown.me/tag/python.html">#python, </a></span>
+                <span><a href="http://www.sunisdown.me/tag/legb.html">#legb, </a></span>
+            </div>
+
+            <div class="entry-social">
+                <span class="twitter"><a target="_blank" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;" title="Twitter" href="https://twitter.com/share?url=http://www.sunisdown.me/li-jie-python-de-legb.html&text=理解 Python 的 LEGB&via="><img src="http://www.sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
+
+                <span class="gplus"><a target="_blank" title="Google +" href="https://plus.google.com/share?url=http://www.sunisdown.me/li-jie-python-de-legb.html&hl=fr" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://www.sunisdown.me/theme/images/icons/google-s.png"></a></span>
+
+                <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;" href="https://www.facebook.com/sharer.php?u=http://www.sunisdown.me/li-jie-python-de-legb.html&t=理解 Python 的 LEGB"><img src="http://www.sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
+
+                <a  target="_blank" title="Linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=http://www.sunisdown.me/li-jie-python-de-legb.html&title=理解 Python 的 LEGB" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://www.sunisdown.me/theme/images/icons/linkedin-s.png"></a>
+
+                <span class="mail"><a href="mailto:?subject=理解 Python 的 LEGB&amp;body=Viens découvrir un article à propos de [理解 Python 的 LEGB] sur le site de sunisdown. http://www.sunisdown.me/li-jie-python-de-legb.html" title="Share by Email" target="_blank"><img src="http://www.sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+            </div>
+        </div>
+    </article>
+</section>
+  </article>
+
+  <!-- Footer -->
+  <footer>
+    <p>
+      Blog powered by <a href="http://getpelican.com/">Pelican</a>, 
+      which takes great advantage of <a href="http://python.org">Python</a>.
+      Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a href="https://parbhatpuri.com/">@parbhat</a>.
+    </p>
+  </footer>
+
+
+</body>
+</html>

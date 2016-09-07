@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh" itemscope itemtype="http://schema.org/Person">
+<head>
+  <meta charset="utf-8">
+  <!-- Site Meta Data -->
+  <title>如何利用决策树来决定去不去年会</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="sunisdown">
+
+  <link rel="shortcut icon" href="">
+
+  <!-- schema.org -->
+  <meta itemprop="name" content="SunisDown">
+  <meta itemprop="image" content="">
+  <meta itemprop="description" content="">
+
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+  <!-- Style Meta Data -->
+  <link rel="stylesheet" href="http://www.sunisdown.me/theme/css/style.css" type="text/css" />
+  <link rel="stylesheet" href="http://www.sunisdown.me/theme/css/pygments.css" type="text/css" />
+
+  <!-- Feed Meta Data -->
+    <link href="http://www.sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="SunisDown ATOM Feed" />
+
+  <!-- Twitter Feed -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="">
+  <meta name="twitter:image" content="">
+
+<meta name="twitter:creator" content="">
+<meta name="twitter:url" content="http://www.sunisdown.me/ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html">
+<meta name="twitter:title" content="SunisDown ~ 如何利用决策树来决定去不去年会">
+<meta name="twitter:description" content="<p>又到一年年会时,吸引大家去年会的,要么是冲奖品去,要么是为了看表演的妹子,作为一个好青年我排除掉看妹子的选项,仅用奖品来做价值来决定<strong>到底年会值不值得去!!!</strong></p>
+<p>如果我们去年会的话,有可能得到一个
+iMac,如果我们不去,那我们可能什么都得不到.但是
+如果去年会,我们需要花路费,假设我们需要坐一次公交￥1,然后再坐一次地铁￥3,现在帝都公交地
+铁都涨价了,出门的成本也增加了T
+T.有的小伙伴可能会开车,这样路费比公共交通更贵.反正我没有车,一天的来回路费按￥8计算.</p>
+<p>通过上面的简单计算,如果我们去年会,则肯定需要支出￥8的成本,但是有可能会收获一台价
+值￥8000的 iMac,看起来不错,即使没有抽到
+iMac,其他的奖品也还是不错的~但是前提是你 人品要好.这是一个概率事件.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="26%" />
+<col width="26%" />
+<col width="23%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">抽奖顺序</th>
+<th class="head">奖品级别</th>
+<th class="head">价值￥</th>
+<th class="head">人数</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>1</td>
+<td>4等</td>
+<td>200 ...</td></tr></tbody></table>">
+
+<!-- Facebook Meta Data -->
+<meta property="og:title" content="SunisDown ~ 如何利用决策树来决定去不去年会" />
+<meta property="og:description" content="<p>又到一年年会时,吸引大家去年会的,要么是冲奖品去,要么是为了看表演的妹子,作为一个好青年我排除掉看妹子的选项,仅用奖品来做价值来决定<strong>到底年会值不值得去!!!</strong></p>
+<p>如果我们去年会的话,有可能得到一个
+iMac,如果我们不去,那我们可能什么都得不到.但是
+如果去年会,我们需要花路费,假设我们需要坐一次公交￥1,然后再坐一次地铁￥3,现在帝都公交地
+铁都涨价了,出门的成本也增加了T
+T.有的小伙伴可能会开车,这样路费比公共交通更贵.反正我没有车,一天的来回路费按￥8计算.</p>
+<p>通过上面的简单计算,如果我们去年会,则肯定需要支出￥8的成本,但是有可能会收获一台价
+值￥8000的 iMac,看起来不错,即使没有抽到
+iMac,其他的奖品也还是不错的~但是前提是你 人品要好.这是一个概率事件.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="26%" />
+<col width="26%" />
+<col width="23%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">抽奖顺序</th>
+<th class="head">奖品级别</th>
+<th class="head">价值￥</th>
+<th class="head">人数</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>1</td>
+<td>4等</td>
+<td>200 ...</td></tr></tbody></table>" />
+<meta property="og:image" content="" />
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <aside>
+    <!--<center><a href="http://www.sunisdown.me"><img id="avatar" src=""></a></center>-->
+    <h1>SunisDown</h1>
+    <br>
+
+
+    <nav class="nav">
+      <ul class="list-bare">
+      
+          <li><a class="nav__link" href="/index.html">Blog</a></li>
+          <li><a class="nav__link" href="/archives.html">Archives</a></li>
+          <li><a class="nav__link" href="/tags.html">Tags</a></li>
+         
+          <li><a class="nav__link" href="http://www.sunisdown.me/pages/about.html">About</a></li>
+         
+      </ul>
+    </nav>
+
+    <p class="social">
+        <a href="https://github.com/alexandrevicenzi" target="_blank" ><img src="http://www.sunisdown.me/theme/images/icons/github.png"></a>
+        <a href="https://twitter.com/alxvicenzi" target="_blank" ><img src="http://www.sunisdown.me/theme/images/icons/twitter.png"></a>
+      <a href="http://www.sunisdown.me/feeds/all.atom.xml" rel="alternate">
+        <img src="http://www.sunisdown.me/theme/images/icons/rss.png"></a>
+    </p>
+
+    <!--
+    <h2>Categories</h2>
+    <ul class="navbar">
+      <li class="active"><a href="http://www.sunisdown.me/category/articles.html">articles</a></li>
+    </ul> 
+    -->
+  </aside>
+
+  <!-- Content -->
+  <article>
+<section id="content">
+    <article>
+        <h2 class="post_title post_detail"><a href="http://www.sunisdown.me/ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html" rel="bookmark" title="Permalink to 如何利用决策树来决定去不去年会">如何利用决策树来决定去不去年会</a></h2>
+        <div class="entry-content blog-post">
+            <p>又到一年年会时,吸引大家去年会的,要么是冲奖品去,要么是为了看表演的妹子,作为一个好青年我排除掉看妹子的选项,仅用奖品来做价值来决定<strong>到底年会值不值得去!!!</strong></p>
+<p>如果我们去年会的话,有可能得到一个
+iMac,如果我们不去,那我们可能什么都得不到.但是
+如果去年会,我们需要花路费,假设我们需要坐一次公交￥1,然后再坐一次地铁￥3,现在帝都公交地
+铁都涨价了,出门的成本也增加了T
+T.有的小伙伴可能会开车,这样路费比公共交通更贵.反正我没有车,一天的来回路费按￥8计算.</p>
+<p>通过上面的简单计算,如果我们去年会,则肯定需要支出￥8的成本,但是有可能会收获一台价
+值￥8000的 iMac,看起来不错,即使没有抽到
+iMac,其他的奖品也还是不错的~但是前提是你 人品要好.这是一个概率事件.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="26%" />
+<col width="26%" />
+<col width="23%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">抽奖顺序</th>
+<th class="head">奖品级别</th>
+<th class="head">价值￥</th>
+<th class="head">人数</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>1</td>
+<td>4等</td>
+<td>200</td>
+<td>40</td>
+</tr>
+<tr><td>2</td>
+<td>3等</td>
+<td>300</td>
+<td>30</td>
+</tr>
+<tr><td>3</td>
+<td>2等</td>
+<td>400</td>
+<td>20</td>
+</tr>
+<tr><td>4</td>
+<td>1等</td>
+<td>800</td>
+<td>10</td>
+</tr>
+<tr><td>5</td>
+<td>特等</td>
+<td>8000</td>
+<td>1</td>
+</tr>
+<tr><td>5</td>
+<td>特别幸运</td>
+<td>8000</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>当你对于一件事犹豫不决不知道该不该做的时候,决策树是帮你的好工具,下面我们利用决策树来帮助我们做一下决策.</p>
+<p>首先我们开始画一个决策树: 去或者不去,</p>
+<div class="figure">
+<img alt="图片1" src="images/dt1.png" />
+<p class="caption">图片1</p>
+</div>
+<p>如果我们去了,开始了抽奖环节,估计大家都跟我一样,在开始的时候祈祷:不要不要不要抽
+我,因为四等奖太小了.四等奖价值￥200,有40个四等奖,全公司有1200人,这样我们可以得出
+抽中4等奖的概率为40/1200,然后￥200减去我们的成本￥8,预计收益为￥192.</p>
+<pre class="literal-block">
+ 200-8
+=192
+</pre>
+<p>决策树如下:</p>
+<div class="figure">
+<img alt="图2" src="images/dt2.png" />
+<p class="caption">图2</p>
+</div>
+<p>如果没有抽中4等奖,后面还有机会竞争3等奖,由于前面有小伙伴得到了4等奖,所以我们获得3等奖的概率会增加,因为抽奖的时候会排除他们,重新计算,</p>
+<pre class="literal-block">
+ 300 - 8
+= 292
+</pre>
+<p>得到如下决策树:</p>
+<div class="figure">
+<img alt="图3" src="images/dt3.png" />
+<p class="caption">图3</p>
+</div>
+<p>根据上面的计算方法,我们可以得到完整的决策树:</p>
+<div class="figure">
+<img alt="图4" src="images/dt4.png" />
+<p class="caption">图4</p>
+</div>
+<p>当然,通常情况下为了尽兴,或者老板心情好,决定给一个特别将,嗯,再加一个特别奖:</p>
+<div class="figure">
+<img alt="图5" src="images/dt5.png" />
+<p class="caption">图5</p>
+</div>
+<p>上面的图中,我已经在决策树中分析了各种可能以及概率,下面我们要从末端反推决策树,确认每个分支的价值,然后做出判断:
+特别奖的分支我们可以做出如下判断:</p>
+<pre class="literal-block">
+ 1/1099*7992 + (1098/1099)*(-8)
+=-0.72
+</pre>
+<p>然后根据上面的计算简化决策树:</p>
+<div class="figure">
+<img alt="图6" src="images/dt6.png" />
+<p class="caption">图6</p>
+</div>
+<p>根据上面的简化方法一直计算,最终得到最简化的树:</p>
+<div class="figure">
+<img alt="图7" src="images/dt7.png" />
+<p class="caption">图7</p>
+</div>
+<p>嗯,通过最终的简化图,我们可以看到,如果去年会,我们会有￥32.85
+的收益,对我们是有好处的.So,还是去吧~</p>
+<p>当然,如果是周末开年会的话,计算的时候就需要再加上时间成本,小伙伴们自己来算吧:)</p>
+
+        </div>
+        <div class="post_list">
+            <span>By </span>
+            <a href="http://www.sunisdown.me/author/sunisdown.html">@SunisDown</a>
+            <span> in </span>
+            <span class="post_category"><a href="http://www.sunisdown.me/category/articles.html" rel="bookmark" title="Permalink to articles">[ articles ]</a></span>
+            <span class="post_date">Thu 06 November 2014</span>
+            <div><span>Tags : </span>
+            </div>
+
+            <div class="entry-social">
+                <span class="twitter"><a target="_blank" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;" title="Twitter" href="https://twitter.com/share?url=http://www.sunisdown.me/ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html&text=如何利用决策树来决定去不去年会&via="><img src="http://www.sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
+
+                <span class="gplus"><a target="_blank" title="Google +" href="https://plus.google.com/share?url=http://www.sunisdown.me/ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html&hl=fr" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://www.sunisdown.me/theme/images/icons/google-s.png"></a></span>
+
+                <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;" href="https://www.facebook.com/sharer.php?u=http://www.sunisdown.me/ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html&t=如何利用决策树来决定去不去年会"><img src="http://www.sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
+
+                <a  target="_blank" title="Linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=http://www.sunisdown.me/ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html&title=如何利用决策树来决定去不去年会" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://www.sunisdown.me/theme/images/icons/linkedin-s.png"></a>
+
+                <span class="mail"><a href="mailto:?subject=如何利用决策树来决定去不去年会&amp;body=Viens découvrir un article à propos de [如何利用决策树来决定去不去年会] sur le site de sunisdown. http://www.sunisdown.me/ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html" title="Share by Email" target="_blank"><img src="http://www.sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+            </div>
+        </div>
+    </article>
+</section>
+  </article>
+
+  <!-- Footer -->
+  <footer>
+    <p>
+      Blog powered by <a href="http://getpelican.com/">Pelican</a>, 
+      which takes great advantage of <a href="http://python.org">Python</a>.
+      Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a href="https://parbhatpuri.com/">@parbhat</a>.
+    </p>
+  </footer>
+
+
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="zh" itemscope itemtype="http://schema.org/Person">
+<head>
+  <meta charset="utf-8">
+  <!-- Site Meta Data -->
+  <title>一致性哈希</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="sunisdown">
+
+  <link rel="shortcut icon" href="">
+
+  <!-- schema.org -->
+  <meta itemprop="name" content="SunisDown">
+  <meta itemprop="image" content="">
+  <meta itemprop="description" content="">
+
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+  <!-- Style Meta Data -->
+  <link rel="stylesheet" href="http://www.sunisdown.me/theme/css/style.css" type="text/css" />
+  <link rel="stylesheet" href="http://www.sunisdown.me/theme/css/pygments.css" type="text/css" />
+
+  <!-- Feed Meta Data -->
+    <link href="http://www.sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="SunisDown ATOM Feed" />
+
+  <!-- Twitter Feed -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="">
+  <meta name="twitter:image" content="">
+
+<meta name="twitter:creator" content="">
+<meta name="twitter:url" content="http://www.sunisdown.me/yi-zhi-xing-ha-xi.html">
+<meta name="twitter:title" content="SunisDown ~ 一致性哈希">
+<meta name="twitter:description" content="<p><em>一致性哈希</em>，顾名思义，是一种哈希算法。比较常用的哈希算法应该是取模，通常在数据库需要分库的时候，大家都会用取模哈希。但是取模有一个缺点，就是，就是增加或者删除一个槽位的时候，几乎需要对所有的关键字进行重新映射，而分库的时候用这种方法，则所有的数据都需要重新录入。</p>
+<p>在我们做分布式缓存的时候，我们需要把对 A 的请求，映射到某一个节点
+node_a，如果是取模来做哈希，假设我们是资源
+6，集群中有4个几点，取4的模为，则资源缓存到
+node_2。如果我们向集群中添加一台设备，则需要取5的模，资源6会缓存到
+node_1。实际上如果用取模来做哈希，无论是增加还是删除节点，都是灾难性的。大部分数据都需要重新映射，集群内的内容也需要重新缓存。这种情况下请求则会击穿缓存，请求到数据库，给数据库带来很大的压力。这种情况下，我们会需要<strong>一致性哈希</strong>。</p>
+<p><a class="reference external" href="http://people.csail.mit.edu/karger/">David
+Karger</a>及其合作者列出了使得一致哈希在互联网分布式缓存中非常有用的几个特性：</p>
+<ul class="simple">
+<li>冗余少</li>
+<li>负载均衡</li>
+<li>过渡平滑</li>
+<li>存储均衡</li>
+<li>关键词单调</li>
+</ul>
+<p>一致性哈希最基础的想法是对所有的对象都使用相同的函数来映射缓存。这样可以尽可能的将同一个资源映射到同一个节点上面 ...</p>">
+
+<!-- Facebook Meta Data -->
+<meta property="og:title" content="SunisDown ~ 一致性哈希" />
+<meta property="og:description" content="<p><em>一致性哈希</em>，顾名思义，是一种哈希算法。比较常用的哈希算法应该是取模，通常在数据库需要分库的时候，大家都会用取模哈希。但是取模有一个缺点，就是，就是增加或者删除一个槽位的时候，几乎需要对所有的关键字进行重新映射，而分库的时候用这种方法，则所有的数据都需要重新录入。</p>
+<p>在我们做分布式缓存的时候，我们需要把对 A 的请求，映射到某一个节点
+node_a，如果是取模来做哈希，假设我们是资源
+6，集群中有4个几点，取4的模为，则资源缓存到
+node_2。如果我们向集群中添加一台设备，则需要取5的模，资源6会缓存到
+node_1。实际上如果用取模来做哈希，无论是增加还是删除节点，都是灾难性的。大部分数据都需要重新映射，集群内的内容也需要重新缓存。这种情况下请求则会击穿缓存，请求到数据库，给数据库带来很大的压力。这种情况下，我们会需要<strong>一致性哈希</strong>。</p>
+<p><a class="reference external" href="http://people.csail.mit.edu/karger/">David
+Karger</a>及其合作者列出了使得一致哈希在互联网分布式缓存中非常有用的几个特性：</p>
+<ul class="simple">
+<li>冗余少</li>
+<li>负载均衡</li>
+<li>过渡平滑</li>
+<li>存储均衡</li>
+<li>关键词单调</li>
+</ul>
+<p>一致性哈希最基础的想法是对所有的对象都使用相同的函数来映射缓存。这样可以尽可能的将同一个资源映射到同一个节点上面 ...</p>" />
+<meta property="og:image" content="" />
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <aside>
+    <!--<center><a href="http://www.sunisdown.me"><img id="avatar" src=""></a></center>-->
+    <h1>SunisDown</h1>
+    <br>
+
+
+    <nav class="nav">
+      <ul class="list-bare">
+      
+          <li><a class="nav__link" href="/index.html">Blog</a></li>
+          <li><a class="nav__link" href="/archives.html">Archives</a></li>
+          <li><a class="nav__link" href="/tags.html">Tags</a></li>
+         
+          <li><a class="nav__link" href="http://www.sunisdown.me/pages/about.html">About</a></li>
+         
+      </ul>
+    </nav>
+
+    <p class="social">
+        <a href="https://github.com/alexandrevicenzi" target="_blank" ><img src="http://www.sunisdown.me/theme/images/icons/github.png"></a>
+        <a href="https://twitter.com/alxvicenzi" target="_blank" ><img src="http://www.sunisdown.me/theme/images/icons/twitter.png"></a>
+      <a href="http://www.sunisdown.me/feeds/all.atom.xml" rel="alternate">
+        <img src="http://www.sunisdown.me/theme/images/icons/rss.png"></a>
+    </p>
+
+    <!--
+    <h2>Categories</h2>
+    <ul class="navbar">
+      <li class="active"><a href="http://www.sunisdown.me/category/articles.html">articles</a></li>
+    </ul> 
+    -->
+  </aside>
+
+  <!-- Content -->
+  <article>
+<section id="content">
+    <article>
+        <h2 class="post_title post_detail"><a href="http://www.sunisdown.me/yi-zhi-xing-ha-xi.html" rel="bookmark" title="Permalink to 一致性哈希">一致性哈希</a></h2>
+        <div class="entry-content blog-post">
+            <p><em>一致性哈希</em>，顾名思义，是一种哈希算法。比较常用的哈希算法应该是取模，通常在数据库需要分库的时候，大家都会用取模哈希。但是取模有一个缺点，就是，就是增加或者删除一个槽位的时候，几乎需要对所有的关键字进行重新映射，而分库的时候用这种方法，则所有的数据都需要重新录入。</p>
+<p>在我们做分布式缓存的时候，我们需要把对 A 的请求，映射到某一个节点
+node_a，如果是取模来做哈希，假设我们是资源
+6，集群中有4个几点，取4的模为，则资源缓存到
+node_2。如果我们向集群中添加一台设备，则需要取5的模，资源6会缓存到
+node_1。实际上如果用取模来做哈希，无论是增加还是删除节点，都是灾难性的。大部分数据都需要重新映射，集群内的内容也需要重新缓存。这种情况下请求则会击穿缓存，请求到数据库，给数据库带来很大的压力。这种情况下，我们会需要<strong>一致性哈希</strong>。</p>
+<p><a class="reference external" href="http://people.csail.mit.edu/karger/">David
+Karger</a>及其合作者列出了使得一致哈希在互联网分布式缓存中非常有用的几个特性：</p>
+<ul class="simple">
+<li>冗余少</li>
+<li>负载均衡</li>
+<li>过渡平滑</li>
+<li>存储均衡</li>
+<li>关键词单调</li>
+</ul>
+<p>一致性哈希最基础的想法是对所有的对象都使用相同的函数来映射缓存。这样可以尽可能的将同一个资源映射到同一个节点上面。这种情况下，无论是增加还是移出一个节点，都只会影响其相邻的节点，而其他的节点不受影响，这样最大程度的保证了缓存的有效性，将副作用降到了最低。</p>
+<div class="section" id="id2">
+<h2>详解</h2>
+<div class="section" id="id3">
+<h3>原理</h3>
+<p>一致性哈希梓潼来说非常简单，你可以认为这是一个从0到一个更大的数字构成的环。给你一个任意节点
+A，通过一个 hash 函数，你可以将节点 A 放在环的某一个位置。如下图所示：</p>
+<img alt="" src="images/hash_ring_1.png" />
+<p>然后再给你一个对象<tt class="docutils literal">15</tt>，通过相同的 hash 函数对 <tt class="docutils literal">15</tt>
+进行计算，则可以得到在环上得到相应的位置 key 15。</p>
+<img alt="" src="images/hash_ring_2.png" />
+<p>如上图所示，key 15被缓存到顺时针遇见的第一个节点，即
+node20节点上。其他对象
+key6，key23，key40则分别缓存到各自遇见的第一个节点，node10，node30，node40。一个节点缓存了自己与上一个节点之间的所有数据。
+这种缓存方式下，如果节点20被删除，则 key15呗映射到 node30，如果
+node30与与 node40之间增加了一个节点 node35，则
+key31，key33都被重新映射到 node35，其他的对象映射不需要改变。</p>
+</div>
+<div class="section" id="id4">
+<h3>虚拟节点</h3>
+<p>利用上面的方法可以说基本上已经足够了，但是有一个问题：我们对节点和对象进行哈希运算的时候，如果节点数过少，有可能会出现节点直接不均匀的情况出现。这样可能的大多数对象都映射到同一个节点上，如下图所示：</p>
+<img alt="" src="images/hash_ring_4.png" />
+<p>这样大部分数据都映射到
+node40上，并不能够做到均衡，从而导致数据倾斜。为了解决这个问题，引入了<tt class="docutils literal">虚拟节点</tt>的机制。即新增同一个缓存设备的时候，会对这个设备进行多次哈希计算，从而产生多个节点。用上面的栗子，我们可以对每个节点进行三次哈希计算，环上则有9个节点<tt class="docutils literal">20#1 #2 #3， 10#1 #2 #3， 40#1 #2 #3</tt>：</p>
+<img alt="" src="images/hash_ring_5.png" />
+<p>在实际的生产环境中，我们可以对同一设备进行更多次哈希，这样数据分布会接近于平均分布。</p>
+</div>
+</div>
+<div class="section" id="python">
+<h2>Python 实现</h2>
+<p>代码来做与 Python 的 hash_ring库：</p>
+<pre class="code python literal-block">
+<span class="kn">import</span> <span class="nn">md5</span>
+
+<span class="k">class</span> <span class="nc">HashRing</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">replicas</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Manages a hash ring.
+
+        `nodes` is a list of objects that have a proper __str__ representation.
+        `replicas` indicates how many virtual points should be used pr. node,
+        replicas are required to improve the distribution.
+        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span> <span class="o">=</span> <span class="n">replicas</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ring</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sorted_keys</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds a `node` to the hash ring (including a number of replicas).
+        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_key</span><span class="p">(</span><span class="s1">'</span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ring</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sorted_keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sorted_keys</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">remove_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes `node` from the hash ring and its replicas.
+        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_key</span><span class="p">(</span><span class="s1">'</span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">ring</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sorted_keys</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a string key a corresponding node in the hash ring is returned.
+
+        If the hash ring is empty, `None` is returned.
+        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_node_pos</span><span class="p">(</span><span class="n">string_key</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_node_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a string key a corresponding node in the hash ring is returned
+        along with it's position in the ring.
+
+        If the hash ring is empty, (`None`, `None`) is returned.
+        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ring</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
+
+        <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_key</span><span class="p">(</span><span class="n">string_key</span><span class="p">)</span>
+
+        <span class="n">nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sorted_keys</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)):</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">&lt;=</span> <span class="n">node</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ring</span><span class="p">[</span><span class="n">node</span><span class="p">],</span> <span class="n">i</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ring</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">get_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a string key it returns the nodes as a generator that can hold the key.
+
+        The generator is never ending and iterates through the ring
+        starting at the correct position.
+        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ring</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
+
+        <span class="n">node</span><span class="p">,</span> <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_node_pos</span><span class="p">(</span><span class="n">string_key</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sorted_keys</span><span class="p">[</span><span class="n">pos</span><span class="p">:]:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">ring</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sorted_keys</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">ring</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">gen_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a string key it returns a long value,
+        this long value represents a place on the hash ring.
+
+        md5 is currently used because it mixes well.
+        &quot;&quot;&quot;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">md5</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">long</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="mi">16</span><span class="p">)</span>
+</pre>
+</div>
+
+        </div>
+        <div class="post_list">
+            <span>By </span>
+            <a href="http://www.sunisdown.me/author/sunisdown.html">@Sunisdown</a>
+            <span> in </span>
+            <span class="post_category"><a href="http://www.sunisdown.me/category/articles.html" rel="bookmark" title="Permalink to articles">[ articles ]</a></span>
+            <span class="post_date">Thu 06 November 2014</span>
+            <div><span>Tags : </span>
+                <span><a href="http://www.sunisdown.me/tag/python.html">#Python, </a></span>
+                <span><a href="http://www.sunisdown.me/tag/gil.html">#GIL, </a></span>
+                <span><a href="http://www.sunisdown.me/tag/hash.html">#Hash, </a></span>
+            </div>
+
+            <div class="entry-social">
+                <span class="twitter"><a target="_blank" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;" title="Twitter" href="https://twitter.com/share?url=http://www.sunisdown.me/yi-zhi-xing-ha-xi.html&text=一致性哈希&via="><img src="http://www.sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
+
+                <span class="gplus"><a target="_blank" title="Google +" href="https://plus.google.com/share?url=http://www.sunisdown.me/yi-zhi-xing-ha-xi.html&hl=fr" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://www.sunisdown.me/theme/images/icons/google-s.png"></a></span>
+
+                <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;" href="https://www.facebook.com/sharer.php?u=http://www.sunisdown.me/yi-zhi-xing-ha-xi.html&t=一致性哈希"><img src="http://www.sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
+
+                <a  target="_blank" title="Linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=http://www.sunisdown.me/yi-zhi-xing-ha-xi.html&title=一致性哈希" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://www.sunisdown.me/theme/images/icons/linkedin-s.png"></a>
+
+                <span class="mail"><a href="mailto:?subject=一致性哈希&amp;body=Viens découvrir un article à propos de [一致性哈希] sur le site de sunisdown. http://www.sunisdown.me/yi-zhi-xing-ha-xi.html" title="Share by Email" target="_blank"><img src="http://www.sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+            </div>
+        </div>
+    </article>
+</section>
+  </article>
+
+  <!-- Footer -->
+  <footer>
+    <p>
+      Blog powered by <a href="http://getpelican.com/">Pelican</a>, 
+      which takes great advantage of <a href="http://python.org">Python</a>.
+      Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a href="https://parbhatpuri.com/">@parbhat</a>.
+    </p>
+  </footer>
+
+
+</body>
+</html>

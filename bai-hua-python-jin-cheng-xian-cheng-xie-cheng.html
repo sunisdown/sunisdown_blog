@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh" itemscope itemtype="http://schema.org/Person">
+<head>
+  <meta charset="utf-8">
+  <!-- Site Meta Data -->
+  <title>白话Python 进程，线程，协程</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="sunisdown">
+
+  <link rel="shortcut icon" href="">
+
+  <!-- schema.org -->
+  <meta itemprop="name" content="SunisDown">
+  <meta itemprop="image" content="">
+  <meta itemprop="description" content="">
+
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+  <!-- Style Meta Data -->
+  <link rel="stylesheet" href="http://www.sunisdown.me/theme/css/style.css" type="text/css" />
+  <link rel="stylesheet" href="http://www.sunisdown.me/theme/css/pygments.css" type="text/css" />
+
+  <!-- Feed Meta Data -->
+    <link href="http://www.sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="SunisDown ATOM Feed" />
+
+  <!-- Twitter Feed -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="">
+  <meta name="twitter:image" content="">
+
+<meta name="twitter:creator" content="">
+<meta name="twitter:url" content="http://www.sunisdown.me/bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html">
+<meta name="twitter:title" content="SunisDown ~ 白话Python 进程，线程，协程">
+<meta name="twitter:description" content="<p>Python被人诟病最多的大概就是性能差，在这里讲一下 Python
+的多进程，多线程与协程。首先声明这不是教程，看完这篇文章，大概能够对
+Python 的多进程与多线程有一定的了解。</p>
+<img alt="" src="images/process_thread.png" />
+<div class="section" id="id1">
+<h2>进程</h2>
+<p>进程是正则执行的程序实例。执行程序的过程中，内核会讲程序代码载入虚拟内存，喂程序变量分配空间，建立bookkeeping 数据结构，来记录与进程有关的信息，比如进程 ID，用户 ID 等</p>
+<p>创建进程的时候，内核会为进程分配一定的资源，并在进程存活的时候不断进行调整，比如内存，进程创建的时候会占有一部分内存。进程结束的时候资源会释放出来，来让其他资源使用。</p>
+<p>我们可以把进程理解为一种容器，容器内的资源可多可少，但是在容器内的程序只能使用容器内的东西。</p>
+</div>
+<div class="section" id="id2">
+<h2>线程</h2>
+<p>UNIX
+中，一个进程中可以执行多个线程。多个线程共享进程内的资源。所以可以将线程可以看成是共享同一虚拟内存以及其他属性的进程。</p>
+<p>线程相对于进程的优势在于同一进程下的不同线程之间的数据共享更加容易。</p>
+<p>Python被诟病最多的大概就是解释器全局锁（GIL）了，GIL 的存在是为了实现Python 中对于共享资源访问的互斥。而且是非常霸道的解释器级别的互斥。在GIL的机制下，一个线程访问解释器之后，其他的线程就需要等待这个线程释放之后才可以访问 ...</p></div>">
+
+<!-- Facebook Meta Data -->
+<meta property="og:title" content="SunisDown ~ 白话Python 进程，线程，协程" />
+<meta property="og:description" content="<p>Python被人诟病最多的大概就是性能差，在这里讲一下 Python
+的多进程，多线程与协程。首先声明这不是教程，看完这篇文章，大概能够对
+Python 的多进程与多线程有一定的了解。</p>
+<img alt="" src="images/process_thread.png" />
+<div class="section" id="id1">
+<h2>进程</h2>
+<p>进程是正则执行的程序实例。执行程序的过程中，内核会讲程序代码载入虚拟内存，喂程序变量分配空间，建立bookkeeping 数据结构，来记录与进程有关的信息，比如进程 ID，用户 ID 等</p>
+<p>创建进程的时候，内核会为进程分配一定的资源，并在进程存活的时候不断进行调整，比如内存，进程创建的时候会占有一部分内存。进程结束的时候资源会释放出来，来让其他资源使用。</p>
+<p>我们可以把进程理解为一种容器，容器内的资源可多可少，但是在容器内的程序只能使用容器内的东西。</p>
+</div>
+<div class="section" id="id2">
+<h2>线程</h2>
+<p>UNIX
+中，一个进程中可以执行多个线程。多个线程共享进程内的资源。所以可以将线程可以看成是共享同一虚拟内存以及其他属性的进程。</p>
+<p>线程相对于进程的优势在于同一进程下的不同线程之间的数据共享更加容易。</p>
+<p>Python被诟病最多的大概就是解释器全局锁（GIL）了，GIL 的存在是为了实现Python 中对于共享资源访问的互斥。而且是非常霸道的解释器级别的互斥。在GIL的机制下，一个线程访问解释器之后，其他的线程就需要等待这个线程释放之后才可以访问 ...</p></div>" />
+<meta property="og:image" content="" />
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <aside>
+    <!--<center><a href="http://www.sunisdown.me"><img id="avatar" src=""></a></center>-->
+    <h1>SunisDown</h1>
+    <br>
+
+
+    <nav class="nav">
+      <ul class="list-bare">
+      
+          <li><a class="nav__link" href="/index.html">Blog</a></li>
+          <li><a class="nav__link" href="/archives.html">Archives</a></li>
+          <li><a class="nav__link" href="/tags.html">Tags</a></li>
+         
+          <li><a class="nav__link" href="http://www.sunisdown.me/pages/about.html">About</a></li>
+         
+      </ul>
+    </nav>
+
+    <p class="social">
+        <a href="https://github.com/alexandrevicenzi" target="_blank" ><img src="http://www.sunisdown.me/theme/images/icons/github.png"></a>
+        <a href="https://twitter.com/alxvicenzi" target="_blank" ><img src="http://www.sunisdown.me/theme/images/icons/twitter.png"></a>
+      <a href="http://www.sunisdown.me/feeds/all.atom.xml" rel="alternate">
+        <img src="http://www.sunisdown.me/theme/images/icons/rss.png"></a>
+    </p>
+
+    <!--
+    <h2>Categories</h2>
+    <ul class="navbar">
+      <li class="active"><a href="http://www.sunisdown.me/category/articles.html">articles</a></li>
+    </ul> 
+    -->
+  </aside>
+
+  <!-- Content -->
+  <article>
+<section id="content">
+    <article>
+        <h2 class="post_title post_detail"><a href="http://www.sunisdown.me/bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html" rel="bookmark" title="Permalink to 白话Python 进程，线程，协程">白话Python 进程，线程，协程</a></h2>
+        <div class="entry-content blog-post">
+            <p>Python被人诟病最多的大概就是性能差，在这里讲一下 Python
+的多进程，多线程与协程。首先声明这不是教程，看完这篇文章，大概能够对
+Python 的多进程与多线程有一定的了解。</p>
+<img alt="" src="images/process_thread.png" />
+<div class="section" id="id1">
+<h2>进程</h2>
+<p>进程是正则执行的程序实例。执行程序的过程中，内核会讲程序代码载入虚拟内存，喂程序变量分配空间，建立bookkeeping 数据结构，来记录与进程有关的信息，比如进程 ID，用户 ID 等</p>
+<p>创建进程的时候，内核会为进程分配一定的资源，并在进程存活的时候不断进行调整，比如内存，进程创建的时候会占有一部分内存。进程结束的时候资源会释放出来，来让其他资源使用。</p>
+<p>我们可以把进程理解为一种容器，容器内的资源可多可少，但是在容器内的程序只能使用容器内的东西。</p>
+</div>
+<div class="section" id="id2">
+<h2>线程</h2>
+<p>UNIX
+中，一个进程中可以执行多个线程。多个线程共享进程内的资源。所以可以将线程可以看成是共享同一虚拟内存以及其他属性的进程。</p>
+<p>线程相对于进程的优势在于同一进程下的不同线程之间的数据共享更加容易。</p>
+<p>Python被诟病最多的大概就是解释器全局锁（GIL）了，GIL 的存在是为了实现Python 中对于共享资源访问的互斥。而且是非常霸道的解释器级别的互斥。在GIL的机制下，一个线程访问解释器之后，其他的线程就需要等待这个线程释放之后才可以访问。这种处理方法在单处理器下面并没有什么问题，单处理器的本质是无法并行的。但是再多处理器下面，这种方法会导致无法利用多核的优势。</p>
+<p>Python
+的线程调度跟操作系统的进程调度类似，都属于抢占式的调度。一个进程执行了一定时间之后，发出一个信号，操作系统响应这个时钟中断（信号），开始进程调度。而在
+Python 中，则通过软件模拟这种中断，来实现线程调度。</p>
+</div>
+<div class="section" id="id3">
+<h2>协程</h2>
+<p>协程我们可以看成是一种用户空间的线程,协程是主动的协作是工作，现有的操作系统线程调度是抢占式。两种的区别在于协作是调度，需要之前的任务主动放弃时间片。</p>
+</div>
+<div class="section" id="id4">
+<h2>总结</h2>
+<p>在 Python中，使用协程来做并发是对于系统资源消耗最小，可以最大化的做高并发，但是，需要我们自己来做调度，操作系统不会主动调度任务。</p>
+</div>
+
+        </div>
+        <div class="post_list">
+            <span>By </span>
+            <a href="http://www.sunisdown.me/author/sunisdown.html">@SunisDown</a>
+            <span> in </span>
+            <span class="post_category"><a href="http://www.sunisdown.me/category/articles.html" rel="bookmark" title="Permalink to articles">[ articles ]</a></span>
+            <span class="post_date">Sun 19 October 2014</span>
+            <div><span>Tags : </span>
+                <span><a href="http://www.sunisdown.me/tag/process.html">#process, </a></span>
+                <span><a href="http://www.sunisdown.me/tag/thread.html">#thread, </a></span>
+                <span><a href="http://www.sunisdown.me/tag/coroutine.html">#coroutine, </a></span>
+                <span><a href="http://www.sunisdown.me/tag/python.html">#python, </a></span>
+            </div>
+
+            <div class="entry-social">
+                <span class="twitter"><a target="_blank" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;" title="Twitter" href="https://twitter.com/share?url=http://www.sunisdown.me/bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html&text=白话Python 进程，线程，协程&via="><img src="http://www.sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
+
+                <span class="gplus"><a target="_blank" title="Google +" href="https://plus.google.com/share?url=http://www.sunisdown.me/bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html&hl=fr" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://www.sunisdown.me/theme/images/icons/google-s.png"></a></span>
+
+                <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;" href="https://www.facebook.com/sharer.php?u=http://www.sunisdown.me/bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html&t=白话Python 进程，线程，协程"><img src="http://www.sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
+
+                <a  target="_blank" title="Linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=http://www.sunisdown.me/bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html&title=白话Python 进程，线程，协程" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://www.sunisdown.me/theme/images/icons/linkedin-s.png"></a>
+
+                <span class="mail"><a href="mailto:?subject=白话Python 进程，线程，协程&amp;body=Viens découvrir un article à propos de [白话Python 进程，线程，协程] sur le site de sunisdown. http://www.sunisdown.me/bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html" title="Share by Email" target="_blank"><img src="http://www.sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+            </div>
+        </div>
+    </article>
+</section>
+  </article>
+
+  <!-- Footer -->
+  <footer>
+    <p>
+      Blog powered by <a href="http://getpelican.com/">Pelican</a>, 
+      which takes great advantage of <a href="http://python.org">Python</a>.
+      Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a href="https://parbhatpuri.com/">@parbhat</a>.
+    </p>
+  </footer>
+
+
+</body>
+</html>
