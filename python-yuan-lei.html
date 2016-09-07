@@ -43,18 +43,16 @@
 <p>神说<tt class="docutils literal">万物皆对象</tt>，Python
 中一切都是对象，凡是对象必先有类型。类，也是对象的一种。Python
 中所有的对象都有一些相同的内容，包含在对象的<a class="reference external" href="https://github.com/python/cpython/blob/2.7/Include/object.h#L106">头部信息</a>中。</p>
-<pre class="code c literal-block">
-<span class="k">typedef</span> <span class="k">struct</span> <span class="n">_object</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_object</span> <span class="p">{</span>
     <span class="n">PyObject_HEAD</span>
 <span class="p">}</span> <span class="n">PyObject</span><span class="p">;</span>
-</pre>
+</pre></div>
 <p>在
 <a class="reference external" href="https://github.com/python/cpython/blob/2.7/Include/object.h#L78">PyObject</a>
 的定义中，<tt class="docutils literal">ob_refcnt</tt>
 是<tt class="docutils literal">应用计数</tt>，用来做内存管理垃圾回收有关，这里暂时不细说。有兴趣的可以查看<a class="reference external" href="https://github.com/qyuhen/book">Q.yuhen的
 Python 笔记</a>,</p>
-<pre class="code c literal-block">
-<span class="cm">/* PyObject_HEAD defines the initial segment of every PyObject ...</span></pre></div>'>
+<div class="highlight"><pre><span></span><span class="cm">/* PyObject_HEAD defines the initial segment of every PyObject ...</span></pre></div></div>'>
 
 <!-- Facebook Meta Data -->
 <meta property="og:title" content="SunisDown ~ Python 元类" />
@@ -70,18 +68,16 @@ Python 笔记</a>,</p>
 <p>神说<tt class="docutils literal">万物皆对象</tt>，Python
 中一切都是对象，凡是对象必先有类型。类，也是对象的一种。Python
 中所有的对象都有一些相同的内容，包含在对象的<a class="reference external" href="https://github.com/python/cpython/blob/2.7/Include/object.h#L106">头部信息</a>中。</p>
-<pre class="code c literal-block">
-<span class="k">typedef</span> <span class="k">struct</span> <span class="n">_object</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_object</span> <span class="p">{</span>
     <span class="n">PyObject_HEAD</span>
 <span class="p">}</span> <span class="n">PyObject</span><span class="p">;</span>
-</pre>
+</pre></div>
 <p>在
 <a class="reference external" href="https://github.com/python/cpython/blob/2.7/Include/object.h#L78">PyObject</a>
 的定义中，<tt class="docutils literal">ob_refcnt</tt>
 是<tt class="docutils literal">应用计数</tt>，用来做内存管理垃圾回收有关，这里暂时不细说。有兴趣的可以查看<a class="reference external" href="https://github.com/qyuhen/book">Q.yuhen的
 Python 笔记</a>,</p>
-<pre class="code c literal-block">
-<span class="cm">/* PyObject_HEAD defines the initial segment of every PyObject ...</span></pre></div>' />
+<div class="highlight"><pre><span></span><span class="cm">/* PyObject_HEAD defines the initial segment of every PyObject ...</span></pre></div></div>' />
 <meta property="og:image" content="" />
 </head>
 
@@ -138,23 +134,21 @@ Python 笔记</a>,</p>
 <p>神说<tt class="docutils literal">万物皆对象</tt>，Python
 中一切都是对象，凡是对象必先有类型。类，也是对象的一种。Python
 中所有的对象都有一些相同的内容，包含在对象的<a class="reference external" href="https://github.com/python/cpython/blob/2.7/Include/object.h#L106">头部信息</a>中。</p>
-<pre class="code c literal-block">
-<span class="k">typedef</span> <span class="k">struct</span> <span class="n">_object</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_object</span> <span class="p">{</span>
     <span class="n">PyObject_HEAD</span>
 <span class="p">}</span> <span class="n">PyObject</span><span class="p">;</span>
-</pre>
+</pre></div>
 <p>在
 <a class="reference external" href="https://github.com/python/cpython/blob/2.7/Include/object.h#L78">PyObject</a>
 的定义中，<tt class="docutils literal">ob_refcnt</tt>
 是<tt class="docutils literal">应用计数</tt>，用来做内存管理垃圾回收有关，这里暂时不细说。有兴趣的可以查看<a class="reference external" href="https://github.com/qyuhen/book">Q.yuhen的
 Python 笔记</a>,</p>
-<pre class="code c literal-block">
-<span class="cm">/* PyObject_HEAD defines the initial segment of every PyObject. */</span>
-<span class="cp">#define PyObject_HEAD                   \
-    _PyObject_HEAD_EXTRA                \
-    Py_ssize_t ob_refcnt;               \
-    struct _typeobject *ob_type;</span>
-</pre>
+<div class="highlight"><pre><span></span><span class="cm">/* PyObject_HEAD defines the initial segment of every PyObject. */</span>
+<span class="cp">#define PyObject_HEAD                   \</span>
+<span class="cp">    _PyObject_HEAD_EXTRA                \</span>
+<span class="cp">    Py_ssize_t ob_refcnt;               \</span>
+<span class="cp">    struct _typeobject *ob_type;</span>
+</pre></div>
 <p><tt class="docutils literal">ob_type</tt>则是指向指向具体类型的指针。里面定义各种 Python
 的类型。每一个对象都有他的类型。</p>
 <p>下面跟我念：Python
@@ -162,8 +156,7 @@ Python 笔记</a>,</p>
 <p>那么问题来了：我们通过什么来确定一个对象其实是一个类型对象？答案就是
 <tt class="docutils literal">metaclass</tt>，所有 class 的 class，所有类型的类型。</p>
 <p>举个栗子：</p>
-<pre class="code python literal-block">
-<span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">class</span> <span class="nc">NewData</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">class</span> <span class="nc">NewData</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
    <span class="o">...</span><span class="p">:</span>     <span class="k">pass</span>
    <span class="o">...</span><span class="p">:</span>
 
@@ -195,7 +188,7 @@ Python 笔记</a>,</p>
 
 <span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="nb">object</span><span class="o">.</span><span class="n">__class__</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="nb">type</span>
-</pre>
+</pre></div>
 <p>从上面的栗子中我们可以观察到，<tt class="docutils literal">NewData</tt>与<tt class="docutils literal">type</tt>以及<tt class="docutils literal">object</tt>的类型都是
 <em>type</em>，这 里面的类型 <em>type</em> 就是
 <tt class="docutils literal">metaclass</tt>的一种，现在理一下元类，类型，类，实例之间的关 系：</p>
@@ -209,8 +202,7 @@ Python 笔记</a>,</p>
 <p>Python 中 <tt class="docutils literal">class</tt> 关键字会
 <a class="reference external" href="https://github.com/python/cpython/blob/2.7/Python/ceval.c#L4621">创建类的对象</a>，
 我们观察一下类的创建过程:</p>
-<pre class="code c literal-block">
-<span class="k">if</span> <span class="p">(</span><span class="n">PyDict_Check</span><span class="p">(</span><span class="n">methods</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">PyDict_Check</span><span class="p">(</span><span class="n">methods</span><span class="p">))</span>
     <span class="n">metaclass</span> <span class="o">=</span> <span class="n">PyDict_GetItemString</span><span class="p">(</span><span class="n">methods</span><span class="p">,</span> <span class="s">&quot;__metaclass__&quot;</span><span class="p">);</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">metaclass</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
     <span class="n">Py_INCREF</span><span class="p">(</span><span class="n">metaclass</span><span class="p">);</span>
@@ -223,7 +215,7 @@ Python 笔记</a>,</p>
         <span class="n">Py_INCREF</span><span class="p">(</span><span class="n">metaclass</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</pre>
+</pre></div>
 <p>先检测在类的定义中是否指定了<tt class="docutils literal">__metaclass__</tt>，如果没有自己定义，则使用<tt class="docutils literal">object</tt>的
 <tt class="docutils literal">__class__</tt>来作为元类，上面演示过<tt class="docutils literal">object.__class__</tt>
 是<tt class="docutils literal">type</tt>。</p>
@@ -235,8 +227,7 @@ Python 笔记</a>,</p>
 的名字从 Auth
 里面抹去这种事儿不能忍，这种情况下也可以蛋疼的用元类（这真的是一个
 蛋疼的栗子）：</p>
-<pre class="code python literal-block">
-<span class="k">class</span> <span class="nc">AuthMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">AuthMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
         <span class="n">t</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
         <span class="n">t</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="s2">&quot;SunisDown&quot;</span>
@@ -248,8 +239,8 @@ Python 笔记</a>,</p>
 
 <span class="n">aaa</span> <span class="o">=</span> <span class="n">Blog</span><span class="p">()</span>
 
-<span class="n">aaa</span><span class="o">.</span><span class="n">auth</span> <span class="o">==</span> <span class="s1">'SunisDown'</span>
-</pre>
+<span class="n">aaa</span><span class="o">.</span><span class="n">auth</span> <span class="o">==</span> <span class="s1">&#39;SunisDown&#39;</span>
+</pre></div>
 <p>如上所示，在后续的代码中，只要将__metaclass__ 指向
 <tt class="docutils literal">AuthMeta</tt>，后面的类就有了属
 性<tt class="docutils literal">auth</tt>，嗯，这个蛋疼的作者名字跟代码永远的绑到一起了。</p>
@@ -262,11 +253,10 @@ Python 笔记</a>,</p>
 <a class="reference external" href="https://github.com/django/django/blob/master/django/db/models/base.py#L60">models</a>
 中，对于元类的使用可以算是一次教科书式的使用。</p>
 <p>通过继承<tt class="docutils literal">models.Models</tt>里面的元类，我们就可以直接写类似：</p>
-<pre class="code python literal-block">
-<span class="k">class</span> <span class="nc">Blog</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Blog</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
     <span class="n">auth</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
-</pre>
+</pre></div>
 <p>这种简单方便的
 API，用户可以直接使用，而后面负责的逻辑，就隐藏在元类之中。</p>
 </div>
