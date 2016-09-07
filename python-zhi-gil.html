@@ -225,19 +225,18 @@ GIL.这样可以避免一些只需要单线程的程序做多余的线程调度.
 GIL.</p>
 <p>我们跟踪<tt class="docutils literal">PyEval_InitThreads()</tt>到<a class="reference external" href="https://github.com/python/cpython/blob/2.7/Python/ceval.c#L249">ceval.c</a>,可以看到创建
 GIL 的代码:</p>
-<pre class="literal-block">
-static PyThread_type_lock interpreter_lock = 0; /* This is the GIL */
+<div class="highlight"><pre><span></span><span class="k">static</span> <span class="n">PyThread_type_lock</span> <span class="n">interpreter_lock</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="cm">/* This is the GIL */</span>
 
 
-PyEval_InitThreads(void)
-{
-    if (interpreter_lock)
-        return;
-    interpreter_lock = PyThread_allocate_lock();
-    PyThread_acquire_lock(interpreter_lock, 1);
-    main_thread = PyThread_get_thread_ident();
-}
-</pre>
+<span class="n">PyEval_InitThreads</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">interpreter_lock</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="n">interpreter_lock</span> <span class="o">=</span> <span class="n">PyThread_allocate_lock</span><span class="p">();</span>
+    <span class="n">PyThread_acquire_lock</span><span class="p">(</span><span class="n">interpreter_lock</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">main_thread</span> <span class="o">=</span> <span class="n">PyThread_get_thread_ident</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
 <p>从上面的代码中我们可以看到,在初始化多线程环境的时候,会检测
 <tt class="docutils literal">interpreter_lock</tt>
 是不是已经创建,如果没有创建,则会用<tt class="docutils literal">PyThread_allocate_lock</tt>
@@ -248,50 +247,48 @@ PyEval_InitThreads(void)
 <p>上面我们跟踪到 GIL 的创建过程,可是 GIL 到底是个什么东西?</p>
 <p>从前面的代码中,我们看到是由<tt class="docutils literal">PyThread_allocate_lock</tt>来创建GIL
 的,而<tt class="docutils literal">PyThread_allocate_lock</tt>则是针对各个平台来做的具体实现,这里我们看<a class="reference external" href="https://github.com/python/cpython/blob/2.7/Python/thread_pthread.h#L360">Posix标准</a>的实现:</p>
-<pre class="literal-block">
-PyThread_allocate_lock(void)
-{
-    pthread_lock *lock;
-    int status, error = 0;
+<div class="highlight"><pre><span></span><span class="n">PyThread_allocate_lock</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">pthread_lock</span> <span class="o">*</span><span class="n">lock</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">status</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    dprintf((&quot;PyThread_allocate_lock called\n&quot;));
-    if (!initialized)
-        PyThread_init_thread();
+    <span class="n">dprintf</span><span class="p">((</span><span class="s">&quot;PyThread_allocate_lock called</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">initialized</span><span class="p">)</span>
+        <span class="n">PyThread_init_thread</span><span class="p">();</span>
 
-    lock = (pthread_lock *) malloc(sizeof(pthread_lock));
-    if (lock) {
-        memset((void *)lock, '\0', sizeof(pthread_lock));
-        lock-&gt;locked = 0;
+    <span class="n">lock</span> <span class="o">=</span> <span class="p">(</span><span class="n">pthread_lock</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">pthread_lock</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">lock</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">memset</span><span class="p">((</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">lock</span><span class="p">,</span> <span class="sc">&#39;\0&#39;</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">pthread_lock</span><span class="p">));</span>
+        <span class="n">lock</span><span class="o">-&gt;</span><span class="n">locked</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-        status = pthread_mutex_init(&amp;lock-&gt;mut,
-                                    pthread_mutexattr_default);
-        CHECK_STATUS(&quot;pthread_mutex_init&quot;);
+        <span class="n">status</span> <span class="o">=</span> <span class="n">pthread_mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="o">-&gt;</span><span class="n">mut</span><span class="p">,</span>
+                                    <span class="n">pthread_mutexattr_default</span><span class="p">);</span>
+        <span class="n">CHECK_STATUS</span><span class="p">(</span><span class="s">&quot;pthread_mutex_init&quot;</span><span class="p">);</span>
 
-        status = pthread_cond_init(&amp;lock-&gt;lock_released,
-                                   pthread_condattr_default);
-        CHECK_STATUS(&quot;pthread_cond_init&quot;);
+        <span class="n">status</span> <span class="o">=</span> <span class="n">pthread_cond_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="o">-&gt;</span><span class="n">lock_released</span><span class="p">,</span>
+                                   <span class="n">pthread_condattr_default</span><span class="p">);</span>
+        <span class="n">CHECK_STATUS</span><span class="p">(</span><span class="s">&quot;pthread_cond_init&quot;</span><span class="p">);</span>
 
-        if (error) {
-            free((void *)lock);
-            lock = 0;
-        }
-    }
+        <span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">free</span><span class="p">((</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">lock</span><span class="p">);</span>
+            <span class="n">lock</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-    dprintf((&quot;PyThread_allocate_lock() -&gt; %p\n&quot;, lock));
-    return (PyThread_type_lock) lock;
-}
-</pre>
+    <span class="n">dprintf</span><span class="p">((</span><span class="s">&quot;PyThread_allocate_lock() -&gt; %p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">lock</span><span class="p">));</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">PyThread_type_lock</span><span class="p">)</span> <span class="n">lock</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 <p>先检测是否已经初始化,如果没有,则进行初始化.中间加上 malloc
 机制,最后返回一个<tt class="docutils literal">pthread_lock</tt>,这就是我们的 GIL
 了,<a class="reference external" href="https://github.com/python/cpython/blob/2.7/Python/thread_pthread.h#L113">线程互斥的锁</a>:</p>
-<pre class="literal-block">
-typedef struct {
-    char             locked; /* 0=unlocked, 1=locked */
-    /* a &lt;cond, mutex&gt; pair to handle an acquire of a locked lock */
-    pthread_cond_t   lock_released;
-    pthread_mutex_t  mut;
-} pthread_lock;
-</pre>
+<div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="kt">char</span>             <span class="n">locked</span><span class="p">;</span> <span class="cm">/* 0=unlocked, 1=locked */</span>
+    <span class="cm">/* a &lt;cond, mutex&gt; pair to handle an acquire of a locked lock */</span>
+    <span class="n">pthread_cond_t</span>   <span class="n">lock_released</span><span class="p">;</span>
+    <span class="n">pthread_mutex_t</span>  <span class="n">mut</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">pthread_lock</span><span class="p">;</span>
+</pre></div>
 </div>
 <div class="section" id="id4">
 <h2>什么时候释放 GIL</h2>

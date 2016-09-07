@@ -277,19 +277,18 @@ GIL.这样可以避免一些只需要单线程的程序做多余的线程调度.
 GIL.&lt;/p&gt;
 &lt;p&gt;我们跟踪&lt;tt class="docutils literal"&gt;PyEval_InitThreads()&lt;/tt&gt;到&lt;a class="reference external" href="https://github.com/python/cpython/blob/2.7/Python/ceval.c#L249"&gt;ceval.c&lt;/a&gt;,可以看到创建
 GIL 的代码:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-static PyThread_type_lock interpreter_lock = 0; /* This is the GIL */
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="n"&gt;PyThread_type_lock&lt;/span&gt; &lt;span class="n"&gt;interpreter_lock&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="cm"&gt;/* This is the GIL */&lt;/span&gt;
 
 
-PyEval_InitThreads(void)
-{
-    if (interpreter_lock)
-        return;
-    interpreter_lock = PyThread_allocate_lock();
-    PyThread_acquire_lock(interpreter_lock, 1);
-    main_thread = PyThread_get_thread_ident();
-}
-&lt;/pre&gt;
+&lt;span class="n"&gt;PyEval_InitThreads&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;interpreter_lock&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;interpreter_lock&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;PyThread_allocate_lock&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="n"&gt;PyThread_acquire_lock&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;interpreter_lock&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;main_thread&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;PyThread_get_thread_ident&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;从上面的代码中我们可以看到,在初始化多线程环境的时候,会检测
 &lt;tt class="docutils literal"&gt;interpreter_lock&lt;/tt&gt;
 是不是已经创建,如果没有创建,则会用&lt;tt class="docutils literal"&gt;PyThread_allocate_lock&lt;/tt&gt;
@@ -300,50 +299,48 @@ PyEval_InitThreads(void)
 &lt;p&gt;上面我们跟踪到 GIL 的创建过程,可是 GIL 到底是个什么东西?&lt;/p&gt;
 &lt;p&gt;从前面的代码中,我们看到是由&lt;tt class="docutils literal"&gt;PyThread_allocate_lock&lt;/tt&gt;来创建GIL
 的,而&lt;tt class="docutils literal"&gt;PyThread_allocate_lock&lt;/tt&gt;则是针对各个平台来做的具体实现,这里我们看&lt;a class="reference external" href="https://github.com/python/cpython/blob/2.7/Python/thread_pthread.h#L360"&gt;Posix标准&lt;/a&gt;的实现:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-PyThread_allocate_lock(void)
-{
-    pthread_lock *lock;
-    int status, error = 0;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;PyThread_allocate_lock&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;pthread_lock&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;status&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;error&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    dprintf((&amp;quot;PyThread_allocate_lock called\n&amp;quot;));
-    if (!initialized)
-        PyThread_init_thread();
+    &lt;span class="n"&gt;dprintf&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;PyThread_allocate_lock called&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;initialized&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;PyThread_init_thread&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 
-    lock = (pthread_lock *) malloc(sizeof(pthread_lock));
-    if (lock) {
-        memset((void *)lock, '\0', sizeof(pthread_lock));
-        lock-&amp;gt;locked = 0;
+    &lt;span class="n"&gt;lock&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pthread_lock&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pthread_lock&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;memset&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="sc"&gt;&amp;#39;\0&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pthread_lock&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+        &lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;locked&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-        status = pthread_mutex_init(&amp;amp;lock-&amp;gt;mut,
-                                    pthread_mutexattr_default);
-        CHECK_STATUS(&amp;quot;pthread_mutex_init&amp;quot;);
+        &lt;span class="n"&gt;status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pthread_mutex_init&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;mut&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                                    &lt;span class="n"&gt;pthread_mutexattr_default&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;CHECK_STATUS&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;pthread_mutex_init&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-        status = pthread_cond_init(&amp;amp;lock-&amp;gt;lock_released,
-                                   pthread_condattr_default);
-        CHECK_STATUS(&amp;quot;pthread_cond_init&amp;quot;);
+        &lt;span class="n"&gt;status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pthread_cond_init&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;lock_released&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                                   &lt;span class="n"&gt;pthread_condattr_default&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;CHECK_STATUS&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;pthread_cond_init&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-        if (error) {
-            free((void *)lock);
-            lock = 0;
-        }
-    }
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;error&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="n"&gt;lock&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
 
-    dprintf((&amp;quot;PyThread_allocate_lock() -&amp;gt; %p\n&amp;quot;, lock));
-    return (PyThread_type_lock) lock;
-}
-&lt;/pre&gt;
+    &lt;span class="n"&gt;dprintf&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;PyThread_allocate_lock() -&amp;gt; %p&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;PyThread_type_lock&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;先检测是否已经初始化,如果没有,则进行初始化.中间加上 malloc
 机制,最后返回一个&lt;tt class="docutils literal"&gt;pthread_lock&lt;/tt&gt;,这就是我们的 GIL
 了,&lt;a class="reference external" href="https://github.com/python/cpython/blob/2.7/Python/thread_pthread.h#L113"&gt;线程互斥的锁&lt;/a&gt;:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-typedef struct {
-    char             locked; /* 0=unlocked, 1=locked */
-    /* a &amp;lt;cond, mutex&amp;gt; pair to handle an acquire of a locked lock */
-    pthread_cond_t   lock_released;
-    pthread_mutex_t  mut;
-} pthread_lock;
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt;             &lt;span class="n"&gt;locked&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="cm"&gt;/* 0=unlocked, 1=locked */&lt;/span&gt;
+    &lt;span class="cm"&gt;/* a &amp;lt;cond, mutex&amp;gt; pair to handle an acquire of a locked lock */&lt;/span&gt;
+    &lt;span class="n"&gt;pthread_cond_t&lt;/span&gt;   &lt;span class="n"&gt;lock_released&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;pthread_mutex_t&lt;/span&gt;  &lt;span class="n"&gt;mut&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="n"&gt;pthread_lock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="id4"&gt;
 &lt;h2&gt;什么时候释放 GIL&lt;/h2&gt;
