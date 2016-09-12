@@ -27,7 +27,8 @@ EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
 
 # Social widget
 SOCIAL = (('github', 'https://github.com/sunisdown'),
-          ('twitter', 'https://twitter.com/SunisD0wn'))
+          ('twitter', 'https://twitter.com/SunisD0wn'),
+          ('Note', 'http://1024.today'))
 
 MENUITEMS = (('Blog', '/index.html'),
             ('Archives', '/archives.html'),
