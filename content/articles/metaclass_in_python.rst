@@ -22,7 +22,7 @@ Python 元类
 中一切都是对象，凡是对象必先有类型。类，也是对象的一种。Python
 中所有的对象都有一些相同的内容，包含在对象的\ `头部信息 <https://github.com/python/cpython/blob/2.7/Include/object.h#L106>`__\ 中。
 
-.. code:: c
+.. code-block:: c
 
     typedef struct _object {
         PyObject_HEAD
@@ -34,7 +34,7 @@ Python 元类
 是\ ``应用计数``\ ，用来做内存管理垃圾回收有关，这里暂时不细说。有兴趣的可以查看\ `Q.yuhen的
 Python 笔记 <https://github.com/qyuhen/book>`__,
 
-.. code:: c
+.. code-block:: c
 
     /* PyObject_HEAD defines the initial segment of every PyObject. */
     #define PyObject_HEAD                   \
@@ -53,7 +53,7 @@ Python 笔记 <https://github.com/qyuhen/book>`__,
 
 举个栗子：
 
-.. code:: python
+.. code-block:: python
 
     In [1]: class NewData(object):
        ...:     pass
@@ -102,7 +102,7 @@ Python 中 ``class`` 关键字会
 `创建类的对象 <https://github.com/python/cpython/blob/2.7/Python/ceval.c#L4621>`__\ ，
 我们观察一下类的创建过程:
 
-.. code:: c
+.. code-block:: c
 
         if (PyDict_Check(methods))
             metaclass = PyDict_GetItemString(methods, "__metaclass__");
@@ -131,7 +131,7 @@ Python 中 ``class`` 关键字会
 里面抹去这种事儿不能忍，这种情况下也可以蛋疼的用元类（这真的是一个
 蛋疼的栗子）：
 
-.. code:: python
+.. code-block:: python
 
     class AuthMeta(type):
         def __new__(cls, name, bases, attrs):
@@ -164,7 +164,7 @@ Python 中 ``class`` 关键字会
 
 通过继承\ ``models.Models``\ 里面的元类，我们就可以直接写类似：
 
-.. code:: python
+.. code-block:: python
 
     class Blog(models.Model):
         title = models.CharField(max_length=50)
