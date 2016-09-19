@@ -91,7 +91,7 @@
 &lt;p&gt;首先我们将上面的代码编译&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;go build -gcflags &lt;span class="s2"&gt;&amp;quot;-N -l -m&amp;quot;&lt;/span&gt; -o &lt;span class="nb"&gt;test&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;生成一个 elf 格式的文件 main。&lt;/p&gt;
+&lt;p&gt;生成一个 elf 格式的文件 test。&lt;/p&gt;
 &lt;p&gt;然后我们通过 go 提供的反汇编工具，反编译我们刚刚生成的 test 文件。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$go&lt;/span&gt; tool objdump -s &lt;span class="s2"&gt;&amp;quot;main\.main&amp;quot;&lt;/span&gt; ./test
 TEXT main.main&lt;span class="o"&gt;(&lt;/span&gt;SB&lt;span class="o"&gt;)&lt;/span&gt; /root/data/example/closures/anonymous_func.go

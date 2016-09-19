@@ -203,7 +203,7 @@
 <p>首先我们将上面的代码编译</p>
 <div class="highlight"><pre><span></span>go build -gcflags <span class="s2">&quot;-N -l -m&quot;</span> -o <span class="nb">test</span>
 </pre></div>
-<p>生成一个 elf 格式的文件 main。</p>
+<p>生成一个 elf 格式的文件 test。</p>
 <p>然后我们通过 go 提供的反汇编工具，反编译我们刚刚生成的 test 文件。</p>
 <div class="highlight"><pre><span></span><span class="nv">$go</span> tool objdump -s <span class="s2">&quot;main\.main&quot;</span> ./test
 TEXT main.main<span class="o">(</span>SB<span class="o">)</span> /root/data/example/closures/anonymous_func.go
