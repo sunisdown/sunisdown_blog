@@ -78,24 +78,25 @@ Closures in Go
 
 .. code-block:: go
 
-   package main
 
-   func main() {
-     gen := makeFibGen()
-     for i := 0; i < 10; i++ {
-       println(gen())
-     }
-   }
+    package main
 
-   func makeFibGen() func() int {
-     f1 := 0
-     f2 := 1
-     return func() int {
-       f2, f1 = (f1 + f2), f2
-       return f1
-     }
-   }
+    func main() {
+            gen := makeFibGen()
+            for i := 0; i < 10; i++ {
+                    println(gen())
+            }
+    }
 
+    func makeFibGen() func() int {
+            f1 := 0
+            f2 := 1
+            return func() (fib int) {
+                    fib = f1
+                    f2, f1 = (f1 + f2), f2
+                    return fib
+            }
+    }
 
 
 Go 中匿名函数的实现
