@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="zh" itemscope itemtype="http://schema.org/Person">
+<head>
+  <meta charset="utf-8">
+  <!-- Site Meta Data -->
+  <title>Closures in Go</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="sunisdown">
+
+  <link rel="shortcut icon" href="">
+
+  <!-- schema.org -->
+  <meta itemprop="name" content="SunisDown">
+  <meta itemprop="image" content="">
+  <meta itemprop="description" content="">
+
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+  <!-- Style Meta Data -->
+  <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css" />
+  <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css" />
+
+  <!-- Feed Meta Data -->
+    <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="SunisDown ATOM Feed" />
+
+  <!-- Twitter Feed -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="">
+  <meta name="twitter:image" content="">
+
+<meta name="twitter:creator" content="">
+<meta name="twitter:url" content="http://sunisdown.me/closures-in-go.html">
+<meta name="twitter:title" content="SunisDown ~ Closures in Go">
+<meta name="twitter:description" content='<p>在 <a class="reference external" href="https://qyuhen.bearychat.com">Qyuhen</a> 老大那边潜水的时候，基本上过一段时间就会看见有人讨论闭包。而随手 <tt class="docutils literal">Google</tt> 也并没有看到哪些 Blog 说的很清楚，甚至有一些 <tt class="docutils literal">Blog</tt> 里面的内容都是错的。（当然，也有可能是我理解错了）所以就想自己写一下。</p>
+<div class="section" id="id1">
+<h2>什么是闭包</h2>
+<p>在谈起闭包(Closure)的时候，经常也会说起匿名函数。在 <a class="reference external" href="https://gobyexample.com/closures">gobyexample</a> 里面这两个概念也是放在一起的，很多人搞不清楚闭包与匿名函数有什么关系。这两者确实经常会一起出现，但是并不是一个概念。闭包是闭包，匿名函数是匿名函数。</p>
+<div class="section" id="id2">
+<h3>匿名函数</h3>
+<p>匿名函数与正常的函数区别不大，只是这个函数没有名字。在 <tt class="docutils literal">Go</tt> 里面，一个真正的函数里面</p>
+<div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">Foo</span><span class="p">(</span><span class="nx">message</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 声明一个正常的函数</span>
+    <span class="nb">println</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">Foo</span><span class="p">(</span><span class="s">&quot;hello world!&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+<p>里面有函数名，有函数主体。但是匿名函数的类似与下面这样子 ...</p></div></div>'>
+
+<!-- Facebook Meta Data -->
+<meta property="og:title" content="SunisDown ~ Closures in Go" />
+<meta property="og:description" content='<p>在 <a class="reference external" href="https://qyuhen.bearychat.com">Qyuhen</a> 老大那边潜水的时候，基本上过一段时间就会看见有人讨论闭包。而随手 <tt class="docutils literal">Google</tt> 也并没有看到哪些 Blog 说的很清楚，甚至有一些 <tt class="docutils literal">Blog</tt> 里面的内容都是错的。（当然，也有可能是我理解错了）所以就想自己写一下。</p>
+<div class="section" id="id1">
+<h2>什么是闭包</h2>
+<p>在谈起闭包(Closure)的时候，经常也会说起匿名函数。在 <a class="reference external" href="https://gobyexample.com/closures">gobyexample</a> 里面这两个概念也是放在一起的，很多人搞不清楚闭包与匿名函数有什么关系。这两者确实经常会一起出现，但是并不是一个概念。闭包是闭包，匿名函数是匿名函数。</p>
+<div class="section" id="id2">
+<h3>匿名函数</h3>
+<p>匿名函数与正常的函数区别不大，只是这个函数没有名字。在 <tt class="docutils literal">Go</tt> 里面，一个真正的函数里面</p>
+<div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">Foo</span><span class="p">(</span><span class="nx">message</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 声明一个正常的函数</span>
+    <span class="nb">println</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">Foo</span><span class="p">(</span><span class="s">&quot;hello world!&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+<p>里面有函数名，有函数主体。但是匿名函数的类似与下面这样子 ...</p></div></div>' />
+<meta property="og:image" content="" />
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <aside>
+    <!--<center><a href="http://sunisdown.me"><img id="avatar" src=""></a></center>-->
+    <h1>SunisDown</h1>
+    <br>
+
+
+    <nav class="nav">
+      <ul class="list-bare">
+      
+          <li><a class="nav__link" href="/index.html">Blog</a></li>
+          <li><a class="nav__link" href="/archives.html">Archives</a></li>
+          <li><a class="nav__link" href="/tags.html">Tags</a></li>
+         
+          <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
+         
+      </ul>
+    </nav>
+
+    <p class="social">
+        <a href="http://1024.today" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
+        <a href="https://twitter.com/SunisD0wn" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
+        <a href="https://github.com/sunisdown" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/github.png"></a>
+      <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
+        <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
+    </p>
+
+    <!--
+    <h2>Categories</h2>
+    <ul class="navbar">
+      <li class="active"><a href="http://sunisdown.me/category/articles.html">articles</a></li>
+    </ul> 
+    -->
+  </aside>
+
+  <!-- Content -->
+  <article>
+<section id="content">
+    <article>
+        <h2 class="post_title post_detail"><a href="http://sunisdown.me/closures-in-go.html" rel="bookmark" title="Permalink to Closures in Go">Closures in Go</a></h2>
+        <div class="entry-content blog-post">
+            <p>在 <a class="reference external" href="https://qyuhen.bearychat.com">Qyuhen</a> 老大那边潜水的时候，基本上过一段时间就会看见有人讨论闭包。而随手 <tt class="docutils literal">Google</tt> 也并没有看到哪些 Blog 说的很清楚，甚至有一些 <tt class="docutils literal">Blog</tt> 里面的内容都是错的。（当然，也有可能是我理解错了）所以就想自己写一下。</p>
+<div class="section" id="id1">
+<h2>什么是闭包</h2>
+<p>在谈起闭包(Closure)的时候，经常也会说起匿名函数。在 <a class="reference external" href="https://gobyexample.com/closures">gobyexample</a> 里面这两个概念也是放在一起的，很多人搞不清楚闭包与匿名函数有什么关系。这两者确实经常会一起出现，但是并不是一个概念。闭包是闭包，匿名函数是匿名函数。</p>
+<div class="section" id="id2">
+<h3>匿名函数</h3>
+<p>匿名函数与正常的函数区别不大，只是这个函数没有名字。在 <tt class="docutils literal">Go</tt> 里面，一个真正的函数里面</p>
+<div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">Foo</span><span class="p">(</span><span class="nx">message</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 声明一个正常的函数</span>
+    <span class="nb">println</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">Foo</span><span class="p">(</span><span class="s">&quot;hello world!&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+<p>里面有函数名，有函数主体。但是匿名函数的类似与下面这样子</p>
+<div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+   <span class="kd">func</span><span class="p">(</span><span class="nx">message</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//声明匿名函数并执行</span>
+       <span class="nb">println</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span>
+   <span class="p">}(</span><span class="s">&quot;hello world!&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+<p>并不需要函数名。</p>
+</div>
+<div class="section" id="id3">
+<h3>闭包</h3>
+<div class="highlight"><pre><span></span><span class="err">闭包（英语：</span><span class="n">Closure</span><span class="err">），又称词法闭包（</span><span class="n">Lexical</span> <span class="n">Closure</span><span class="err">）或函数闭包（</span><span class="n">function</span> <span class="n">closures</span><span class="err">），是引用了自由变量的函数。这个被引用的自由变量将和这个函数一同存在，即使已经离开了创造它的环境也不例外。</span>
+    <span class="o">--</span> <span class="n">wikipedia</span>
+</pre></div>
+<p>闭包包含两个部分，一个是函数本身，还有是这个函数所引用的环境。 <tt class="docutils literal">Go</tt> 里闭包的函数必须是匿名函数。</p>
+<div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kd">func</span> <span class="nx">myFunc</span><span class="p">()</span> <span class="kd">func</span><span class="p">()</span> <span class="kt">int</span><span class="p">{</span>
+        <span class="nx">foo</span> <span class="o">:=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="kd">func</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+                <span class="nx">foo</span><span class="o">++</span>
+                <span class="k">return</span> <span class="nx">foo</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">bar</span> <span class="o">:=</span> <span class="nx">myFunc</span><span class="p">()</span>
+        <span class="nx">value_1</span> <span class="o">:=</span> <span class="nx">bar</span><span class="p">()</span>
+        <span class="nx">value_2</span> <span class="o">:=</span> <span class="nx">bar</span><span class="p">()</span>
+
+        <span class="nb">println</span><span class="p">(</span><span class="nx">value_1</span><span class="p">)</span> <span class="c1">// 1</span>
+        <span class="nb">println</span><span class="p">(</span><span class="nx">value_2</span><span class="p">)</span> <span class="c1">// 2</span>
+<span class="p">}</span>
+</pre></div>
+<p>在上面的例子里面，myFunc 里面的匿名函数可以访问并且更新 myFunc 里面的变量，这个变量的生命周期因为匿名函数的存在而延长。</p>
+<p>通过闭包可以比较优雅的实现一些功能。比如斐波那契数列</p>
+<div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">gen</span> <span class="o">:=</span> <span class="nx">makeFibGen</span><span class="p">()</span>
+  <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+    <span class="nb">println</span><span class="p">(</span><span class="nx">gen</span><span class="p">())</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">makeFibGen</span><span class="p">()</span> <span class="kd">func</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+  <span class="nx">f1</span> <span class="o">:=</span> <span class="mi">0</span>
+  <span class="nx">f2</span> <span class="o">:=</span> <span class="mi">1</span>
+  <span class="k">return</span> <span class="kd">func</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="nx">f2</span><span class="p">,</span> <span class="nx">f1</span> <span class="p">=</span> <span class="p">(</span><span class="nx">f1</span> <span class="o">+</span> <span class="nx">f2</span><span class="p">),</span> <span class="nx">f2</span>
+    <span class="k">return</span> <span class="nx">f1</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="go">
+<h2>Go 中匿名函数的实现</h2>
+<p>前面有提到 <tt class="docutils literal">Go</tt> 里面匿名函数与普通函数区别不大，但是这不大的区别到底在哪里？在这我们用一个简短的小例子来看一下。</p>
+<div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kd">func</span> <span class="nx">myFunc</span><span class="p">(</span><span class="nx">message</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">println</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">f</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">message</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nb">println</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="nx">f</span><span class="p">(</span><span class="mh">0x100</span><span class="p">)</span>
+        <span class="nx">myFunc</span><span class="p">(</span><span class="mh">0x100</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+<p>首先我们将上面的代码编译</p>
+<div class="highlight"><pre><span></span>go build -gcflags <span class="s2">&quot;-N -l -m&quot;</span> -o main
+</pre></div>
+<p>生成一个 elf 格式的文件 main。</p>
+<p>然后我们通过 go 提供的反汇编工具，反编译我们刚刚生成的 main 文件。</p>
+<div class="highlight"><pre><span></span><span class="nv">$go</span> tool objdump -s <span class="s2">&quot;main\.main&quot;</span> ./test
+TEXT main.main<span class="o">(</span>SB<span class="o">)</span> /root/data/example/closures/anonymous_func.go
+     anonymous_func.go:7     0x401040        64488b0c25f8ffffff      FS MOVQ FS:0xfffffff8, CX
+     anonymous_func.go:7     0x401049        483b6110                CMPQ 0x10<span class="o">(</span>CX<span class="o">)</span>, SP
+     anonymous_func.go:7     0x40104d        <span class="m">7637</span>                    JBE 0x401086
+     anonymous_func.go:7     0x40104f        4883ec10                SUBQ <span class="nv">$0</span>x10, SP
+     anonymous_func.go:8     0x401053        488d1d16830800          LEAQ 0x88316<span class="o">(</span>IP<span class="o">)</span>, BX
+     anonymous_func.go:8     0x40105a        48895c2408              MOVQ BX, 0x8<span class="o">(</span>SP<span class="o">)</span>
+     anonymous_func.go:11    0x40105f        48c7042400010000        MOVQ <span class="nv">$0</span>x100, 0<span class="o">(</span>SP<span class="o">)</span>
+     anonymous_func.go:11    0x401067        488b5c2408              MOVQ 0x8<span class="o">(</span>SP<span class="o">)</span>, BX
+     anonymous_func.go:11    0x40106c        4889da                  MOVQ BX, DX
+     anonymous_func.go:11    0x40106f        488b1a                  MOVQ 0<span class="o">(</span>DX<span class="o">)</span>, BX
+     anonymous_func.go:11    0x401072        ffd3                    CALL BX
+     anonymous_func.go:12    0x401074        48c7042400010000        MOVQ <span class="nv">$0</span>x100, 0<span class="o">(</span>SP<span class="o">)</span>
+     anonymous_func.go:12    0x40107c        e87fffffff              CALL main.myFunc<span class="o">(</span>SB<span class="o">)</span>
+     anonymous_func.go:13    0x401081        4883c410                ADDQ <span class="nv">$0</span>x10, SP
+     anonymous_func.go:13    0x401085        c3                      RET
+     anonymous_func.go:7     0x401086        e8b59f0400              CALL runtime.morestack_noctxt<span class="o">(</span>SB<span class="o">)</span>
+     anonymous_func.go:7     0x40108b        ebb3                    JMP main.main<span class="o">(</span>SB<span class="o">)</span>
+     anonymous_func.go:7     0x40108d        cc                      INT <span class="nv">$0</span>x3
+     anonymous_func.go:7     0x40108e        cc                      INT <span class="nv">$0</span>x3
+     anonymous_func.go:7     0x40108f        cc                      INT <span class="nv">$0</span>x3
+
+     ...
+</pre></div>
+<p>上面的汇编输出中我们可以看到一共有三次 <tt class="docutils literal">CALL</tt>， 排除调最后那个 <tt class="docutils literal">runtime</tt> 的 <tt class="docutils literal">CALL</tt> ，剩下两次分别对应了匿名函数调用以及正常的函数调用。而两次的区别在于正常的函数是 <tt class="docutils literal">CALL&nbsp; main.myFunc(SB)</tt> , 匿名函数的调用是 <tt class="docutils literal">CALL BX</tt> 。这两种不同的调用方式意味着什么？我们可以通过 gdb 来动态的跟踪这段代码来具体分析一下。</p>
+<div class="highlight"><pre><span></span>gdb main
+Reading symbols from test...done.
+<span class="o">(</span>gdb<span class="o">)</span> b main.main
+Breakpoint <span class="m">1</span> at 0x401040: file /root/data/example/closures/anonymous_func.go, line 7.
+<span class="o">(</span>gdb<span class="o">)</span> r
+Starting program: /root/data/example/closures/test
+<span class="o">[</span>New LWP 2067<span class="o">]</span>
+<span class="o">[</span>New LWP 2068<span class="o">]</span>
+<span class="o">[</span>New LWP 2069<span class="o">]</span>
+
+Breakpoint 1, main.main <span class="o">()</span> at /root/data/example/closures/anonymous_func.go:7
+<span class="m">7</span>       func main<span class="o">()</span> <span class="o">{</span>
+<span class="o">(</span>gdb<span class="o">)</span> l
+2
+<span class="m">3</span>       func myFunc<span class="o">(</span>message int<span class="o">)</span> <span class="o">{</span>
+<span class="m">4</span>               println<span class="o">(</span>message<span class="o">)</span>
+<span class="m">5</span>       <span class="o">}</span>
+6
+<span class="m">7</span>       func main<span class="o">()</span> <span class="o">{</span>
+<span class="m">8</span>               f :<span class="o">=</span> func<span class="o">(</span>message int<span class="o">)</span> <span class="o">{</span>
+<span class="m">9</span>                       println<span class="o">(</span>message<span class="o">)</span>
+<span class="m">10</span>              <span class="o">}</span>
+<span class="m">11</span>              f<span class="o">(</span>0x100<span class="o">)</span>
+<span class="o">(</span>gdb<span class="o">)</span> i locals
+<span class="nv">f</span> <span class="o">=</span> <span class="o">{</span>void <span class="o">(</span>int<span class="o">)}</span> 0xc820039f40
+<span class="o">(</span>gdb<span class="o">)</span> x/1xg 0xc820039f40
+0xc820039f40:   0x000000c820000180
+</pre></div>
+<p>上面在 gdb 里面把断点设置在 <tt class="docutils literal">main.main</tt> 处，然后通过输出当前的环境变量可以看到变量 f。这时候显示 f 指针指向的内存内容。</p>
+<div class="highlight"><pre><span></span><span class="o">(</span>gdb<span class="o">)</span> b 11
+Breakpoint <span class="m">2</span> at 0x40105f: file /root/data/example/closures/anonymous_func.go, line 11.
+<span class="o">(</span>gdb<span class="o">)</span> c
+Continuing.
+
+Breakpoint 2, main.main <span class="o">()</span> at /root/data/example/closures/anonymous_func.go:11
+<span class="m">11</span>              f<span class="o">(</span>0x100<span class="o">)</span>
+<span class="o">(</span>gdb<span class="o">)</span> i locals
+<span class="nv">f</span> <span class="o">=</span> <span class="o">{</span>void <span class="o">(</span>int<span class="o">)}</span> 0xc820039f40
+<span class="o">(</span>gdb<span class="o">)</span> x/1xg 0xc820039f40
+0xc820039f40:   0x0000000000489370
+<span class="o">(</span>gdb<span class="o">)</span> i symbol 0x0000000000489370
+main.main.func1.f in section .rodata of /root/data/example/closures/test
+<span class="o">(</span>gdb<span class="o">)</span> x/2xg 0x0000000000489370
+0x489370 &lt;main.main.func1.f&gt;:   0x0000000000401090      0x0000000000441fa0
+<span class="o">(</span>gdb<span class="o">)</span> i symbol 0x0000000000401090
+main.main.func1 in section .text of /root/data/example/closures/test
+</pre></div>
+<p>然后在调用匿名函数 <tt class="docutils literal">f</tt> 的地方再设置一个断点， <tt class="docutils literal">c</tt> 让程序执行到新的断点。再输出 f 指针指向的内存，发现里面的内容已经改变了，输出符号名可以看到符号是 <tt class="docutils literal">main.main.func1.f</tt>, 这个是编译器提我们生成的符号名，然后具叙看一下这个地址指向的内容，会发现 <tt class="docutils literal">main.main.func1</tt> ，也就是就是我们的匿名函数。接着跟</p>
+<div class="highlight"><pre><span></span><span class="o">(</span>gdb<span class="o">)</span> i r
+  rax            0xc820000180     859530330496
+  rbx            0x489370 4756336
+  ...
+<span class="o">(</span>gdb<span class="o">)</span> disassemble
+Dump of assembler code <span class="k">for</span> <span class="k">function</span> main.main:
+  0x0000000000401040 &lt;+0&gt;:     mov    %fs:0xfffffffffffffff8,%rcx
+  0x0000000000401049 &lt;+9&gt;:     cmp    0x10<span class="o">(</span>%rcx<span class="o">)</span>,%rsp
+  0x000000000040104d &lt;+13&gt;:    jbe    0x401086 &lt;main.main+70&gt;
+  0x000000000040104f &lt;+15&gt;:    sub    <span class="nv">$0</span>x10,%rsp
+  0x0000000000401053 &lt;+19&gt;:    lea    0x88316<span class="o">(</span>%rip<span class="o">)</span>,%rbx        <span class="c1"># 0x489370 &lt;main.main.func1.f&gt;</span>
+  0x000000000040105a &lt;+26&gt;:    mov    %rbx,0x8<span class="o">(</span>%rsp<span class="o">)</span>
+<span class="o">=</span>&gt; 0x000000000040105f &lt;+31&gt;:    movq   <span class="nv">$0</span>x100,<span class="o">(</span>%rsp<span class="o">)</span>
+  0x0000000000401067 &lt;+39&gt;:    mov    0x8<span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x000000000040106c &lt;+44&gt;:    mov    %rbx,%rdx
+  0x000000000040106f &lt;+47&gt;:    mov    <span class="o">(</span>%rdx<span class="o">)</span>,%rbx
+  0x0000000000401072 &lt;+50&gt;:    callq  *%rbx
+  0x0000000000401074 &lt;+52&gt;:    movq   <span class="nv">$0</span>x100,<span class="o">(</span>%rsp<span class="o">)</span>
+  0x000000000040107c &lt;+60&gt;:    callq  0x401000 &lt;main.myFunc&gt;
+  0x0000000000401081 &lt;+65&gt;:    add    <span class="nv">$0</span>x10,%rsp
+  0x0000000000401085 &lt;+69&gt;:    retq
+  0x0000000000401086 &lt;+70&gt;:    callq  0x44b040 &lt;runtime.morestack_noctxt&gt;
+  0x000000000040108b &lt;+75&gt;:    jmp    0x401040 &lt;main.main&gt;
+  0x000000000040108d &lt;+77&gt;:    int3
+  0x000000000040108e &lt;+78&gt;:    int3
+  0x000000000040108f &lt;+79&gt;:    int3
+End of assembler dump.
+<span class="o">(</span>gdb<span class="o">)</span> p <span class="nv">$rsp</span>
+<span class="nv">$2</span> <span class="o">=</span> <span class="o">(</span>void *<span class="o">)</span> 0xc820039f38
+<span class="o">(</span>gdb<span class="o">)</span> x/1xg 0xc820039f38
+0xc820039f38:   0x0000000000000000
+<span class="o">(</span>gdb<span class="o">)</span> ni
+0x0000000000401067      <span class="m">11</span>              f<span class="o">(</span>0x100<span class="o">)</span>
+<span class="o">(</span>gdb<span class="o">)</span> x/1xg 0xc820039f38
+0xc820039f38:   0x0000000000000100
+</pre></div>
+<p>输出寄存器里面的值看一下，可以注意到寄存器 <tt class="docutils literal">rbx</tt> 的内存地址是 <tt class="docutils literal">func1.f</tt> 的地址。然后反编译可以看到执行到了 +31 这一行，将常量 <tt class="docutils literal">0x100</tt> 放在 rsp 内指针指向的内存地址。输出 rsp 的内容，然后显示地址指向内存的内容，可以看到是 <tt class="docutils literal">0x0000000000000000</tt>，输入 <tt class="docutils literal">ni</tt> 执行这一行汇编之后再看，就看到内存里面的内容变成了 <tt class="docutils literal">0x0000000000000100</tt>，也就是我们输入常量。</p>
+<div class="highlight"><pre><span></span><span class="o">(</span>gdb<span class="o">)</span> ni
+0x000000000040106c      <span class="m">11</span>              f<span class="o">(</span>0x100<span class="o">)</span>
+<span class="o">(</span>gdb<span class="o">)</span> ni
+0x000000000040106f      <span class="m">11</span>              f<span class="o">(</span>0x100<span class="o">)</span>
+<span class="o">(</span>gdb<span class="o">)</span> disassemble
+Dump of assembler code <span class="k">for</span> <span class="k">function</span> main.main:
+  0x0000000000401040 &lt;+0&gt;:     mov    %fs:0xfffffffffffffff8,%rcx
+  0x0000000000401049 &lt;+9&gt;:     cmp    0x10<span class="o">(</span>%rcx<span class="o">)</span>,%rsp
+  0x000000000040104d &lt;+13&gt;:    jbe    0x401086 &lt;main.main+70&gt;
+  0x000000000040104f &lt;+15&gt;:    sub    <span class="nv">$0</span>x10,%rsp
+  0x0000000000401053 &lt;+19&gt;:    lea    0x88316<span class="o">(</span>%rip<span class="o">)</span>,%rbx        <span class="c1"># 0x489370 &lt;main.main.func1.f&gt;</span>
+  0x000000000040105a &lt;+26&gt;:    mov    %rbx,0x8<span class="o">(</span>%rsp<span class="o">)</span>
+  0x000000000040105f &lt;+31&gt;:    movq   <span class="nv">$0</span>x100,<span class="o">(</span>%rsp<span class="o">)</span>
+  0x0000000000401067 &lt;+39&gt;:    mov    0x8<span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x000000000040106c &lt;+44&gt;:    mov    %rbx,%rdx
+<span class="o">=</span>&gt; 0x000000000040106f &lt;+47&gt;:    mov    <span class="o">(</span>%rdx<span class="o">)</span>,%rbx
+  0x0000000000401072 &lt;+50&gt;:    callq  *%rbx
+  0x0000000000401074 &lt;+52&gt;:    movq   <span class="nv">$0</span>x100,<span class="o">(</span>%rsp<span class="o">)</span>
+  0x000000000040107c &lt;+60&gt;:    callq  0x401000 &lt;main.myFunc&gt;
+  0x0000000000401081 &lt;+65&gt;:    add    <span class="nv">$0</span>x10,%rsp
+  0x0000000000401085 &lt;+69&gt;:    retq
+  0x0000000000401086 &lt;+70&gt;:    callq  0x44b040 &lt;runtime.morestack_noctxt&gt;
+  0x000000000040108b &lt;+75&gt;:    jmp    0x401040 &lt;main.main&gt;
+  0x000000000040108d &lt;+77&gt;:    int3
+  0x000000000040108e &lt;+78&gt;:    int3
+  0x000000000040108f &lt;+79&gt;:    int3
+End of assembler dump.
+<span class="o">(</span>gdb<span class="o">)</span> ni
+0x0000000000401072      <span class="m">11</span>              f<span class="o">(</span>0x100<span class="o">)</span>
+<span class="o">(</span>gdb<span class="o">)</span> p <span class="nv">$rbx</span>
+<span class="nv">$5</span> <span class="o">=</span> 4198544
+<span class="o">(</span>gdb<span class="o">)</span> i r
+rax            0xc820000180     859530330496
+rbx            0x401090 4198544
+...
+<span class="o">(</span>gdb<span class="o">)</span> x/1xg 0x401090
+0x401090 &lt;main.main.func1&gt;:     0xfffff8250c8b4864
+</pre></div>
+<p>接着往下执行到 +47 这一行，可以看到 <tt class="docutils literal">rbx</tt> 里面的值在这一行会有变化，<tt class="docutils literal">ni</tt> 执行完这一行，输出寄存器的内容看一下，然后显示 <tt class="docutils literal">rbx</tt> 指向的内存可以看到我们的匿名函数 <tt class="docutils literal">func1</tt>。</p>
+<p>现在基本可以理清 <tt class="docutils literal">Go</tt> 里面匿名函数与正常的函数区别，参数的传递区别不到，只是在调用方面，匿名函数需要通过一个包装对象`func1.f`` 来调用匿名函数，这个过程通过 <tt class="docutils literal">rbx</tt> 进行二次寻址来完成调用。理论上，匿名函数也会比正常函数性能要差。</p>
+</div>
+<div class="section" id="id4">
+<h2>Go 中闭包的实现</h2>
+<p>闭包函数携带着定义这个函数的的环境。</p>
+<div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kd">func</span> <span class="nx">myFunc</span><span class="p">()</span> <span class="kd">func</span><span class="p">()</span> <span class="kt">int</span><span class="p">{</span>
+        <span class="nx">foo</span> <span class="o">:=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="kd">func</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+                <span class="nx">foo</span><span class="o">++</span>
+                <span class="k">return</span> <span class="nx">foo</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">bar</span> <span class="o">:=</span> <span class="nx">myFunc</span><span class="p">()</span>
+        <span class="nx">value_1</span> <span class="o">:=</span> <span class="nx">bar</span><span class="p">()</span>
+        <span class="nx">value_2</span> <span class="o">:=</span> <span class="nx">bar</span><span class="p">()</span>
+
+        <span class="nb">println</span><span class="p">(</span><span class="nx">value_1</span><span class="p">)</span> <span class="c1">// 1</span>
+        <span class="nb">println</span><span class="p">(</span><span class="nx">value_2</span><span class="p">)</span> <span class="c1">// 2</span>
+<span class="p">}</span>
+</pre></div>
+<p>与分析匿名函数的过程一样，编译然后通过 <tt class="docutils literal">gdb</tt> 来跟踪。</p>
+<div class="highlight"><pre><span></span>$ go build -gcflags <span class="s2">&quot;-N -l -m&quot;</span>  closure_func.go
+<span class="c1"># command-line-arguments</span>
+./closure_func.go:5: func literal escapes to heap
+./closure_func.go:5: func literal escapes to heap
+./closure_func.go:4: moved to heap: foo
+./closure_func.go:6: <span class="p">&amp;</span>foo escapes to heap
+
+$ gdb closure_func
+<span class="o">(</span>gdb<span class="o">)</span> b main.main
+Breakpoint <span class="m">1</span> at 0x4010d0: file /root/data/example/closures/closure_func.go, line 11.
+<span class="o">(</span>gdb<span class="o">)</span> r
+Starting program: /root/data/example/closures/closure_func
+<span class="o">[</span>New LWP 5367<span class="o">]</span>
+<span class="o">[</span>New LWP 5368<span class="o">]</span>
+<span class="o">[</span>New LWP 5370<span class="o">]</span>
+<span class="o">[</span>New LWP 5369<span class="o">]</span>
+
+Breakpoint 1, main.main <span class="o">()</span> at /root/data/example/closures/closure_func.go:11
+<span class="m">11</span>      func main<span class="o">()</span> <span class="o">{</span>
+<span class="o">(</span>gdb<span class="o">)</span> i locals
+<span class="nv">value_2</span> <span class="o">=</span> 859530428512
+<span class="nv">value_1</span> <span class="o">=</span> 0
+<span class="nv">bar</span> <span class="o">=</span> <span class="o">{</span>void <span class="o">(</span>int *<span class="o">)}</span> 0xc820039f40
+</pre></div>
+<p><tt class="docutils literal">gdb</tt> 在 <tt class="docutils literal">main.main</tt> 设置断点并输出环境变量可以看到 <tt class="docutils literal">bar</tt>，而且 <tt class="docutils literal">bar</tt> 是一个指针。</p>
+<div class="highlight"><pre><span></span> <span class="o">(</span>gdb<span class="o">)</span> disassemble
+ Dump of assembler code <span class="k">for</span> <span class="k">function</span> main.main:
+    0x00000000004010d0 &lt;+0&gt;:     mov    %fs:0xfffffffffffffff8,%rcx
+    0x00000000004010d9 &lt;+9&gt;:     cmp    0x10<span class="o">(</span>%rcx<span class="o">)</span>,%rsp
+    0x00000000004010dd &lt;+13&gt;:    jbe    0x40115c &lt;main.main+140&gt;
+    0x00000000004010df &lt;+15&gt;:    sub    <span class="nv">$0</span>x20,%rsp
+    0x00000000004010e3 &lt;+19&gt;:    callq  0x401000 &lt;main.myFunc&gt;
+ <span class="o">=</span>&gt; 0x00000000004010e8 &lt;+24&gt;:    mov    <span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+    0x00000000004010ec &lt;+28&gt;:    mov    %rbx,0x18<span class="o">(</span>%rsp<span class="o">)</span>
+    0x00000000004010f1 &lt;+33&gt;:    mov    0x18<span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+    0x00000000004010f6 &lt;+38&gt;:    mov    %rbx,%rdx
+    ...
+<span class="o">(</span>gdb<span class="o">)</span> i r
+rax            0x80000  524288
+rbx            0xc82000a140     859530371392
+...
+<span class="o">(</span>gdb<span class="o">)</span> x/2xg 0xc82000a140
+0xc82000a140:   0x0000000000401170      0x000000c82000a0b8
+<span class="o">(</span>gdb<span class="o">)</span> x/2xg 0x0000000000401170
+0x401170 &lt;main.myFunc.func1&gt;:   0x085a8b4810ec8348      0x44c74808245c8948
+</pre></div>
+<p>将程序继续向下走到 +24 这一行，然后输出寄存器的信息，能够发现寄存器 <tt class="docutils literal">rbx</tt> 与之前匿名函数的作用类似，都指向了闭包返回对象。里面封装着我们需要用到的匿名函数。可以看到匿名函数作为返回结果，整个调用过程跟是否形成闭包区别不大。那这个区别在哪里呢？</p>
+<div class="highlight"><pre><span></span><span class="o">(</span>gdb<span class="o">)</span> disassemble
+Dump of assembler code <span class="k">for</span> <span class="k">function</span> main.main:
+  0x00000000004010d0 &lt;+0&gt;:     mov    %fs:0xfffffffffffffff8,%rcx
+  0x00000000004010d9 &lt;+9&gt;:     cmp    0x10<span class="o">(</span>%rcx<span class="o">)</span>,%rsp
+  0x00000000004010dd &lt;+13&gt;:    jbe    0x40115c &lt;main.main+140&gt;
+  0x00000000004010df &lt;+15&gt;:    sub    <span class="nv">$0</span>x20,%rsp
+  0x00000000004010e3 &lt;+19&gt;:    callq  0x401000 &lt;main.myFunc&gt;
+  0x00000000004010e8 &lt;+24&gt;:    mov    <span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x00000000004010ec &lt;+28&gt;:    mov    %rbx,0x18<span class="o">(</span>%rsp<span class="o">)</span>
+  0x00000000004010f1 &lt;+33&gt;:    mov    0x18<span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x00000000004010f6 &lt;+38&gt;:    mov    %rbx,%rdx
+<span class="o">=</span>&gt; 0x00000000004010f9 &lt;+41&gt;:    mov    <span class="o">(</span>%rdx<span class="o">)</span>,%rbx
+  0x00000000004010fc &lt;+44&gt;:    callq  *%rbx
+  0x00000000004010fe &lt;+46&gt;:    mov    <span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x0000000000401102 &lt;+50&gt;:    mov    %rbx,0x10<span class="o">(</span>%rsp<span class="o">)</span>
+  ...
+End of assembler dump.
+<span class="o">(</span>gdb<span class="o">)</span> ni
+0x00000000004010fc      <span class="m">13</span>              value_1 :<span class="o">=</span> bar<span class="o">()</span>
+<span class="o">(</span>gdb<span class="o">)</span> si
+main.myFunc.func1 <span class="o">(</span>~r0<span class="o">=</span>859530371392<span class="o">)</span> at /root/data/example/closures/closure_func.go:5
+<span class="m">5</span>               <span class="k">return</span> func<span class="o">()</span> int <span class="o">{</span>
+<span class="o">(</span>gdb<span class="o">)</span> disassemble
+Dump of assembler code <span class="k">for</span> <span class="k">function</span> main.myFunc.func1:
+<span class="o">=</span>&gt; 0x0000000000401170 &lt;+0&gt;:     sub    <span class="nv">$0</span>x10,%rsp
+  0x0000000000401174 &lt;+4&gt;:     mov    0x8<span class="o">(</span>%rdx<span class="o">)</span>,%rbx
+  0x0000000000401178 &lt;+8&gt;:     mov    %rbx,0x8<span class="o">(</span>%rsp<span class="o">)</span>
+  0x000000000040117d &lt;+13&gt;:    movq   <span class="nv">$0</span>x0,0x18<span class="o">(</span>%rsp<span class="o">)</span>
+  0x0000000000401186 &lt;+22&gt;:    mov    0x8<span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x000000000040118b &lt;+27&gt;:    mov    <span class="o">(</span>%rbx<span class="o">)</span>,%rbp
+  ...
+End of assembler dump.
+<span class="o">(</span>gdb<span class="o">)</span> i r
+rax            0x80000  524288
+rbx            0x401170 4198768
+rcx            0xc820000180     859530330496
+rdx            0xc82000a140     859530371392
+...
+<span class="o">(</span>gdb<span class="o">)</span> x/2xg 0xc82000a140
+0xc82000a140:   0x0000000000401170      0x000000c82000a0b8
+<span class="o">(</span>gdb<span class="o">)</span> x/2xg 0x0000000000401170
+0x401170 &lt;main.myFunc.func1&gt;:   0x085a8b4810ec8348      0x44c74808245c8948
+<span class="o">(</span>gdb<span class="o">)</span> x/2xg 0x000000c82000a0b8
+0xc82000a0b8:   0x0000000000000000      0x3d534e4d554c4f43
+</pre></div>
+<p>让程序执行到 +44 行，<tt class="docutils literal">si</tt> 进入到匿名函数内部。在 <tt class="docutils literal">func1</tt> 内部可以看到从 <tt class="docutils literal">rdx</tt> 取数据。输出 <tt class="docutils literal">rdx</tt> 内容，可以看到前面指向匿名函数，而后面则指向另外的内容 <tt class="docutils literal">0x0000000000000000</tt>。</p>
+<div class="highlight"><pre><span></span><span class="o">(</span>gdb<span class="o">)</span> b 14
+Breakpoint <span class="m">2</span> at 0x401107: file /root/data/example/closures/closure_func.go, line 14.
+<span class="o">(</span>gdb<span class="o">)</span> c
+Continuing.
+
+Breakpoint 2, main.main <span class="o">()</span> at /root/data/example/closures/closure_func.go:14
+<span class="m">14</span>              value_2 :<span class="o">=</span> bar<span class="o">()</span>
+<span class="m">14</span>              value_2 :<span class="o">=</span> bar<span class="o">()</span>
+<span class="o">(</span>gdb<span class="o">)</span> disassemble
+Dump of assembler code <span class="k">for</span> <span class="k">function</span> main.main:
+  0x00000000004010d0 &lt;+0&gt;:     mov    %fs:0xfffffffffffffff8,%rcx
+  0x00000000004010d9 &lt;+9&gt;:     cmp    0x10<span class="o">(</span>%rcx<span class="o">)</span>,%rsp
+  0x00000000004010dd &lt;+13&gt;:    jbe    0x40115c &lt;main.main+140&gt;
+  0x00000000004010df &lt;+15&gt;:    sub    <span class="nv">$0</span>x20,%rsp
+  0x00000000004010e3 &lt;+19&gt;:    callq  0x401000 &lt;main.myFunc&gt;
+  0x00000000004010e8 &lt;+24&gt;:    mov    <span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x00000000004010ec &lt;+28&gt;:    mov    %rbx,0x18<span class="o">(</span>%rsp<span class="o">)</span>
+  0x00000000004010f1 &lt;+33&gt;:    mov    0x18<span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x00000000004010f6 &lt;+38&gt;:    mov    %rbx,%rdx
+  0x00000000004010f9 &lt;+41&gt;:    mov    <span class="o">(</span>%rdx<span class="o">)</span>,%rbx
+  0x00000000004010fc &lt;+44&gt;:    callq  *%rbx
+  0x00000000004010fe &lt;+46&gt;:    mov    <span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x0000000000401102 &lt;+50&gt;:    mov    %rbx,0x10<span class="o">(</span>%rsp<span class="o">)</span>
+<span class="o">=</span>&gt; 0x0000000000401107 &lt;+55&gt;:    mov    0x18<span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x000000000040110c &lt;+60&gt;:    mov    %rbx,%rdx
+  0x000000000040110f &lt;+63&gt;:    mov    <span class="o">(</span>%rdx<span class="o">)</span>,%rbx
+  0x0000000000401112 &lt;+66&gt;:    callq  *%rbx
+  0x0000000000401114 &lt;+68&gt;:    mov    <span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  ...
+End of assembler dump.
+<span class="o">(</span>gdb<span class="o">)</span> ni 3
+0x0000000000401112      <span class="m">14</span>              value_2 :<span class="o">=</span> bar<span class="o">()</span>
+<span class="o">(</span>gdb<span class="o">)</span> disassemble
+Dump of assembler code <span class="k">for</span> <span class="k">function</span> main.main:
+  0x00000000004010d0 &lt;+0&gt;:     mov    %fs:0xfffffffffffffff8,%rcx
+  0x00000000004010d9 &lt;+9&gt;:     cmp    0x10<span class="o">(</span>%rcx<span class="o">)</span>,%rsp
+  0x00000000004010dd &lt;+13&gt;:    jbe    0x40115c &lt;main.main+140&gt;
+  0x00000000004010df &lt;+15&gt;:    sub    <span class="nv">$0</span>x20,%rsp
+  0x00000000004010e3 &lt;+19&gt;:    callq  0x401000 &lt;main.myFunc&gt;
+  0x00000000004010e8 &lt;+24&gt;:    mov    <span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x00000000004010ec &lt;+28&gt;:    mov    %rbx,0x18<span class="o">(</span>%rsp<span class="o">)</span>
+  0x00000000004010f1 &lt;+33&gt;:    mov    0x18<span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x00000000004010f6 &lt;+38&gt;:    mov    %rbx,%rdx
+  0x00000000004010f9 &lt;+41&gt;:    mov    <span class="o">(</span>%rdx<span class="o">)</span>,%rbx
+  0x00000000004010fc &lt;+44&gt;:    callq  *%rbx
+  0x00000000004010fe &lt;+46&gt;:    mov    <span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x0000000000401102 &lt;+50&gt;:    mov    %rbx,0x10<span class="o">(</span>%rsp<span class="o">)</span>
+  0x0000000000401107 &lt;+55&gt;:    mov    0x18<span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x000000000040110c &lt;+60&gt;:    mov    %rbx,%rdx
+  0x000000000040110f &lt;+63&gt;:    mov    <span class="o">(</span>%rdx<span class="o">)</span>,%rbx
+<span class="o">=</span>&gt; 0x0000000000401112 &lt;+66&gt;:    callq  *%rbx
+  0x0000000000401114 &lt;+68&gt;:    mov    <span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  ...
+End of assembler dump.
+<span class="o">(</span>gdb<span class="o">)</span> si
+main.myFunc.func1 <span class="o">(</span>~r0<span class="o">=</span>1<span class="o">)</span> at /root/data/example/closures/closure_func.go:5
+<span class="m">5</span>               <span class="k">return</span> func<span class="o">()</span> int <span class="o">{</span>
+<span class="o">(</span>gdb<span class="o">)</span> disassemble
+Dump of assembler code <span class="k">for</span> <span class="k">function</span> main.myFunc.func1:
+<span class="o">=</span>&gt; 0x0000000000401170 &lt;+0&gt;:     sub    <span class="nv">$0</span>x10,%rsp
+  0x0000000000401174 &lt;+4&gt;:     mov    0x8<span class="o">(</span>%rdx<span class="o">)</span>,%rbx
+  0x0000000000401178 &lt;+8&gt;:     mov    %rbx,0x8<span class="o">(</span>%rsp<span class="o">)</span>
+  0x000000000040117d &lt;+13&gt;:    movq   <span class="nv">$0</span>x0,0x18<span class="o">(</span>%rsp<span class="o">)</span>
+  0x0000000000401186 &lt;+22&gt;:    mov    0x8<span class="o">(</span>%rsp<span class="o">)</span>,%rbx
+  0x000000000040118b &lt;+27&gt;:    mov    <span class="o">(</span>%rbx<span class="o">)</span>,%rbp
+  ...
+End of assembler dump.
+<span class="o">(</span>gdb<span class="o">)</span> i r
+rax            0x80000  524288
+rbx            0x401170 4198768
+rcx            0xc820000180     859530330496
+rdx            0xc82000a140     859530371392
+...
+<span class="o">(</span>gdb<span class="o">)</span> x/2xg 0xc82000a140
+0xc82000a140:   0x0000000000401170      0x000000c82000a0b8
+<span class="o">(</span>gdb<span class="o">)</span> x/2xg 0x000000c82000a0b8
+0xc82000a0b8:   0x0000000000000001      0x3d534e4d554c4f43
+<span class="o">(</span>gdb<span class="o">)</span> i locals
+<span class="p">&amp;</span><span class="nv">foo</span> <span class="o">=</span> 0xc82000a0b8
+</pre></div>
+<p>设置断点进入到下一次闭包内，输出相同的内容，会发现 <tt class="docutils literal">rdx</tt> 后半段指向的内容发生了变化。通过 <tt class="docutils literal">i locals</tt> 查看环境变量，可以看到 foo 的地址是 <tt class="docutils literal">0xc82000a0b8</tt> ， 跟 <tt class="docutils literal">rdx</tt> 的后半段内容一样。</p>
+<p>由此可以判断，闭包返回的包装对象是一个复合结构，里面包含匿名函数的地址，以及环境变量的地址。</p>
+</div>
+<div class="section" id="id5">
+<h2>注意事项</h2>
+<ol class="arabic simple">
+<li>匿名函数作为返回对象性能上要比正常的函数性能要差。</li>
+<li>闭包可能会导致变量逃逸到堆上来延长变量的生命周期，给 GC 带来压力。</li>
+<li>破除迷信，批判性的看任何人的 Blog。</li>
+</ol>
+<p>PS: 有些 Blog 写的内容都是错的还自诩对 Go 底层非常了解，这种误人子弟的不要太多。</p>
+</div>
+
+        </div>
+        <div class="post_list">
+            <span>By </span>
+            <a href="http://sunisdown.me/author/sunisdown.html">@SunisDown</a>
+            <span> in </span>
+            <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark" title="Permalink to articles">[ articles ]</a></span>
+            <span class="post_date">Wed 14 September 2016</span>
+            <div><span>Tags : </span>
+                <span><a href="http://sunisdown.me/tag/closures.html">#closures, </a></span>
+                <span><a href="http://sunisdown.me/tag/go.html">#go, </a></span>
+            </div>
+
+            <div class="entry-social">
+                <span class="twitter"><a target="_blank" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;" title="Twitter" href="https://twitter.com/share?url=http://sunisdown.me/closures-in-go.html&text=Closures in Go&via="><img src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
+
+                <span class="gplus"><a target="_blank" title="Google +" href="https://plus.google.com/share?url=http://sunisdown.me/closures-in-go.html&hl=fr" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
+
+                <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;" href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/closures-in-go.html&t=Closures in Go"><img src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
+
+                <a  target="_blank" title="Linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/closures-in-go.html&title=Closures in Go" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
+
+                <span class="mail"><a href="mailto:?subject=Closures in Go&amp;body=Viens découvrir un article à propos de [Closures in Go] sur le site de sunisdown. http://sunisdown.me/closures-in-go.html" title="Share by Email" target="_blank"><img src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+            </div>
+        </div>
+    </article>
+</section>
+  </article>
+
+  <!-- Footer -->
+  <footer>
+    <p>
+      Blog powered by <a href="http://getpelican.com/">Pelican</a>, 
+      which takes great advantage of <a href="http://python.org">Python</a>.
+      Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a href="https://parbhatpuri.com/">@parbhat</a>.
+    </p>
+  </footer>
+
+
+</body>
+</html>

@@ -1,5 +1,458 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>SunisDown</title><link href="http://sunisdown.me/" rel="alternate"></link><link href="http://sunisdown.me/feeds/articles.atom.xml" rel="self"></link><id>http://sunisdown.me/</id><updated>2016-09-06T00:00:00+08:00</updated><entry><title>GoBeansDB 架构设计</title><link href="http://sunisdown.me/gobeansdb-jia-gou-she-ji.html" rel="alternate"></link><published>2016-09-06T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2016-09-06:gobeansdb-jia-gou-she-ji.html</id><summary type="html">&lt;p&gt;从产品转系统有一段时间了，转到核心系统之后一直在维护 GoBeansDB，最近也在慢慢的熟悉另外一个新的项目（暂时保密）。&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>SunisDown</title><link href="http://sunisdown.me/" rel="alternate"></link><link href="http://sunisdown.me/feeds/articles.atom.xml" rel="self"></link><id>http://sunisdown.me/</id><updated>2016-09-14T00:00:00+08:00</updated><entry><title>Closures in Go</title><link href="http://sunisdown.me/closures-in-go.html" rel="alternate"></link><published>2016-09-14T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2016-09-14:closures-in-go.html</id><summary type="html">&lt;p&gt;在 &lt;a class="reference external" href="https://qyuhen.bearychat.com"&gt;Qyuhen&lt;/a&gt; 老大那边潜水的时候，基本上过一段时间就会看见有人讨论闭包。而随手 &lt;tt class="docutils literal"&gt;Google&lt;/tt&gt; 也并没有看到哪些 Blog 说的很清楚，甚至有一些 &lt;tt class="docutils literal"&gt;Blog&lt;/tt&gt; 里面的内容都是错的。（当然，也有可能是我理解错了）所以就想自己写一下。&lt;/p&gt;
+&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;什么是闭包&lt;/h2&gt;
+&lt;p&gt;在谈起闭包(Closure)的时候，经常也会说起匿名函数。在 &lt;a class="reference external" href="https://gobyexample.com/closures"&gt;gobyexample&lt;/a&gt; 里面这两个概念也是放在一起的，很多人搞不清楚闭包与匿名函数有什么关系。这两者确实经常会一起出现，但是并不是一个概念。闭包是闭包，匿名函数是匿名函数。&lt;/p&gt;
+&lt;div class="section" id="id2"&gt;
+&lt;h3&gt;匿名函数&lt;/h3&gt;
+&lt;p&gt;匿名函数与正常的函数区别不大，只是这个函数没有名字。在 &lt;tt class="docutils literal"&gt;Go&lt;/tt&gt; 里面，一个真正的函数里面&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;Foo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="c1"&gt;// 声明一个正常的函数&lt;/span&gt;
+    &lt;span class="nb"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;Foo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;hello world!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;里面有函数名，有函数主体。但是匿名函数的类似与下面这样子&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+   &lt;span class="kd"&gt;func&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="c1"&gt;//声明匿名函数并执行&lt;/span&gt;
+       &lt;span class="nb"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+   &lt;span class="p"&gt;}(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;hello world!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;并不需要函数名。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id3"&gt;
+&lt;h3&gt;闭包&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;闭包（英语：&lt;/span&gt;&lt;span class="n"&gt;Closure&lt;/span&gt;&lt;span class="err"&gt;），又称词法闭包（&lt;/span&gt;&lt;span class="n"&gt;Lexical&lt;/span&gt; &lt;span class="n"&gt;Closure&lt;/span&gt;&lt;span class="err"&gt;）或函数闭包（&lt;/span&gt;&lt;span class="n"&gt;function&lt;/span&gt; &lt;span class="n"&gt;closures&lt;/span&gt;&lt;span class="err"&gt;），是引用了自由变量的函数。这个被引用的自由变量将和这个函数一同存在，即使已经离开了创造它的环境也不例外。&lt;/span&gt;
+    &lt;span class="o"&gt;--&lt;/span&gt; &lt;span class="n"&gt;wikipedia&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;闭包包含两个部分，一个是函数本身，还有是这个函数所引用的环境。 &lt;tt class="docutils literal"&gt;Go&lt;/tt&gt; 里闭包的函数必须是匿名函数。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;package&lt;/span&gt; &lt;span class="nx"&gt;main&lt;/span&gt;
+
+&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;myFunc&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="kd"&gt;func&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kd"&gt;func&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="nx"&gt;foo&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;
+                &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;foo&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;bar&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nx"&gt;myFunc&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="nx"&gt;value_1&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nx"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="nx"&gt;value_2&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nx"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+        &lt;span class="nb"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;value_1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;// 1&lt;/span&gt;
+        &lt;span class="nb"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;value_2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;// 2&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;在上面的例子里面，myFunc 里面的匿名函数可以访问并且更新 myFunc 里面的变量，这个变量的生命周期因为匿名函数的存在而延长。&lt;/p&gt;
+&lt;p&gt;通过闭包可以比较优雅的实现一些功能。比如斐波那契数列&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;package&lt;/span&gt; &lt;span class="nx"&gt;main&lt;/span&gt;
+
+&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nx"&gt;gen&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nx"&gt;makeFibGen&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+  &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nx"&gt;i&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="nx"&gt;i&lt;/span&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="nx"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nb"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;gen&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;makeFibGen&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="kd"&gt;func&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nx"&gt;f1&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+  &lt;span class="nx"&gt;f2&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kd"&gt;func&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;f2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;f1&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;f1&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nx"&gt;f2&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="nx"&gt;f2&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;f1&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="go"&gt;
+&lt;h2&gt;Go 中匿名函数的实现&lt;/h2&gt;
+&lt;p&gt;前面有提到 &lt;tt class="docutils literal"&gt;Go&lt;/tt&gt; 里面匿名函数与普通函数区别不大，但是这不大的区别到底在哪里？在这我们用一个简短的小例子来看一下。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;package&lt;/span&gt; &lt;span class="nx"&gt;main&lt;/span&gt;
+
+&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;myFunc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nb"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;f&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="kd"&gt;func&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="nb"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="nx"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0x100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="nx"&gt;myFunc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0x100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;首先我们将上面的代码编译&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;go build -gcflags &lt;span class="s2"&gt;&amp;quot;-N -l -m&amp;quot;&lt;/span&gt; -o main
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;生成一个 elf 格式的文件 main。&lt;/p&gt;
+&lt;p&gt;然后我们通过 go 提供的反汇编工具，反编译我们刚刚生成的 main 文件。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$go&lt;/span&gt; tool objdump -s &lt;span class="s2"&gt;&amp;quot;main\.main&amp;quot;&lt;/span&gt; ./test
+TEXT main.main&lt;span class="o"&gt;(&lt;/span&gt;SB&lt;span class="o"&gt;)&lt;/span&gt; /root/data/example/closures/anonymous_func.go
+     anonymous_func.go:7     0x401040        64488b0c25f8ffffff      FS MOVQ FS:0xfffffff8, CX
+     anonymous_func.go:7     0x401049        483b6110                CMPQ 0x10&lt;span class="o"&gt;(&lt;/span&gt;CX&lt;span class="o"&gt;)&lt;/span&gt;, SP
+     anonymous_func.go:7     0x40104d        &lt;span class="m"&gt;7637&lt;/span&gt;                    JBE 0x401086
+     anonymous_func.go:7     0x40104f        4883ec10                SUBQ &lt;span class="nv"&gt;$0&lt;/span&gt;x10, SP
+     anonymous_func.go:8     0x401053        488d1d16830800          LEAQ 0x88316&lt;span class="o"&gt;(&lt;/span&gt;IP&lt;span class="o"&gt;)&lt;/span&gt;, BX
+     anonymous_func.go:8     0x40105a        48895c2408              MOVQ BX, 0x8&lt;span class="o"&gt;(&lt;/span&gt;SP&lt;span class="o"&gt;)&lt;/span&gt;
+     anonymous_func.go:11    0x40105f        48c7042400010000        MOVQ &lt;span class="nv"&gt;$0&lt;/span&gt;x100, 0&lt;span class="o"&gt;(&lt;/span&gt;SP&lt;span class="o"&gt;)&lt;/span&gt;
+     anonymous_func.go:11    0x401067        488b5c2408              MOVQ 0x8&lt;span class="o"&gt;(&lt;/span&gt;SP&lt;span class="o"&gt;)&lt;/span&gt;, BX
+     anonymous_func.go:11    0x40106c        4889da                  MOVQ BX, DX
+     anonymous_func.go:11    0x40106f        488b1a                  MOVQ 0&lt;span class="o"&gt;(&lt;/span&gt;DX&lt;span class="o"&gt;)&lt;/span&gt;, BX
+     anonymous_func.go:11    0x401072        ffd3                    CALL BX
+     anonymous_func.go:12    0x401074        48c7042400010000        MOVQ &lt;span class="nv"&gt;$0&lt;/span&gt;x100, 0&lt;span class="o"&gt;(&lt;/span&gt;SP&lt;span class="o"&gt;)&lt;/span&gt;
+     anonymous_func.go:12    0x40107c        e87fffffff              CALL main.myFunc&lt;span class="o"&gt;(&lt;/span&gt;SB&lt;span class="o"&gt;)&lt;/span&gt;
+     anonymous_func.go:13    0x401081        4883c410                ADDQ &lt;span class="nv"&gt;$0&lt;/span&gt;x10, SP
+     anonymous_func.go:13    0x401085        c3                      RET
+     anonymous_func.go:7     0x401086        e8b59f0400              CALL runtime.morestack_noctxt&lt;span class="o"&gt;(&lt;/span&gt;SB&lt;span class="o"&gt;)&lt;/span&gt;
+     anonymous_func.go:7     0x40108b        ebb3                    JMP main.main&lt;span class="o"&gt;(&lt;/span&gt;SB&lt;span class="o"&gt;)&lt;/span&gt;
+     anonymous_func.go:7     0x40108d        cc                      INT &lt;span class="nv"&gt;$0&lt;/span&gt;x3
+     anonymous_func.go:7     0x40108e        cc                      INT &lt;span class="nv"&gt;$0&lt;/span&gt;x3
+     anonymous_func.go:7     0x40108f        cc                      INT &lt;span class="nv"&gt;$0&lt;/span&gt;x3
+
+     ...
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上面的汇编输出中我们可以看到一共有三次 &lt;tt class="docutils literal"&gt;CALL&lt;/tt&gt;， 排除调最后那个 &lt;tt class="docutils literal"&gt;runtime&lt;/tt&gt; 的 &lt;tt class="docutils literal"&gt;CALL&lt;/tt&gt; ，剩下两次分别对应了匿名函数调用以及正常的函数调用。而两次的区别在于正常的函数是 &lt;tt class="docutils literal"&gt;CALL&amp;nbsp; main.myFunc(SB)&lt;/tt&gt; , 匿名函数的调用是 &lt;tt class="docutils literal"&gt;CALL BX&lt;/tt&gt; 。这两种不同的调用方式意味着什么？我们可以通过 gdb 来动态的跟踪这段代码来具体分析一下。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;gdb main
+Reading symbols from test...done.
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; b main.main
+Breakpoint &lt;span class="m"&gt;1&lt;/span&gt; at 0x401040: file /root/data/example/closures/anonymous_func.go, line 7.
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; r
+Starting program: /root/data/example/closures/test
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP 2067&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP 2068&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP 2069&lt;span class="o"&gt;]&lt;/span&gt;
+
+Breakpoint 1, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/example/closures/anonymous_func.go:7
+&lt;span class="m"&gt;7&lt;/span&gt;       func main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; l
+2
+&lt;span class="m"&gt;3&lt;/span&gt;       func myFunc&lt;span class="o"&gt;(&lt;/span&gt;message int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="m"&gt;4&lt;/span&gt;               println&lt;span class="o"&gt;(&lt;/span&gt;message&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="m"&gt;5&lt;/span&gt;       &lt;span class="o"&gt;}&lt;/span&gt;
+6
+&lt;span class="m"&gt;7&lt;/span&gt;       func main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="m"&gt;8&lt;/span&gt;               f :&lt;span class="o"&gt;=&lt;/span&gt; func&lt;span class="o"&gt;(&lt;/span&gt;message int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="m"&gt;9&lt;/span&gt;                       println&lt;span class="o"&gt;(&lt;/span&gt;message&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="m"&gt;10&lt;/span&gt;              &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="m"&gt;11&lt;/span&gt;              f&lt;span class="o"&gt;(&lt;/span&gt;0x100&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i locals
+&lt;span class="nv"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;void &lt;span class="o"&gt;(&lt;/span&gt;int&lt;span class="o"&gt;)}&lt;/span&gt; 0xc820039f40
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/1xg 0xc820039f40
+0xc820039f40:   0x000000c820000180
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上面在 gdb 里面把断点设置在 &lt;tt class="docutils literal"&gt;main.main&lt;/tt&gt; 处，然后通过输出当前的环境变量可以看到变量 f。这时候显示 f 指针指向的内存内容。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; b 11
+Breakpoint &lt;span class="m"&gt;2&lt;/span&gt; at 0x40105f: file /root/data/example/closures/anonymous_func.go, line 11.
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; c
+Continuing.
+
+Breakpoint 2, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/example/closures/anonymous_func.go:11
+&lt;span class="m"&gt;11&lt;/span&gt;              f&lt;span class="o"&gt;(&lt;/span&gt;0x100&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i locals
+&lt;span class="nv"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;void &lt;span class="o"&gt;(&lt;/span&gt;int&lt;span class="o"&gt;)}&lt;/span&gt; 0xc820039f40
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/1xg 0xc820039f40
+0xc820039f40:   0x0000000000489370
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i symbol 0x0000000000489370
+main.main.func1.f in section .rodata of /root/data/example/closures/test
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/2xg 0x0000000000489370
+0x489370 &amp;lt;main.main.func1.f&amp;gt;:   0x0000000000401090      0x0000000000441fa0
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i symbol 0x0000000000401090
+main.main.func1 in section .text of /root/data/example/closures/test
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然后在调用匿名函数 &lt;tt class="docutils literal"&gt;f&lt;/tt&gt; 的地方再设置一个断点， &lt;tt class="docutils literal"&gt;c&lt;/tt&gt; 让程序执行到新的断点。再输出 f 指针指向的内存，发现里面的内容已经改变了，输出符号名可以看到符号是 &lt;tt class="docutils literal"&gt;main.main.func1.f&lt;/tt&gt;, 这个是编译器提我们生成的符号名，然后具叙看一下这个地址指向的内容，会发现 &lt;tt class="docutils literal"&gt;main.main.func1&lt;/tt&gt; ，也就是就是我们的匿名函数。接着跟&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i r
+  rax            0xc820000180     859530330496
+  rbx            0x489370 4756336
+  ...
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
+Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; main.main:
+  0x0000000000401040 &amp;lt;+0&amp;gt;:     mov    %fs:0xfffffffffffffff8,%rcx
+  0x0000000000401049 &amp;lt;+9&amp;gt;:     cmp    0x10&lt;span class="o"&gt;(&lt;/span&gt;%rcx&lt;span class="o"&gt;)&lt;/span&gt;,%rsp
+  0x000000000040104d &amp;lt;+13&amp;gt;:    jbe    0x401086 &amp;lt;main.main+70&amp;gt;
+  0x000000000040104f &amp;lt;+15&amp;gt;:    sub    &lt;span class="nv"&gt;$0&lt;/span&gt;x10,%rsp
+  0x0000000000401053 &amp;lt;+19&amp;gt;:    lea    0x88316&lt;span class="o"&gt;(&lt;/span&gt;%rip&lt;span class="o"&gt;)&lt;/span&gt;,%rbx        &lt;span class="c1"&gt;# 0x489370 &amp;lt;main.main.func1.f&amp;gt;&lt;/span&gt;
+  0x000000000040105a &amp;lt;+26&amp;gt;:    mov    %rbx,0x8&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;=&lt;/span&gt;&amp;gt; 0x000000000040105f &amp;lt;+31&amp;gt;:    movq   &lt;span class="nv"&gt;$0&lt;/span&gt;x100,&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  0x0000000000401067 &amp;lt;+39&amp;gt;:    mov    0x8&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x000000000040106c &amp;lt;+44&amp;gt;:    mov    %rbx,%rdx
+  0x000000000040106f &amp;lt;+47&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rdx&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x0000000000401072 &amp;lt;+50&amp;gt;:    callq  *%rbx
+  0x0000000000401074 &amp;lt;+52&amp;gt;:    movq   &lt;span class="nv"&gt;$0&lt;/span&gt;x100,&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  0x000000000040107c &amp;lt;+60&amp;gt;:    callq  0x401000 &amp;lt;main.myFunc&amp;gt;
+  0x0000000000401081 &amp;lt;+65&amp;gt;:    add    &lt;span class="nv"&gt;$0&lt;/span&gt;x10,%rsp
+  0x0000000000401085 &amp;lt;+69&amp;gt;:    retq
+  0x0000000000401086 &amp;lt;+70&amp;gt;:    callq  0x44b040 &amp;lt;runtime.morestack_noctxt&amp;gt;
+  0x000000000040108b &amp;lt;+75&amp;gt;:    jmp    0x401040 &amp;lt;main.main&amp;gt;
+  0x000000000040108d &amp;lt;+77&amp;gt;:    int3
+  0x000000000040108e &amp;lt;+78&amp;gt;:    int3
+  0x000000000040108f &amp;lt;+79&amp;gt;:    int3
+End of assembler dump.
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; p &lt;span class="nv"&gt;$rsp&lt;/span&gt;
+&lt;span class="nv"&gt;$2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;void *&lt;span class="o"&gt;)&lt;/span&gt; 0xc820039f38
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/1xg 0xc820039f38
+0xc820039f38:   0x0000000000000000
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; ni
+0x0000000000401067      &lt;span class="m"&gt;11&lt;/span&gt;              f&lt;span class="o"&gt;(&lt;/span&gt;0x100&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/1xg 0xc820039f38
+0xc820039f38:   0x0000000000000100
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;输出寄存器里面的值看一下，可以注意到寄存器 &lt;tt class="docutils literal"&gt;rbx&lt;/tt&gt; 的内存地址是 &lt;tt class="docutils literal"&gt;func1.f&lt;/tt&gt; 的地址。然后反编译可以看到执行到了 +31 这一行，将常量 &lt;tt class="docutils literal"&gt;0x100&lt;/tt&gt; 放在 rsp 内指针指向的内存地址。输出 rsp 的内容，然后显示地址指向内存的内容，可以看到是 &lt;tt class="docutils literal"&gt;0x0000000000000000&lt;/tt&gt;，输入 &lt;tt class="docutils literal"&gt;ni&lt;/tt&gt; 执行这一行汇编之后再看，就看到内存里面的内容变成了 &lt;tt class="docutils literal"&gt;0x0000000000000100&lt;/tt&gt;，也就是我们输入常量。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; ni
+0x000000000040106c      &lt;span class="m"&gt;11&lt;/span&gt;              f&lt;span class="o"&gt;(&lt;/span&gt;0x100&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; ni
+0x000000000040106f      &lt;span class="m"&gt;11&lt;/span&gt;              f&lt;span class="o"&gt;(&lt;/span&gt;0x100&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
+Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; main.main:
+  0x0000000000401040 &amp;lt;+0&amp;gt;:     mov    %fs:0xfffffffffffffff8,%rcx
+  0x0000000000401049 &amp;lt;+9&amp;gt;:     cmp    0x10&lt;span class="o"&gt;(&lt;/span&gt;%rcx&lt;span class="o"&gt;)&lt;/span&gt;,%rsp
+  0x000000000040104d &amp;lt;+13&amp;gt;:    jbe    0x401086 &amp;lt;main.main+70&amp;gt;
+  0x000000000040104f &amp;lt;+15&amp;gt;:    sub    &lt;span class="nv"&gt;$0&lt;/span&gt;x10,%rsp
+  0x0000000000401053 &amp;lt;+19&amp;gt;:    lea    0x88316&lt;span class="o"&gt;(&lt;/span&gt;%rip&lt;span class="o"&gt;)&lt;/span&gt;,%rbx        &lt;span class="c1"&gt;# 0x489370 &amp;lt;main.main.func1.f&amp;gt;&lt;/span&gt;
+  0x000000000040105a &amp;lt;+26&amp;gt;:    mov    %rbx,0x8&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  0x000000000040105f &amp;lt;+31&amp;gt;:    movq   &lt;span class="nv"&gt;$0&lt;/span&gt;x100,&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  0x0000000000401067 &amp;lt;+39&amp;gt;:    mov    0x8&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x000000000040106c &amp;lt;+44&amp;gt;:    mov    %rbx,%rdx
+&lt;span class="o"&gt;=&lt;/span&gt;&amp;gt; 0x000000000040106f &amp;lt;+47&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rdx&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x0000000000401072 &amp;lt;+50&amp;gt;:    callq  *%rbx
+  0x0000000000401074 &amp;lt;+52&amp;gt;:    movq   &lt;span class="nv"&gt;$0&lt;/span&gt;x100,&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  0x000000000040107c &amp;lt;+60&amp;gt;:    callq  0x401000 &amp;lt;main.myFunc&amp;gt;
+  0x0000000000401081 &amp;lt;+65&amp;gt;:    add    &lt;span class="nv"&gt;$0&lt;/span&gt;x10,%rsp
+  0x0000000000401085 &amp;lt;+69&amp;gt;:    retq
+  0x0000000000401086 &amp;lt;+70&amp;gt;:    callq  0x44b040 &amp;lt;runtime.morestack_noctxt&amp;gt;
+  0x000000000040108b &amp;lt;+75&amp;gt;:    jmp    0x401040 &amp;lt;main.main&amp;gt;
+  0x000000000040108d &amp;lt;+77&amp;gt;:    int3
+  0x000000000040108e &amp;lt;+78&amp;gt;:    int3
+  0x000000000040108f &amp;lt;+79&amp;gt;:    int3
+End of assembler dump.
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; ni
+0x0000000000401072      &lt;span class="m"&gt;11&lt;/span&gt;              f&lt;span class="o"&gt;(&lt;/span&gt;0x100&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; p &lt;span class="nv"&gt;$rbx&lt;/span&gt;
+&lt;span class="nv"&gt;$5&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 4198544
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i r
+rax            0xc820000180     859530330496
+rbx            0x401090 4198544
+...
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/1xg 0x401090
+0x401090 &amp;lt;main.main.func1&amp;gt;:     0xfffff8250c8b4864
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;接着往下执行到 +47 这一行，可以看到 &lt;tt class="docutils literal"&gt;rbx&lt;/tt&gt; 里面的值在这一行会有变化，&lt;tt class="docutils literal"&gt;ni&lt;/tt&gt; 执行完这一行，输出寄存器的内容看一下，然后显示 &lt;tt class="docutils literal"&gt;rbx&lt;/tt&gt; 指向的内存可以看到我们的匿名函数 &lt;tt class="docutils literal"&gt;func1&lt;/tt&gt;。&lt;/p&gt;
+&lt;p&gt;现在基本可以理清 &lt;tt class="docutils literal"&gt;Go&lt;/tt&gt; 里面匿名函数与正常的函数区别，参数的传递区别不到，只是在调用方面，匿名函数需要通过一个包装对象`func1.f`` 来调用匿名函数，这个过程通过 &lt;tt class="docutils literal"&gt;rbx&lt;/tt&gt; 进行二次寻址来完成调用。理论上，匿名函数也会比正常函数性能要差。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id4"&gt;
+&lt;h2&gt;Go 中闭包的实现&lt;/h2&gt;
+&lt;p&gt;闭包函数携带着定义这个函数的的环境。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;package&lt;/span&gt; &lt;span class="nx"&gt;main&lt;/span&gt;
+
+&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;myFunc&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="kd"&gt;func&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kd"&gt;func&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="nx"&gt;foo&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;
+                &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;foo&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;bar&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nx"&gt;myFunc&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="nx"&gt;value_1&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nx"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="nx"&gt;value_2&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nx"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+        &lt;span class="nb"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;value_1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;// 1&lt;/span&gt;
+        &lt;span class="nb"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;value_2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;// 2&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;与分析匿名函数的过程一样，编译然后通过 &lt;tt class="docutils literal"&gt;gdb&lt;/tt&gt; 来跟踪。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ go build -gcflags &lt;span class="s2"&gt;&amp;quot;-N -l -m&amp;quot;&lt;/span&gt;  closure_func.go
+&lt;span class="c1"&gt;# command-line-arguments&lt;/span&gt;
+./closure_func.go:5: func literal escapes to heap
+./closure_func.go:5: func literal escapes to heap
+./closure_func.go:4: moved to heap: foo
+./closure_func.go:6: &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;foo escapes to heap
+
+$ gdb closure_func
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; b main.main
+Breakpoint &lt;span class="m"&gt;1&lt;/span&gt; at 0x4010d0: file /root/data/example/closures/closure_func.go, line 11.
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; r
+Starting program: /root/data/example/closures/closure_func
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP 5367&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP 5368&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP 5370&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP 5369&lt;span class="o"&gt;]&lt;/span&gt;
+
+Breakpoint 1, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/example/closures/closure_func.go:11
+&lt;span class="m"&gt;11&lt;/span&gt;      func main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i locals
+&lt;span class="nv"&gt;value_2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 859530428512
+&lt;span class="nv"&gt;value_1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0
+&lt;span class="nv"&gt;bar&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;void &lt;span class="o"&gt;(&lt;/span&gt;int *&lt;span class="o"&gt;)}&lt;/span&gt; 0xc820039f40
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;tt class="docutils literal"&gt;gdb&lt;/tt&gt; 在 &lt;tt class="docutils literal"&gt;main.main&lt;/tt&gt; 设置断点并输出环境变量可以看到 &lt;tt class="docutils literal"&gt;bar&lt;/tt&gt;，而且 &lt;tt class="docutils literal"&gt;bar&lt;/tt&gt; 是一个指针。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
+ Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; main.main:
+    0x00000000004010d0 &amp;lt;+0&amp;gt;:     mov    %fs:0xfffffffffffffff8,%rcx
+    0x00000000004010d9 &amp;lt;+9&amp;gt;:     cmp    0x10&lt;span class="o"&gt;(&lt;/span&gt;%rcx&lt;span class="o"&gt;)&lt;/span&gt;,%rsp
+    0x00000000004010dd &amp;lt;+13&amp;gt;:    jbe    0x40115c &amp;lt;main.main+140&amp;gt;
+    0x00000000004010df &amp;lt;+15&amp;gt;:    sub    &lt;span class="nv"&gt;$0&lt;/span&gt;x20,%rsp
+    0x00000000004010e3 &amp;lt;+19&amp;gt;:    callq  0x401000 &amp;lt;main.myFunc&amp;gt;
+ &lt;span class="o"&gt;=&lt;/span&gt;&amp;gt; 0x00000000004010e8 &amp;lt;+24&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+    0x00000000004010ec &amp;lt;+28&amp;gt;:    mov    %rbx,0x18&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+    0x00000000004010f1 &amp;lt;+33&amp;gt;:    mov    0x18&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+    0x00000000004010f6 &amp;lt;+38&amp;gt;:    mov    %rbx,%rdx
+    ...
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i r
+rax            0x80000  524288
+rbx            0xc82000a140     859530371392
+...
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/2xg 0xc82000a140
+0xc82000a140:   0x0000000000401170      0x000000c82000a0b8
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/2xg 0x0000000000401170
+0x401170 &amp;lt;main.myFunc.func1&amp;gt;:   0x085a8b4810ec8348      0x44c74808245c8948
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;将程序继续向下走到 +24 这一行，然后输出寄存器的信息，能够发现寄存器 &lt;tt class="docutils literal"&gt;rbx&lt;/tt&gt; 与之前匿名函数的作用类似，都指向了闭包返回对象。里面封装着我们需要用到的匿名函数。可以看到匿名函数作为返回结果，整个调用过程跟是否形成闭包区别不大。那这个区别在哪里呢？&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
+Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; main.main:
+  0x00000000004010d0 &amp;lt;+0&amp;gt;:     mov    %fs:0xfffffffffffffff8,%rcx
+  0x00000000004010d9 &amp;lt;+9&amp;gt;:     cmp    0x10&lt;span class="o"&gt;(&lt;/span&gt;%rcx&lt;span class="o"&gt;)&lt;/span&gt;,%rsp
+  0x00000000004010dd &amp;lt;+13&amp;gt;:    jbe    0x40115c &amp;lt;main.main+140&amp;gt;
+  0x00000000004010df &amp;lt;+15&amp;gt;:    sub    &lt;span class="nv"&gt;$0&lt;/span&gt;x20,%rsp
+  0x00000000004010e3 &amp;lt;+19&amp;gt;:    callq  0x401000 &amp;lt;main.myFunc&amp;gt;
+  0x00000000004010e8 &amp;lt;+24&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x00000000004010ec &amp;lt;+28&amp;gt;:    mov    %rbx,0x18&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  0x00000000004010f1 &amp;lt;+33&amp;gt;:    mov    0x18&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x00000000004010f6 &amp;lt;+38&amp;gt;:    mov    %rbx,%rdx
+&lt;span class="o"&gt;=&lt;/span&gt;&amp;gt; 0x00000000004010f9 &amp;lt;+41&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rdx&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x00000000004010fc &amp;lt;+44&amp;gt;:    callq  *%rbx
+  0x00000000004010fe &amp;lt;+46&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x0000000000401102 &amp;lt;+50&amp;gt;:    mov    %rbx,0x10&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  ...
+End of assembler dump.
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; ni
+0x00000000004010fc      &lt;span class="m"&gt;13&lt;/span&gt;              value_1 :&lt;span class="o"&gt;=&lt;/span&gt; bar&lt;span class="o"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; si
+main.myFunc.func1 &lt;span class="o"&gt;(&lt;/span&gt;~r0&lt;span class="o"&gt;=&lt;/span&gt;859530371392&lt;span class="o"&gt;)&lt;/span&gt; at /root/data/example/closures/closure_func.go:5
+&lt;span class="m"&gt;5&lt;/span&gt;               &lt;span class="k"&gt;return&lt;/span&gt; func&lt;span class="o"&gt;()&lt;/span&gt; int &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
+Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; main.myFunc.func1:
+&lt;span class="o"&gt;=&lt;/span&gt;&amp;gt; 0x0000000000401170 &amp;lt;+0&amp;gt;:     sub    &lt;span class="nv"&gt;$0&lt;/span&gt;x10,%rsp
+  0x0000000000401174 &amp;lt;+4&amp;gt;:     mov    0x8&lt;span class="o"&gt;(&lt;/span&gt;%rdx&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x0000000000401178 &amp;lt;+8&amp;gt;:     mov    %rbx,0x8&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  0x000000000040117d &amp;lt;+13&amp;gt;:    movq   &lt;span class="nv"&gt;$0&lt;/span&gt;x0,0x18&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  0x0000000000401186 &amp;lt;+22&amp;gt;:    mov    0x8&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x000000000040118b &amp;lt;+27&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rbx&lt;span class="o"&gt;)&lt;/span&gt;,%rbp
+  ...
+End of assembler dump.
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i r
+rax            0x80000  524288
+rbx            0x401170 4198768
+rcx            0xc820000180     859530330496
+rdx            0xc82000a140     859530371392
+...
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/2xg 0xc82000a140
+0xc82000a140:   0x0000000000401170      0x000000c82000a0b8
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/2xg 0x0000000000401170
+0x401170 &amp;lt;main.myFunc.func1&amp;gt;:   0x085a8b4810ec8348      0x44c74808245c8948
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/2xg 0x000000c82000a0b8
+0xc82000a0b8:   0x0000000000000000      0x3d534e4d554c4f43
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;让程序执行到 +44 行，&lt;tt class="docutils literal"&gt;si&lt;/tt&gt; 进入到匿名函数内部。在 &lt;tt class="docutils literal"&gt;func1&lt;/tt&gt; 内部可以看到从 &lt;tt class="docutils literal"&gt;rdx&lt;/tt&gt; 取数据。输出 &lt;tt class="docutils literal"&gt;rdx&lt;/tt&gt; 内容，可以看到前面指向匿名函数，而后面则指向另外的内容 &lt;tt class="docutils literal"&gt;0x0000000000000000&lt;/tt&gt;。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; b 14
+Breakpoint &lt;span class="m"&gt;2&lt;/span&gt; at 0x401107: file /root/data/example/closures/closure_func.go, line 14.
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; c
+Continuing.
+
+Breakpoint 2, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/example/closures/closure_func.go:14
+&lt;span class="m"&gt;14&lt;/span&gt;              value_2 :&lt;span class="o"&gt;=&lt;/span&gt; bar&lt;span class="o"&gt;()&lt;/span&gt;
+&lt;span class="m"&gt;14&lt;/span&gt;              value_2 :&lt;span class="o"&gt;=&lt;/span&gt; bar&lt;span class="o"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
+Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; main.main:
+  0x00000000004010d0 &amp;lt;+0&amp;gt;:     mov    %fs:0xfffffffffffffff8,%rcx
+  0x00000000004010d9 &amp;lt;+9&amp;gt;:     cmp    0x10&lt;span class="o"&gt;(&lt;/span&gt;%rcx&lt;span class="o"&gt;)&lt;/span&gt;,%rsp
+  0x00000000004010dd &amp;lt;+13&amp;gt;:    jbe    0x40115c &amp;lt;main.main+140&amp;gt;
+  0x00000000004010df &amp;lt;+15&amp;gt;:    sub    &lt;span class="nv"&gt;$0&lt;/span&gt;x20,%rsp
+  0x00000000004010e3 &amp;lt;+19&amp;gt;:    callq  0x401000 &amp;lt;main.myFunc&amp;gt;
+  0x00000000004010e8 &amp;lt;+24&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x00000000004010ec &amp;lt;+28&amp;gt;:    mov    %rbx,0x18&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  0x00000000004010f1 &amp;lt;+33&amp;gt;:    mov    0x18&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x00000000004010f6 &amp;lt;+38&amp;gt;:    mov    %rbx,%rdx
+  0x00000000004010f9 &amp;lt;+41&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rdx&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x00000000004010fc &amp;lt;+44&amp;gt;:    callq  *%rbx
+  0x00000000004010fe &amp;lt;+46&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x0000000000401102 &amp;lt;+50&amp;gt;:    mov    %rbx,0x10&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;=&lt;/span&gt;&amp;gt; 0x0000000000401107 &amp;lt;+55&amp;gt;:    mov    0x18&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x000000000040110c &amp;lt;+60&amp;gt;:    mov    %rbx,%rdx
+  0x000000000040110f &amp;lt;+63&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rdx&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x0000000000401112 &amp;lt;+66&amp;gt;:    callq  *%rbx
+  0x0000000000401114 &amp;lt;+68&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  ...
+End of assembler dump.
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; ni 3
+0x0000000000401112      &lt;span class="m"&gt;14&lt;/span&gt;              value_2 :&lt;span class="o"&gt;=&lt;/span&gt; bar&lt;span class="o"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
+Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; main.main:
+  0x00000000004010d0 &amp;lt;+0&amp;gt;:     mov    %fs:0xfffffffffffffff8,%rcx
+  0x00000000004010d9 &amp;lt;+9&amp;gt;:     cmp    0x10&lt;span class="o"&gt;(&lt;/span&gt;%rcx&lt;span class="o"&gt;)&lt;/span&gt;,%rsp
+  0x00000000004010dd &amp;lt;+13&amp;gt;:    jbe    0x40115c &amp;lt;main.main+140&amp;gt;
+  0x00000000004010df &amp;lt;+15&amp;gt;:    sub    &lt;span class="nv"&gt;$0&lt;/span&gt;x20,%rsp
+  0x00000000004010e3 &amp;lt;+19&amp;gt;:    callq  0x401000 &amp;lt;main.myFunc&amp;gt;
+  0x00000000004010e8 &amp;lt;+24&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x00000000004010ec &amp;lt;+28&amp;gt;:    mov    %rbx,0x18&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  0x00000000004010f1 &amp;lt;+33&amp;gt;:    mov    0x18&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x00000000004010f6 &amp;lt;+38&amp;gt;:    mov    %rbx,%rdx
+  0x00000000004010f9 &amp;lt;+41&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rdx&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x00000000004010fc &amp;lt;+44&amp;gt;:    callq  *%rbx
+  0x00000000004010fe &amp;lt;+46&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x0000000000401102 &amp;lt;+50&amp;gt;:    mov    %rbx,0x10&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  0x0000000000401107 &amp;lt;+55&amp;gt;:    mov    0x18&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x000000000040110c &amp;lt;+60&amp;gt;:    mov    %rbx,%rdx
+  0x000000000040110f &amp;lt;+63&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rdx&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+&lt;span class="o"&gt;=&lt;/span&gt;&amp;gt; 0x0000000000401112 &amp;lt;+66&amp;gt;:    callq  *%rbx
+  0x0000000000401114 &amp;lt;+68&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  ...
+End of assembler dump.
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; si
+main.myFunc.func1 &lt;span class="o"&gt;(&lt;/span&gt;~r0&lt;span class="o"&gt;=&lt;/span&gt;1&lt;span class="o"&gt;)&lt;/span&gt; at /root/data/example/closures/closure_func.go:5
+&lt;span class="m"&gt;5&lt;/span&gt;               &lt;span class="k"&gt;return&lt;/span&gt; func&lt;span class="o"&gt;()&lt;/span&gt; int &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
+Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; main.myFunc.func1:
+&lt;span class="o"&gt;=&lt;/span&gt;&amp;gt; 0x0000000000401170 &amp;lt;+0&amp;gt;:     sub    &lt;span class="nv"&gt;$0&lt;/span&gt;x10,%rsp
+  0x0000000000401174 &amp;lt;+4&amp;gt;:     mov    0x8&lt;span class="o"&gt;(&lt;/span&gt;%rdx&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x0000000000401178 &amp;lt;+8&amp;gt;:     mov    %rbx,0x8&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  0x000000000040117d &amp;lt;+13&amp;gt;:    movq   &lt;span class="nv"&gt;$0&lt;/span&gt;x0,0x18&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+  0x0000000000401186 &amp;lt;+22&amp;gt;:    mov    0x8&lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
+  0x000000000040118b &amp;lt;+27&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rbx&lt;span class="o"&gt;)&lt;/span&gt;,%rbp
+  ...
+End of assembler dump.
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i r
+rax            0x80000  524288
+rbx            0x401170 4198768
+rcx            0xc820000180     859530330496
+rdx            0xc82000a140     859530371392
+...
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/2xg 0xc82000a140
+0xc82000a140:   0x0000000000401170      0x000000c82000a0b8
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/2xg 0x000000c82000a0b8
+0xc82000a0b8:   0x0000000000000001      0x3d534e4d554c4f43
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i locals
+&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="nv"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0xc82000a0b8
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;设置断点进入到下一次闭包内，输出相同的内容，会发现 &lt;tt class="docutils literal"&gt;rdx&lt;/tt&gt; 后半段指向的内容发生了变化。通过 &lt;tt class="docutils literal"&gt;i locals&lt;/tt&gt; 查看环境变量，可以看到 foo 的地址是 &lt;tt class="docutils literal"&gt;0xc82000a0b8&lt;/tt&gt; ， 跟 &lt;tt class="docutils literal"&gt;rdx&lt;/tt&gt; 的后半段内容一样。&lt;/p&gt;
+&lt;p&gt;由此可以判断，闭包返回的包装对象是一个复合结构，里面包含匿名函数的地址，以及环境变量的地址。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id5"&gt;
+&lt;h2&gt;注意事项&lt;/h2&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;匿名函数作为返回对象性能上要比正常的函数性能要差。&lt;/li&gt;
+&lt;li&gt;闭包可能会导致变量逃逸到堆上来延长变量的生命周期，给 GC 带来压力。&lt;/li&gt;
+&lt;li&gt;破除迷信，批判性的看任何人的 Blog。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;PS: 有些 Blog 写的内容都是错的还自诩对 Go 底层非常了解，这种误人子弟的不要太多。&lt;/p&gt;
+&lt;/div&gt;
+</summary><category term="closures"></category><category term="go"></category></entry><entry><title>GoBeansDB 架构设计</title><link href="http://sunisdown.me/gobeansdb-jia-gou-she-ji.html" rel="alternate"></link><published>2016-09-06T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2016-09-06:gobeansdb-jia-gou-she-ji.html</id><summary type="html">&lt;p&gt;从产品转系统有一段时间了，转到核心系统之后一直在维护 GoBeansDB，最近也在慢慢的熟悉另外一个新的项目（暂时保密）。&lt;/p&gt;
 &lt;p&gt;BeansDB 是豆瓣内部实现的分布式存储系统，最开始的时候是 &lt;a class="reference external" href="https://github.com/davies"&gt;Davies&lt;/a&gt; 用 C 来实现的。2015 年的时候，内部决定开始用 Go 来重新写 BeansDB，然后 xiufeng 与 zzl 就实现了现在的 GoBeansDB。&lt;/p&gt;
 &lt;div class="section" id="k-v"&gt;
 &lt;h2&gt;为什么要自己实现一套 k/v 存储&lt;/h2&gt;
