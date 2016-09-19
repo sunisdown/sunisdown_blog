@@ -26,9 +26,9 @@ STATIC_PATHS = ['images', 'extra/CNAME']
 EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
 
 # Social widget
-SOCIAL = (('github', 'https://github.com/sunisdown'),
+SOCIAL = (('notebook', 'http://1024.today'),
           ('twitter', 'https://twitter.com/SunisD0wn'),
-          ('note', 'http://1024.today'))
+          ('github', 'https://github.com/sunisdown'))
 
 MENUITEMS = (('Blog', '/index.html'),
             ('Archives', '/archives.html'),

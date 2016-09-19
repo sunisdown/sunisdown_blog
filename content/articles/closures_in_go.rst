@@ -44,14 +44,14 @@ Closures in Go
 闭包
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-::
+.. code-block:: python
 
-闭包（英语：Closure），又称词法闭包（Lexical Closure）或函数闭包（function closures），是引用了自由变量的函数。这个被引用的自由变量将和这个函数一同存在，即使已经离开了创造它的环境也不例外。
--- wikipedia
+  闭包（英语：Closure），又称词法闭包（Lexical Closure）或函数闭包（function closures），是引用了自由变量的函数。这个被引用的自由变量将和这个函数一同存在，即使已经离开了创造它的环境也不例外。
+      -- wikipedia
 
 闭包包含两个部分，一个是函数本身，还有是这个函数所引用的环境。 ``Go`` 里闭包的函数必须是匿名函数。
 
-.. code-block::
+.. code-block:: go
 
     package main
 
@@ -120,15 +120,15 @@ Go 中匿名函数的实现
 
 首先我们将上面的代码编译
 
-::
+.. code-block:: bash
 
-go build -gcflags "-N -l -m" -o main
+  go build -gcflags "-N -l -m" -o main
 
 生成一个 elf 格式的文件 main。
 
 然后我们通过 go 提供的反汇编工具，反编译我们刚刚生成的 main 文件。
 
-::
+.. code-block:: bash
 
    $go tool objdump -s "main\.main" ./test
    TEXT main.main(SB) /root/data/example/closures/anonymous_func.go
@@ -158,7 +158,8 @@ go build -gcflags "-N -l -m" -o main
 
 上面的汇编输出中我们可以看到一共有三次 ``CALL``， 排除调最后那个 ``runtime`` 的 ``CALL`` ，剩下两次分别对应了匿名函数调用以及正常的函数调用。而两次的区别在于正常的函数是 ``CALL  main.myFunc(SB)`` , 匿名函数的调用是 ``CALL BX`` 。这两种不同的调用方式意味着什么？我们可以通过 gdb 来动态的跟踪这段代码来具体分析一下。
 
-::
+.. code-block:: bash
+
    gdb main
    Reading symbols from test...done.
    (gdb) b main.main
@@ -189,7 +190,7 @@ go build -gcflags "-N -l -m" -o main
 
 上面在 gdb 里面把断点设置在 ``main.main`` 处，然后通过输出当前的环境变量可以看到变量 f。这时候显示 f 指针指向的内存内容。
 
-::
+.. code-block:: bash
 
   (gdb) b 11
   Breakpoint 2 at 0x40105f: file /root/data/example/closures/anonymous_func.go, line 11.
@@ -212,7 +213,7 @@ go build -gcflags "-N -l -m" -o main
 
 然后在调用匿名函数 ``f`` 的地方再设置一个断点， ``c`` 让程序执行到新的断点。再输出 f 指针指向的内存，发现里面的内容已经改变了，输出符号名可以看到符号是 ``main.main.func1.f``, 这个是编译器提我们生成的符号名，然后具叙看一下这个地址指向的内容，会发现 ``main.main.func1`` ，也就是就是我们的匿名函数。接着跟
 
-::
+.. code-block:: bash
 
   (gdb) i r
     rax            0xc820000180     859530330496
@@ -252,7 +253,8 @@ go build -gcflags "-N -l -m" -o main
 
 输出寄存器里面的值看一下，可以注意到寄存器 ``rbx`` 的内存地址是 ``func1.f`` 的地址。然后反编译可以看到执行到了 +31 这一行，将常量 ``0x100`` 放在 rsp 内指针指向的内存地址。输出 rsp 的内容，然后显示地址指向内存的内容，可以看到是 ``0x0000000000000000``，输入 ``ni`` 执行这一行汇编之后再看，就看到内存里面的内容变成了 ``0x0000000000000100``，也就是我们输入常量。
 
-::
+.. code-block:: bash
+
   (gdb) ni
   0x000000000040106c      11              f(0x100)
   (gdb) ni
@@ -352,6 +354,7 @@ Go 中闭包的实现
 ``gdb`` 在 ``main.main`` 设置断点并输出环境变量可以看到 ``bar``，而且 ``bar`` 是一个指针。
 
 .. code-block:: bash
+
    (gdb) disassemble
    Dump of assembler code for function main.main:
       0x00000000004010d0 <+0>:     mov    %fs:0xfffffffffffffff8,%rcx
@@ -376,6 +379,7 @@ Go 中闭包的实现
 将程序继续向下走到 +24 这一行，然后输出寄存器的信息，能够发现寄存器 ``rbx`` 与之前匿名函数的作用类似，都指向了闭包返回对象。里面封装着我们需要用到的匿名函数。可以看到匿名函数作为返回结果，整个调用过程跟是否形成闭包区别不大。那这个区别在哪里呢？
 
 .. code-block:: bash
+
   (gdb) disassemble
   Dump of assembler code for function main.main:
     0x00000000004010d0 <+0>:     mov    %fs:0xfffffffffffffff8,%rcx
@@ -424,6 +428,7 @@ Go 中闭包的实现
 让程序执行到 +44 行，``si`` 进入到匿名函数内部。在 ``func1`` 内部可以看到从 ``rdx`` 取数据。输出 ``rdx`` 内容，可以看到前面指向匿名函数，而后面则指向另外的内容 ``0x0000000000000000``。
 
 .. code-block:: bash
+
   (gdb) b 14
   Breakpoint 2 at 0x401107: file /root/data/example/closures/closure_func.go, line 14.
   (gdb) c
