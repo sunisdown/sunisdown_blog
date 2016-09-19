@@ -201,10 +201,10 @@
 <span class="p">}</span>
 </pre></div>
 <p>首先我们将上面的代码编译</p>
-<div class="highlight"><pre><span></span>go build -gcflags <span class="s2">&quot;-N -l -m&quot;</span> -o main
+<div class="highlight"><pre><span></span>go build -gcflags <span class="s2">&quot;-N -l -m&quot;</span> -o <span class="nb">test</span>
 </pre></div>
 <p>生成一个 elf 格式的文件 main。</p>
-<p>然后我们通过 go 提供的反汇编工具，反编译我们刚刚生成的 main 文件。</p>
+<p>然后我们通过 go 提供的反汇编工具，反编译我们刚刚生成的 test 文件。</p>
 <div class="highlight"><pre><span></span><span class="nv">$go</span> tool objdump -s <span class="s2">&quot;main\.main&quot;</span> ./test
 TEXT main.main<span class="o">(</span>SB<span class="o">)</span> /root/data/example/closures/anonymous_func.go
      anonymous_func.go:7     0x401040        64488b0c25f8ffffff      FS MOVQ FS:0xfffffff8, CX
@@ -278,7 +278,7 @@ main.main.func1.f in section .rodata of /root/data/example/closures/test
 <span class="o">(</span>gdb<span class="o">)</span> i symbol 0x0000000000401090
 main.main.func1 in section .text of /root/data/example/closures/test
 </pre></div>
-<p>然后在调用匿名函数 <tt class="docutils literal">f</tt> 的地方再设置一个断点， <tt class="docutils literal">c</tt> 让程序执行到新的断点。再输出 f 指针指向的内存，发现里面的内容已经改变了，输出符号名可以看到符号是 <tt class="docutils literal">main.main.func1.f</tt>, 这个是编译器提我们生成的符号名，然后具叙看一下这个地址指向的内容，会发现 <tt class="docutils literal">main.main.func1</tt> ，也就是就是我们的匿名函数。接着跟</p>
+<p>然后在调用匿名函数 <tt class="docutils literal">f</tt> 的地方再设置一个断点， <tt class="docutils literal">c</tt> 让程序执行到新的断点。再输出 f 指针指向的内存，发现里面的内容已经改变了，输出符号名可以看到符号是 <tt class="docutils literal">main.main.func1.f</tt>, 这个是编译器提我们生成的符号名，然后看一下这个地址指向的内容，会发现 <tt class="docutils literal">main.main.func1</tt> ，也就是就是我们的匿名函数。接着跟</p>
 <div class="highlight"><pre><span></span><span class="o">(</span>gdb<span class="o">)</span> i r
   rax            0xc820000180     859530330496
   rbx            0x489370 4756336
@@ -355,7 +355,7 @@ rbx            0x401090 4198544
 0x401090 &lt;main.main.func1&gt;:     0xfffff8250c8b4864
 </pre></div>
 <p>接着往下执行到 +47 这一行，可以看到 <tt class="docutils literal">rbx</tt> 里面的值在这一行会有变化，<tt class="docutils literal">ni</tt> 执行完这一行，输出寄存器的内容看一下，然后显示 <tt class="docutils literal">rbx</tt> 指向的内存可以看到我们的匿名函数 <tt class="docutils literal">func1</tt>。</p>
-<p>现在基本可以理清 <tt class="docutils literal">Go</tt> 里面匿名函数与正常的函数区别，参数的传递区别不到，只是在调用方面，匿名函数需要通过一个包装对象`func1.f`` 来调用匿名函数，这个过程通过 <tt class="docutils literal">rbx</tt> 进行二次寻址来完成调用。理论上，匿名函数也会比正常函数性能要差。</p>
+<p>现在基本可以理清 <tt class="docutils literal">Go</tt> 里面匿名函数与正常的函数区别，参数的传递区别不大，只是在调用方面，匿名函数需要通过一个包装对象`func1.f`` 来调用匿名函数，这个过程通过 <tt class="docutils literal">rbx</tt> 进行二次寻址来完成调用。理论上，匿名函数也会比正常函数性能要差。</p>
 </div>
 <div class="section" id="id4">
 <h2>Go 中闭包的实现</h2>

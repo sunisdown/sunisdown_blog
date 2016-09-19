@@ -89,10 +89,10 @@
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;首先我们将上面的代码编译&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;go build -gcflags &lt;span class="s2"&gt;&amp;quot;-N -l -m&amp;quot;&lt;/span&gt; -o main
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;go build -gcflags &lt;span class="s2"&gt;&amp;quot;-N -l -m&amp;quot;&lt;/span&gt; -o &lt;span class="nb"&gt;test&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;生成一个 elf 格式的文件 main。&lt;/p&gt;
-&lt;p&gt;然后我们通过 go 提供的反汇编工具，反编译我们刚刚生成的 main 文件。&lt;/p&gt;
+&lt;p&gt;然后我们通过 go 提供的反汇编工具，反编译我们刚刚生成的 test 文件。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$go&lt;/span&gt; tool objdump -s &lt;span class="s2"&gt;&amp;quot;main\.main&amp;quot;&lt;/span&gt; ./test
 TEXT main.main&lt;span class="o"&gt;(&lt;/span&gt;SB&lt;span class="o"&gt;)&lt;/span&gt; /root/data/example/closures/anonymous_func.go
      anonymous_func.go:7     0x401040        64488b0c25f8ffffff      FS MOVQ FS:0xfffffff8, CX
@@ -166,7 +166,7 @@ main.main.func1.f in section .rodata of /root/data/example/closures/test
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i symbol 0x0000000000401090
 main.main.func1 in section .text of /root/data/example/closures/test
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;然后在调用匿名函数 &lt;tt class="docutils literal"&gt;f&lt;/tt&gt; 的地方再设置一个断点， &lt;tt class="docutils literal"&gt;c&lt;/tt&gt; 让程序执行到新的断点。再输出 f 指针指向的内存，发现里面的内容已经改变了，输出符号名可以看到符号是 &lt;tt class="docutils literal"&gt;main.main.func1.f&lt;/tt&gt;, 这个是编译器提我们生成的符号名，然后具叙看一下这个地址指向的内容，会发现 &lt;tt class="docutils literal"&gt;main.main.func1&lt;/tt&gt; ，也就是就是我们的匿名函数。接着跟&lt;/p&gt;
+&lt;p&gt;然后在调用匿名函数 &lt;tt class="docutils literal"&gt;f&lt;/tt&gt; 的地方再设置一个断点， &lt;tt class="docutils literal"&gt;c&lt;/tt&gt; 让程序执行到新的断点。再输出 f 指针指向的内存，发现里面的内容已经改变了，输出符号名可以看到符号是 &lt;tt class="docutils literal"&gt;main.main.func1.f&lt;/tt&gt;, 这个是编译器提我们生成的符号名，然后看一下这个地址指向的内容，会发现 &lt;tt class="docutils literal"&gt;main.main.func1&lt;/tt&gt; ，也就是就是我们的匿名函数。接着跟&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i r
   rax            0xc820000180     859530330496
   rbx            0x489370 4756336
@@ -243,7 +243,7 @@ rbx            0x401090 4198544
 0x401090 &amp;lt;main.main.func1&amp;gt;:     0xfffff8250c8b4864
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;接着往下执行到 +47 这一行，可以看到 &lt;tt class="docutils literal"&gt;rbx&lt;/tt&gt; 里面的值在这一行会有变化，&lt;tt class="docutils literal"&gt;ni&lt;/tt&gt; 执行完这一行，输出寄存器的内容看一下，然后显示 &lt;tt class="docutils literal"&gt;rbx&lt;/tt&gt; 指向的内存可以看到我们的匿名函数 &lt;tt class="docutils literal"&gt;func1&lt;/tt&gt;。&lt;/p&gt;
-&lt;p&gt;现在基本可以理清 &lt;tt class="docutils literal"&gt;Go&lt;/tt&gt; 里面匿名函数与正常的函数区别，参数的传递区别不到，只是在调用方面，匿名函数需要通过一个包装对象`func1.f`` 来调用匿名函数，这个过程通过 &lt;tt class="docutils literal"&gt;rbx&lt;/tt&gt; 进行二次寻址来完成调用。理论上，匿名函数也会比正常函数性能要差。&lt;/p&gt;
+&lt;p&gt;现在基本可以理清 &lt;tt class="docutils literal"&gt;Go&lt;/tt&gt; 里面匿名函数与正常的函数区别，参数的传递区别不大，只是在调用方面，匿名函数需要通过一个包装对象`func1.f`` 来调用匿名函数，这个过程通过 &lt;tt class="docutils literal"&gt;rbx&lt;/tt&gt; 进行二次寻址来完成调用。理论上，匿名函数也会比正常函数性能要差。&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="id4"&gt;
 &lt;h2&gt;Go 中闭包的实现&lt;/h2&gt;
