@@ -1,107 +1,93 @@
 <!doctype html>
 <html lang="zh" itemscope itemtype="http://schema.org/Person">
 <head>
-  <meta charset="utf-8">
-  <!-- Site Meta Data -->
-  <title>Python 装饰器之 functools.wraps</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="sunisdown">
+            <meta charset="utf-8">
+        <!-- Site Meta Data -->
+        <title>Python 装饰器之 functools.wraps</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="sunisdown">
 
-  <link rel="shortcut icon" href="">
+        <link rel="shortcut icon" href="">
 
-  <!-- schema.org -->
-  <meta itemprop="name" content="SunisDown">
-  <meta itemprop="image" content="">
-  <meta itemprop="description" content="">
+        <!-- schema.org -->
+        <meta itemprop="name" content="SunisDown">
+        <meta itemprop="image" content="">
+        <meta itemprop="description" content="">
 
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
-  <!-- Style Meta Data -->
-  <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css" />
-  <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css" />
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+        <!-- Style Meta Data -->
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css"/>
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css"/>
 
-  <!-- Feed Meta Data -->
-    <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="SunisDown ATOM Feed" />
+        <!-- Feed Meta Data -->
+            <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+                  title="SunisDown ATOM Feed"/>
 
-  <!-- Twitter Feed -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="">
-  <meta name="twitter:image" content="">
+        <!-- Twitter Feed -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="">
+        <meta name="twitter:image" content="">
 
-<meta name="twitter:creator" content="">
-<meta name="twitter:url" content="http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html">
-<meta name="twitter:title" content="SunisDown ~ Python 装饰器之 functools.wraps">
-<meta name="twitter:description" content='<p>在看 Bottle 代码中看见 functools.wraps 这种用法。</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_default_app_wrapper</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Return a callable that relays calls to the current default app. &quot;&quot;&quot;</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">Bottle</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="nd">@functools.wraps</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">Bottle</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
-    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">ka</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">app</span><span class="p">(),</span> <span class="n">name</span><span class="p">)(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">ka</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">wrapper</span>
-</pre></div>
-<p>之前没有看过，于是查文档了解了一下他的用处 先下定义： <strong>functools.wraps
-是 ``装饰器``的``装饰器 ...</strong></p>'>
+    <meta name="twitter:creator" content="">
+    <meta name="twitter:url" content="http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html">
+    <meta name="twitter:title" content="SunisDown ~ Python 装饰器之 functools.wraps">
+    <meta name="twitter:description" content="在看 Bottle 代码中看见 functools.wraps 这种用法。 def make_default_app_wrapper(name): &#34;&#34;&#34; Return a callable that relays calls to the current default app. &#34;&#34;&#34; a = getattr(Bottle, name) @functools.wraps(getattr(Bottle, name)) def wrapper(*a, **ka): return getattr(app(), name)(*a, **ka) return wrapper 之前没有看过，于是查文档了解了一下他的用处 先下定义： functools.wraps 是 ``装饰器``的``装饰器 …">
 
-<!-- Facebook Meta Data -->
-<meta property="og:title" content="SunisDown ~ Python 装饰器之 functools.wraps" />
-<meta property="og:description" content='<p>在看 Bottle 代码中看见 functools.wraps 这种用法。</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_default_app_wrapper</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Return a callable that relays calls to the current default app. &quot;&quot;&quot;</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">Bottle</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="nd">@functools.wraps</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">Bottle</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
-    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">ka</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">app</span><span class="p">(),</span> <span class="n">name</span><span class="p">)(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">ka</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">wrapper</span>
-</pre></div>
-<p>之前没有看过，于是查文档了解了一下他的用处 先下定义： <strong>functools.wraps
-是 ``装饰器``的``装饰器 ...</strong></p>' />
-<meta property="og:image" content="" />
+    <!-- Facebook Meta Data -->
+    <meta property="og:title" content="SunisDown ~ Python 装饰器之 functools.wraps"/>
+    <meta property="og:description" content="在看 Bottle 代码中看见 functools.wraps 这种用法。 def make_default_app_wrapper(name): &#34;&#34;&#34; Return a callable that relays calls to the current default app. &#34;&#34;&#34; a = getattr(Bottle, name) @functools.wraps(getattr(Bottle, name)) def wrapper(*a, **ka): return getattr(app(), name)(*a, **ka) return wrapper 之前没有看过，于是查文档了解了一下他的用处 先下定义： functools.wraps 是 ``装饰器``的``装饰器 …"/>
+    <meta property="og:image" content=""/>
 </head>
 
 <body>
-  <!-- Sidebar -->
-  <aside>
+<!-- Sidebar -->
+<aside>
     <!--<center><a href="http://sunisdown.me"><img id="avatar" src=""></a></center>-->
     <h1>SunisDown</h1>
     <br>
 
 
     <nav class="nav">
-      <ul class="list-bare">
-      
-          <li><a class="nav__link" href="/index.html">Blog</a></li>
-          <li><a class="nav__link" href="/archives.html">Archives</a></li>
-          <li><a class="nav__link" href="/tags.html">Tags</a></li>
-         
-          <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
-         
-      </ul>
+        <ul class="list-bare">
+
+                <li><a class="nav__link" href="/index.html">Blog</a></li>
+                <li><a class="nav__link" href="/archives.html">Archives</a></li>
+                <li><a class="nav__link" href="/tags.html">Tags</a></li>
+
+                <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
+
+        </ul>
     </nav>
 
     <p class="social">
-        <a href="http://1024.today" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
-        <a href="https://twitter.com/SunisD0wn" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
-        <a href="https://github.com/sunisdown" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/github.png"></a>
-      <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
-        <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
+                <a href="http://1024.today" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
+                <a href="https://twitter.com/SunisD0wn" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
+                <a href="https://github.com/sunisdown" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/github.png"></a>
+            <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
+                <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
     </p>
 
-    <!--
-    <h2>Categories</h2>
-    <ul class="navbar">
-      <li class="active"><a href="http://sunisdown.me/category/articles.html">articles</a></li>
-    </ul> 
-    -->
-  </aside>
+        <h2>Categories</h2>
+        <ul class="navbar">
+                <li class="active"><a
+                        href="http://sunisdown.me/category/articles.html">articles</a></li>
+        </ul>
 
-  <!-- Content -->
-  <article>
-<section id="content">
-    <article>
-        <h2 class="post_title post_detail"><a href="http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html" rel="bookmark" title="Permalink to Python 装饰器之 functools.wraps">Python 装饰器之 functools.wraps</a></h2>
-        <div class="entry-content blog-post">
-            <p>在看 Bottle 代码中看见 functools.wraps 这种用法。</p>
+
+</aside>
+
+<!-- Content -->
+<article>
+    <section id="content">
+        <article>
+            <h2 class="post_title post_detail"><a href="http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html" rel="bookmark"
+                                                  title="Permalink to Python 装饰器之 functools.wraps">Python 装饰器之 functools.wraps</a></h2>
+            <div class="entry-content blog-post">
+                <p>在看 Bottle 代码中看见 functools.wraps 这种用法。</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_default_app_wrapper</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Return a callable that relays calls to the current default app. &quot;&quot;&quot;</span>
     <span class="n">a</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">Bottle</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -166,11 +152,11 @@ inner，如上面的<tt class="docutils literal">foo &lt;function __main__.inner
 Decorator。 假想我们有个coordinate类，而且这个类提供了
 <tt class="docutils literal">x, y</tt>坐标，而我们要对两个coordinate 对象进行计算。代码如下：</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Coordinate</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;Coord: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Coord: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">Coordinate</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
@@ -229,9 +215,9 @@ Decorator 来做一个检测再好不过了</p>
 <p>这样，只计算的函数<tt class="docutils literal">add</tt>与<tt class="docutils literal">sub</tt>前面加一个 Decorator
 就可以完成坐标的校验。比在函数内实现要优雅一些。</p>
 <p>Decorator 还可以为类增加额外的成员，</p>
-<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">21</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">hello</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
-   <span class="o">....</span><span class="p">:</span>     <span class="n">cls</span><span class="o">.</span><span class="n">hello</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;HELLO&quot;</span><span class="p">)</span>
-   <span class="o">....</span><span class="p">:</span>     <span class="k">return</span> <span class="n">cls</span>
+<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">21</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">hello</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+   <span class="o">....</span><span class="p">:</span>     <span class="bp">cls</span><span class="o">.</span><span class="n">hello</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;HELLO&quot;</span><span class="p">)</span>
+   <span class="o">....</span><span class="p">:</span>     <span class="k">return</span> <span class="bp">cls</span>
    <span class="o">....</span><span class="p">:</span>
 
 <span class="n">In</span> <span class="p">[</span><span class="mi">22</span><span class="p">]:</span> <span class="nd">@hello</span>
@@ -250,7 +236,7 @@ Decorator 来做一个检测再好不过了</p>
 stackoverflow 里面的栗子</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">logged</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">with_logging</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">print</span> <span class="n">func</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s2">&quot; was called&quot;</span>
+        <span class="k">print</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; was called&quot;</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">with_logging</span>
 
@@ -264,7 +250,7 @@ stackoverflow 里面的栗子</p>
     <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">logged</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
-<span class="n">In</span> <span class="p">[</span><span class="mi">24</span><span class="p">]:</span> <span class="n">f</span><span class="o">.</span><span class="n">__name__</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">24</span><span class="p">]:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">24</span><span class="p">]:</span> <span class="n">with_logging</span>
 </pre></div>
 <p>而functools.wraps 则可以将原函数对象的指定属性复制给包装函数对象, 默认有
@@ -273,7 +259,7 @@ stackoverflow 里面的栗子</p>
 <span class="k">def</span> <span class="nf">logged</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">with_logging</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">print</span> <span class="n">func</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s2">&quot; was called&quot;</span>
+        <span class="k">print</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; was called&quot;</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">with_logging</span>
 
@@ -282,48 +268,68 @@ stackoverflow 里面的栗子</p>
    <span class="sd">&quot;&quot;&quot;does some math&quot;&quot;&quot;</span>
    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
 
-<span class="k">print</span> <span class="n">f</span><span class="o">.</span><span class="n">__name__</span>  <span class="c1"># prints &#39;f&#39;</span>
-<span class="k">print</span> <span class="n">f</span><span class="o">.</span><span class="n">__doc__</span>   <span class="c1"># prints &#39;does some math&#39;</span>
+<span class="k">print</span> <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span>  <span class="c1"># prints &#39;f&#39;</span>
+<span class="k">print</span> <span class="n">f</span><span class="o">.</span><span class="vm">__doc__</span>   <span class="c1"># prints &#39;does some math&#39;</span>
 </pre></div>
 </div>
 </div>
 
-        </div>
-        <div class="post_list">
-            <span>By </span>
-            <a href="http://sunisdown.me/author/sunisdown.html">@SunisDown</a>
-            <span> in </span>
-            <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark" title="Permalink to articles">[ articles ]</a></span>
-            <span class="post_date">Mon 08 July 2013</span>
-            <div><span>Tags : </span>
-                <span><a href="http://sunisdown.me/tag/python.html">#python, </a></span>
-                <span><a href="http://sunisdown.me/tag/decorator.html">#decorator, </a></span>
             </div>
+            <div class="post_list">
+                <span>By </span>
+                <a href="http://sunisdown.me/author/sunisdown.html">@SunisDown</a>
+                <span> in </span>
+                <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark"
+                                               title="Permalink to articles">[ articles ]</a></span>
+                <span class="post_date">Mon 08 July 2013</span>
+                <div><span>Tags : </span>
+                            <span><a href="http://sunisdown.me/tag/python.html">#python, </a></span>
+                            <span><a href="http://sunisdown.me/tag/decorator.html">#decorator, </a></span>
+                </div>
 
-            <div class="entry-social">
-                <span class="twitter"><a target="_blank" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;" title="Twitter" href="https://twitter.com/share?url=http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html&text=Python 装饰器之 functools.wraps&via="><img src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
+                <div class="entry-social">
+                    <span class="twitter"><a target="_blank" rel="nofollow"
+                                             onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;"
+                                             title="Twitter"
+                                             href="https://twitter.com/share?url=http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html&text=Python 装饰器之 functools.wraps&via="><img
+                            src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
 
-                <span class="gplus"><a target="_blank" title="Google +" href="https://plus.google.com/share?url=http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html&hl=fr" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
+                    <span class="gplus"><a target="_blank" title="Google +"
+                                           href="https://plus.google.com/share?url=http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html&hl=fr"
+                                           rel="nofollow"
+                                           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
 
-                <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;" href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html&t=Python 装饰器之 functools.wraps"><img src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
+                    <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow"
+                                              onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;"
+                                              href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html&t=Python 装饰器之 functools.wraps"><img
+                            src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
 
-                <a  target="_blank" title="Linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html&title=Python 装饰器之 functools.wraps" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
+                    <a target="_blank" title="Linkedin"
+                       href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html&title=Python 装饰器之 functools.wraps"
+                       rel="nofollow"
+                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
 
-                <span class="mail"><a href="mailto:?subject=Python 装饰器之 functools.wraps&amp;body=Viens découvrir un article à propos de [Python 装饰器之 functools.wraps] sur le site de sunisdown. http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html" title="Share by Email" target="_blank"><img src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+                    <span class="mail"><a
+                            href="mailto:?subject=Python 装饰器之 functools.wraps&amp;body=Viens découvrir un article à propos de [Python 装饰器之 functools.wraps] sur le site de sunisdown. http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html"
+                            title="Share by Email" target="_blank"><img
+                            src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+                </div>
             </div>
-        </div>
-    </article>
-</section>
-  </article>
+        </article>
+    </section>
+</article>
 
-  <!-- Footer -->
-  <footer>
-    <p>
-      Blog powered by <a href="http://getpelican.com/">Pelican</a>, 
-      which takes great advantage of <a href="http://python.org">Python</a>.
-      Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a href="https://parbhatpuri.com/">@parbhat</a>.
-    </p>
-  </footer>
+<!-- Footer -->
+    <footer>
+        <p>
+            Blog powered by <a href="http://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a href="http://python.org">Python</a>.
+            Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a
+                href="https://parbhatpuri.com/">@parbhat</a>.
+        </p>
+    </footer>
 
 
 </body>

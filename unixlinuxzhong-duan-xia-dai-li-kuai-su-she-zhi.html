@@ -1,113 +1,93 @@
 <!doctype html>
 <html lang="zh" itemscope itemtype="http://schema.org/Person">
 <head>
-  <meta charset="utf-8">
-  <!-- Site Meta Data -->
-  <title>Unix/Linux终端下代理快速设置</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="sunisdown">
+            <meta charset="utf-8">
+        <!-- Site Meta Data -->
+        <title>Unix/Linux终端下代理快速设置</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="sunisdown">
 
-  <link rel="shortcut icon" href="">
+        <link rel="shortcut icon" href="">
 
-  <!-- schema.org -->
-  <meta itemprop="name" content="SunisDown">
-  <meta itemprop="image" content="">
-  <meta itemprop="description" content="">
+        <!-- schema.org -->
+        <meta itemprop="name" content="SunisDown">
+        <meta itemprop="image" content="">
+        <meta itemprop="description" content="">
 
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
-  <!-- Style Meta Data -->
-  <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css" />
-  <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css" />
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+        <!-- Style Meta Data -->
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css"/>
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css"/>
 
-  <!-- Feed Meta Data -->
-    <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="SunisDown ATOM Feed" />
+        <!-- Feed Meta Data -->
+            <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+                  title="SunisDown ATOM Feed"/>
 
-  <!-- Twitter Feed -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="">
-  <meta name="twitter:image" content="">
+        <!-- Twitter Feed -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="">
+        <meta name="twitter:image" content="">
 
-<meta name="twitter:creator" content="">
-<meta name="twitter:url" content="http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html">
-<meta name="twitter:title" content="SunisDown ~ Unix/Linux终端下代理快速设置">
-<meta name="twitter:description" content='<p>最近开始从 Vim 往 Emacs，这是一个痛苦的过程，不过好在有
-evil-mode，让这个迁移的过程不至于夭折。别问我为什么要背叛 Vim 。</p>
-<p>像我这种 Emacs 新手难免会需要下载插件，而下载插件就需要FUCK GFW。笨笨用</p>
-<div class="highlight"><pre><span></span><span class="nv">http_proxy</span><span class="o">=</span>http://host:port emacs -nw
-</pre></div>
-<p>这种方法来启动 emacs，简直要哭晕在地上。</p>
-<div class="section" id="id1">
-<h2>设置方法</h2>
-<p>所以在配置文件中加了下面的代码，方便在终端下控制当前环境变量下FUCK GFW：</p>
-<div class="highlight"><pre><span></span><span class="k">function</span> proxy_on<span class="o">()</span> <span class="o">{</span>
-    <span class="nb">export</span> <span class="nv">no_proxy</span><span class="o">=</span><span class="s2">&quot;localhost,127.0.0.1,localaddress,.localdomain.com&quot;</span>
-    <span class="nb">export</span> <span class="nv">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://host:port&quot;</span>
-    <span class="nb">export</span> <span class="nv">https_proxy</span><span class="o">=</span><span class="nv">$http_proxy</span>
-    <span class="nb">echo ...</span></pre></div></div>'>
+    <meta name="twitter:creator" content="">
+    <meta name="twitter:url" content="http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html">
+    <meta name="twitter:title" content="SunisDown ~ Unix/Linux终端下代理快速设置">
+    <meta name="twitter:description" content="最近开始从 Vim 往 Emacs，这是一个痛苦的过程，不过好在有 evil-mode，让这个迁移的过程不至于夭折。别问我为什么要背叛 Vim 。 像我这种 Emacs 新手难免会需要下载插件，而下载插件就需要FUCK GFW。笨笨用 http_proxy=http://host:port emacs -nw 这种方法来启动 emacs，简直要哭晕在地上。 设置方法 所以在配置文件中加了下面的代码，方便在终端下控制当前环境变量下FUCK GFW： function proxy_on() { export no_proxy=&#34;localhost,127.0.0.1,localaddress,.localdomain.com&#34; export http_proxy=&#34;http://host:port&#34; export https_proxy=$http_proxy echo …">
 
-<!-- Facebook Meta Data -->
-<meta property="og:title" content="SunisDown ~ Unix/Linux终端下代理快速设置" />
-<meta property="og:description" content='<p>最近开始从 Vim 往 Emacs，这是一个痛苦的过程，不过好在有
-evil-mode，让这个迁移的过程不至于夭折。别问我为什么要背叛 Vim 。</p>
-<p>像我这种 Emacs 新手难免会需要下载插件，而下载插件就需要FUCK GFW。笨笨用</p>
-<div class="highlight"><pre><span></span><span class="nv">http_proxy</span><span class="o">=</span>http://host:port emacs -nw
-</pre></div>
-<p>这种方法来启动 emacs，简直要哭晕在地上。</p>
-<div class="section" id="id1">
-<h2>设置方法</h2>
-<p>所以在配置文件中加了下面的代码，方便在终端下控制当前环境变量下FUCK GFW：</p>
-<div class="highlight"><pre><span></span><span class="k">function</span> proxy_on<span class="o">()</span> <span class="o">{</span>
-    <span class="nb">export</span> <span class="nv">no_proxy</span><span class="o">=</span><span class="s2">&quot;localhost,127.0.0.1,localaddress,.localdomain.com&quot;</span>
-    <span class="nb">export</span> <span class="nv">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://host:port&quot;</span>
-    <span class="nb">export</span> <span class="nv">https_proxy</span><span class="o">=</span><span class="nv">$http_proxy</span>
-    <span class="nb">echo ...</span></pre></div></div>' />
-<meta property="og:image" content="" />
+    <!-- Facebook Meta Data -->
+    <meta property="og:title" content="SunisDown ~ Unix/Linux终端下代理快速设置"/>
+    <meta property="og:description" content="最近开始从 Vim 往 Emacs，这是一个痛苦的过程，不过好在有 evil-mode，让这个迁移的过程不至于夭折。别问我为什么要背叛 Vim 。 像我这种 Emacs 新手难免会需要下载插件，而下载插件就需要FUCK GFW。笨笨用 http_proxy=http://host:port emacs -nw 这种方法来启动 emacs，简直要哭晕在地上。 设置方法 所以在配置文件中加了下面的代码，方便在终端下控制当前环境变量下FUCK GFW： function proxy_on() { export no_proxy=&#34;localhost,127.0.0.1,localaddress,.localdomain.com&#34; export http_proxy=&#34;http://host:port&#34; export https_proxy=$http_proxy echo …"/>
+    <meta property="og:image" content=""/>
 </head>
 
 <body>
-  <!-- Sidebar -->
-  <aside>
+<!-- Sidebar -->
+<aside>
     <!--<center><a href="http://sunisdown.me"><img id="avatar" src=""></a></center>-->
     <h1>SunisDown</h1>
     <br>
 
 
     <nav class="nav">
-      <ul class="list-bare">
-      
-          <li><a class="nav__link" href="/index.html">Blog</a></li>
-          <li><a class="nav__link" href="/archives.html">Archives</a></li>
-          <li><a class="nav__link" href="/tags.html">Tags</a></li>
-         
-          <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
-         
-      </ul>
+        <ul class="list-bare">
+
+                <li><a class="nav__link" href="/index.html">Blog</a></li>
+                <li><a class="nav__link" href="/archives.html">Archives</a></li>
+                <li><a class="nav__link" href="/tags.html">Tags</a></li>
+
+                <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
+
+        </ul>
     </nav>
 
     <p class="social">
-        <a href="http://1024.today" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
-        <a href="https://twitter.com/SunisD0wn" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
-        <a href="https://github.com/sunisdown" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/github.png"></a>
-      <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
-        <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
+                <a href="http://1024.today" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
+                <a href="https://twitter.com/SunisD0wn" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
+                <a href="https://github.com/sunisdown" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/github.png"></a>
+            <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
+                <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
     </p>
 
-    <!--
-    <h2>Categories</h2>
-    <ul class="navbar">
-      <li class="active"><a href="http://sunisdown.me/category/articles.html">articles</a></li>
-    </ul> 
-    -->
-  </aside>
+        <h2>Categories</h2>
+        <ul class="navbar">
+                <li class="active"><a
+                        href="http://sunisdown.me/category/articles.html">articles</a></li>
+        </ul>
 
-  <!-- Content -->
-  <article>
-<section id="content">
-    <article>
-        <h2 class="post_title post_detail"><a href="http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html" rel="bookmark" title="Permalink to Unix/Linux终端下代理快速设置">Unix/Linux终端下代理快速设置</a></h2>
-        <div class="entry-content blog-post">
-            <p>最近开始从 Vim 往 Emacs，这是一个痛苦的过程，不过好在有
+
+</aside>
+
+<!-- Content -->
+<article>
+    <section id="content">
+        <article>
+            <h2 class="post_title post_detail"><a href="http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html" rel="bookmark"
+                                                  title="Permalink to Unix/Linux终端下代理快速设置">Unix/Linux终端下代理快速设置</a></h2>
+            <div class="entry-content blog-post">
+                <p>最近开始从 Vim 往 Emacs，这是一个痛苦的过程，不过好在有
 evil-mode，让这个迁移的过程不至于夭折。别问我为什么要背叛 Vim 。</p>
 <p>像我这种 Emacs 新手难免会需要下载插件，而下载插件就需要FUCK GFW。笨笨用</p>
 <div class="highlight"><pre><span></span><span class="nv">http_proxy</span><span class="o">=</span>http://host:port emacs -nw
@@ -150,43 +130,63 @@ Proxy environment variable removed.
 </pre></div>
 </div>
 
-        </div>
-        <div class="post_list">
-            <span>By </span>
-            <a href="http://sunisdown.me/author/sunisdown.html">@SunisDown</a>
-            <span> in </span>
-            <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark" title="Permalink to articles">[ articles ]</a></span>
-            <span class="post_date">Wed 22 October 2014</span>
-            <div><span>Tags : </span>
-                <span><a href="http://sunisdown.me/tag/linux.html">#linux, </a></span>
-                <span><a href="http://sunisdown.me/tag/unix.html">#unix, </a></span>
-                <span><a href="http://sunisdown.me/tag/proxy.html">#proxy, </a></span>
             </div>
+            <div class="post_list">
+                <span>By </span>
+                <a href="http://sunisdown.me/author/sunisdown.html">@SunisDown</a>
+                <span> in </span>
+                <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark"
+                                               title="Permalink to articles">[ articles ]</a></span>
+                <span class="post_date">Wed 22 October 2014</span>
+                <div><span>Tags : </span>
+                            <span><a href="http://sunisdown.me/tag/linux.html">#linux, </a></span>
+                            <span><a href="http://sunisdown.me/tag/unix.html">#unix, </a></span>
+                            <span><a href="http://sunisdown.me/tag/proxy.html">#proxy, </a></span>
+                </div>
 
-            <div class="entry-social">
-                <span class="twitter"><a target="_blank" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;" title="Twitter" href="https://twitter.com/share?url=http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html&text=Unix/Linux终端下代理快速设置&via="><img src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
+                <div class="entry-social">
+                    <span class="twitter"><a target="_blank" rel="nofollow"
+                                             onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;"
+                                             title="Twitter"
+                                             href="https://twitter.com/share?url=http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html&text=Unix/Linux终端下代理快速设置&via="><img
+                            src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
 
-                <span class="gplus"><a target="_blank" title="Google +" href="https://plus.google.com/share?url=http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html&hl=fr" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
+                    <span class="gplus"><a target="_blank" title="Google +"
+                                           href="https://plus.google.com/share?url=http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html&hl=fr"
+                                           rel="nofollow"
+                                           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
 
-                <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;" href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html&t=Unix/Linux终端下代理快速设置"><img src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
+                    <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow"
+                                              onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;"
+                                              href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html&t=Unix/Linux终端下代理快速设置"><img
+                            src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
 
-                <a  target="_blank" title="Linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html&title=Unix/Linux终端下代理快速设置" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
+                    <a target="_blank" title="Linkedin"
+                       href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html&title=Unix/Linux终端下代理快速设置"
+                       rel="nofollow"
+                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
 
-                <span class="mail"><a href="mailto:?subject=Unix/Linux终端下代理快速设置&amp;body=Viens découvrir un article à propos de [Unix/Linux终端下代理快速设置] sur le site de sunisdown. http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html" title="Share by Email" target="_blank"><img src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+                    <span class="mail"><a
+                            href="mailto:?subject=Unix/Linux终端下代理快速设置&amp;body=Viens découvrir un article à propos de [Unix/Linux终端下代理快速设置] sur le site de sunisdown. http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html"
+                            title="Share by Email" target="_blank"><img
+                            src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+                </div>
             </div>
-        </div>
-    </article>
-</section>
-  </article>
+        </article>
+    </section>
+</article>
 
-  <!-- Footer -->
-  <footer>
-    <p>
-      Blog powered by <a href="http://getpelican.com/">Pelican</a>, 
-      which takes great advantage of <a href="http://python.org">Python</a>.
-      Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a href="https://parbhatpuri.com/">@parbhat</a>.
-    </p>
-  </footer>
+<!-- Footer -->
+    <footer>
+        <p>
+            Blog powered by <a href="http://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a href="http://python.org">Python</a>.
+            Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a
+                href="https://parbhatpuri.com/">@parbhat</a>.
+        </p>
+    </footer>
 
 
 </body>

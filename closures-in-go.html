@@ -1,117 +1,93 @@
 <!doctype html>
 <html lang="zh" itemscope itemtype="http://schema.org/Person">
 <head>
-  <meta charset="utf-8">
-  <!-- Site Meta Data -->
-  <title>Closures in Go</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="sunisdown">
+            <meta charset="utf-8">
+        <!-- Site Meta Data -->
+        <title>Closures in Go</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="sunisdown">
 
-  <link rel="shortcut icon" href="">
+        <link rel="shortcut icon" href="">
 
-  <!-- schema.org -->
-  <meta itemprop="name" content="SunisDown">
-  <meta itemprop="image" content="">
-  <meta itemprop="description" content="">
+        <!-- schema.org -->
+        <meta itemprop="name" content="SunisDown">
+        <meta itemprop="image" content="">
+        <meta itemprop="description" content="">
 
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
-  <!-- Style Meta Data -->
-  <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css" />
-  <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css" />
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+        <!-- Style Meta Data -->
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css"/>
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css"/>
 
-  <!-- Feed Meta Data -->
-    <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="SunisDown ATOM Feed" />
+        <!-- Feed Meta Data -->
+            <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+                  title="SunisDown ATOM Feed"/>
 
-  <!-- Twitter Feed -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="">
-  <meta name="twitter:image" content="">
+        <!-- Twitter Feed -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="">
+        <meta name="twitter:image" content="">
 
-<meta name="twitter:creator" content="">
-<meta name="twitter:url" content="http://sunisdown.me/closures-in-go.html">
-<meta name="twitter:title" content="SunisDown ~ Closures in Go">
-<meta name="twitter:description" content='<p>在 <a class="reference external" href="https://qyuhen.bearychat.com">Qyuhen</a> 老大那边潜水的时候，基本上过一段时间就会看见有人讨论闭包。而随手 <tt class="docutils literal">Google</tt> 也并没有看到哪些 Blog 说的很清楚，甚至有一些 <tt class="docutils literal">Blog</tt> 里面的内容都是错的。（当然，也有可能是我理解错了）所以就想自己写一下。</p>
-<div class="section" id="id1">
-<h2>什么是闭包</h2>
-<p>在谈起闭包(Closure)的时候，经常也会说起匿名函数。在 <a class="reference external" href="https://gobyexample.com/closures">gobyexample</a> 里面这两个概念也是放在一起的，很多人搞不清楚闭包与匿名函数有什么关系。这两者确实经常会一起出现，但是并不是一个概念。闭包是闭包，匿名函数是匿名函数。</p>
-<div class="section" id="id2">
-<h3>匿名函数</h3>
-<p>匿名函数与正常的函数区别不大，只是这个函数没有名字。在 <tt class="docutils literal">Go</tt> 里面，一个真正的函数里面</p>
-<div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">Foo</span><span class="p">(</span><span class="nx">message</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 声明一个正常的函数</span>
-    <span class="nb">println</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span>
-<span class="p">}</span>
+    <meta name="twitter:creator" content="">
+    <meta name="twitter:url" content="http://sunisdown.me/closures-in-go.html">
+    <meta name="twitter:title" content="SunisDown ~ Closures in Go">
+    <meta name="twitter:description" content="在 Qyuhen 老大那边潜水的时候，基本上过一段时间就会看见有人讨论闭包。而随手 Google 也并没有看到哪些 Blog 说的很清楚，甚至有一些 Blog 里面的内容都是错的。（当然，也有可能是我理解错了）所以就想自己写一下。 什么是闭包 在谈起闭包(Closure)的时候，经常也会说起匿名函数。在 gobyexample 里面这两个概念也是放在一起的，很多人搞不清楚闭包与匿名函数有什么关系。这两者确实经常会一起出现，但是并不是一个概念。闭包是闭包，匿名函数是匿名函数。 匿名函数 匿名函数与正常的函数区别不大，只是这个函数没有名字。在 Go 里面，一个真正的函数里面 func Foo(message string) { // 声明一个正常的函数 println(message) } func main() { Foo(&#34;hello world!&#34;) } 里面有函数名，有函数主体。但是匿名函数的类似与下面这样子 …">
 
-<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">Foo</span><span class="p">(</span><span class="s">&quot;hello world!&quot;</span><span class="p">)</span>
-<span class="p">}</span>
-</pre></div>
-<p>里面有函数名，有函数主体。但是匿名函数的类似与下面这样子 ...</p></div></div>'>
-
-<!-- Facebook Meta Data -->
-<meta property="og:title" content="SunisDown ~ Closures in Go" />
-<meta property="og:description" content='<p>在 <a class="reference external" href="https://qyuhen.bearychat.com">Qyuhen</a> 老大那边潜水的时候，基本上过一段时间就会看见有人讨论闭包。而随手 <tt class="docutils literal">Google</tt> 也并没有看到哪些 Blog 说的很清楚，甚至有一些 <tt class="docutils literal">Blog</tt> 里面的内容都是错的。（当然，也有可能是我理解错了）所以就想自己写一下。</p>
-<div class="section" id="id1">
-<h2>什么是闭包</h2>
-<p>在谈起闭包(Closure)的时候，经常也会说起匿名函数。在 <a class="reference external" href="https://gobyexample.com/closures">gobyexample</a> 里面这两个概念也是放在一起的，很多人搞不清楚闭包与匿名函数有什么关系。这两者确实经常会一起出现，但是并不是一个概念。闭包是闭包，匿名函数是匿名函数。</p>
-<div class="section" id="id2">
-<h3>匿名函数</h3>
-<p>匿名函数与正常的函数区别不大，只是这个函数没有名字。在 <tt class="docutils literal">Go</tt> 里面，一个真正的函数里面</p>
-<div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">Foo</span><span class="p">(</span><span class="nx">message</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 声明一个正常的函数</span>
-    <span class="nb">println</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">Foo</span><span class="p">(</span><span class="s">&quot;hello world!&quot;</span><span class="p">)</span>
-<span class="p">}</span>
-</pre></div>
-<p>里面有函数名，有函数主体。但是匿名函数的类似与下面这样子 ...</p></div></div>' />
-<meta property="og:image" content="" />
+    <!-- Facebook Meta Data -->
+    <meta property="og:title" content="SunisDown ~ Closures in Go"/>
+    <meta property="og:description" content="在 Qyuhen 老大那边潜水的时候，基本上过一段时间就会看见有人讨论闭包。而随手 Google 也并没有看到哪些 Blog 说的很清楚，甚至有一些 Blog 里面的内容都是错的。（当然，也有可能是我理解错了）所以就想自己写一下。 什么是闭包 在谈起闭包(Closure)的时候，经常也会说起匿名函数。在 gobyexample 里面这两个概念也是放在一起的，很多人搞不清楚闭包与匿名函数有什么关系。这两者确实经常会一起出现，但是并不是一个概念。闭包是闭包，匿名函数是匿名函数。 匿名函数 匿名函数与正常的函数区别不大，只是这个函数没有名字。在 Go 里面，一个真正的函数里面 func Foo(message string) { // 声明一个正常的函数 println(message) } func main() { Foo(&#34;hello world!&#34;) } 里面有函数名，有函数主体。但是匿名函数的类似与下面这样子 …"/>
+    <meta property="og:image" content=""/>
 </head>
 
 <body>
-  <!-- Sidebar -->
-  <aside>
+<!-- Sidebar -->
+<aside>
     <!--<center><a href="http://sunisdown.me"><img id="avatar" src=""></a></center>-->
     <h1>SunisDown</h1>
     <br>
 
 
     <nav class="nav">
-      <ul class="list-bare">
-      
-          <li><a class="nav__link" href="/index.html">Blog</a></li>
-          <li><a class="nav__link" href="/archives.html">Archives</a></li>
-          <li><a class="nav__link" href="/tags.html">Tags</a></li>
-         
-          <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
-         
-      </ul>
+        <ul class="list-bare">
+
+                <li><a class="nav__link" href="/index.html">Blog</a></li>
+                <li><a class="nav__link" href="/archives.html">Archives</a></li>
+                <li><a class="nav__link" href="/tags.html">Tags</a></li>
+
+                <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
+
+        </ul>
     </nav>
 
     <p class="social">
-        <a href="http://1024.today" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
-        <a href="https://twitter.com/SunisD0wn" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
-        <a href="https://github.com/sunisdown" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/github.png"></a>
-      <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
-        <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
+                <a href="http://1024.today" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
+                <a href="https://twitter.com/SunisD0wn" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
+                <a href="https://github.com/sunisdown" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/github.png"></a>
+            <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
+                <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
     </p>
 
-    <!--
-    <h2>Categories</h2>
-    <ul class="navbar">
-      <li class="active"><a href="http://sunisdown.me/category/articles.html">articles</a></li>
-    </ul> 
-    -->
-  </aside>
+        <h2>Categories</h2>
+        <ul class="navbar">
+                <li class="active"><a
+                        href="http://sunisdown.me/category/articles.html">articles</a></li>
+        </ul>
 
-  <!-- Content -->
-  <article>
-<section id="content">
-    <article>
-        <h2 class="post_title post_detail"><a href="http://sunisdown.me/closures-in-go.html" rel="bookmark" title="Permalink to Closures in Go">Closures in Go</a></h2>
-        <div class="entry-content blog-post">
-            <p>在 <a class="reference external" href="https://qyuhen.bearychat.com">Qyuhen</a> 老大那边潜水的时候，基本上过一段时间就会看见有人讨论闭包。而随手 <tt class="docutils literal">Google</tt> 也并没有看到哪些 Blog 说的很清楚，甚至有一些 <tt class="docutils literal">Blog</tt> 里面的内容都是错的。（当然，也有可能是我理解错了）所以就想自己写一下。</p>
+
+</aside>
+
+<!-- Content -->
+<article>
+    <section id="content">
+        <article>
+            <h2 class="post_title post_detail"><a href="http://sunisdown.me/closures-in-go.html" rel="bookmark"
+                                                  title="Permalink to Closures in Go">Closures in Go</a></h2>
+            <div class="entry-content blog-post">
+                <p>在 <a class="reference external" href="https://qyuhen.bearychat.com">Qyuhen</a> 老大那边潜水的时候，基本上过一段时间就会看见有人讨论闭包。而随手 <tt class="docutils literal">Google</tt> 也并没有看到哪些 Blog 说的很清楚，甚至有一些 <tt class="docutils literal">Blog</tt> 里面的内容都是错的。（当然，也有可能是我理解错了）所以就想自己写一下。</p>
 <div class="section" id="id1">
 <h2>什么是闭包</h2>
 <p>在谈起闭包(Closure)的时候，经常也会说起匿名函数。在 <a class="reference external" href="https://gobyexample.com/closures">gobyexample</a> 里面这两个概念也是放在一起的，很多人搞不清楚闭包与匿名函数有什么关系。这两者确实经常会一起出现，但是并不是一个概念。闭包是闭包，匿名函数是匿名函数。</p>
@@ -203,7 +179,7 @@
 <p>首先我们将上面的代码编译</p>
 <div class="highlight"><pre><span></span>go build -gcflags <span class="s2">&quot;-N -l -m&quot;</span> -o <span class="nb">test</span>
 </pre></div>
-<p>生成一个 elf 格式的文件 test。</p>
+<p>生成一个 elf 格式的文件 main。</p>
 <p>然后我们通过 go 提供的反汇编工具，反编译我们刚刚生成的 test 文件。</p>
 <div class="highlight"><pre><span></span><span class="nv">$go</span> tool objdump -s <span class="s2">&quot;main\.main&quot;</span> ./test
 TEXT main.main<span class="o">(</span>SB<span class="o">)</span> /root/data/example/closures/anonymous_func.go
@@ -213,12 +189,12 @@ TEXT main.main<span class="o">(</span>SB<span class="o">)</span> /root/data/exam
      anonymous_func.go:7     0x40104f        4883ec10                SUBQ <span class="nv">$0</span>x10, SP
      anonymous_func.go:8     0x401053        488d1d16830800          LEAQ 0x88316<span class="o">(</span>IP<span class="o">)</span>, BX
      anonymous_func.go:8     0x40105a        48895c2408              MOVQ BX, 0x8<span class="o">(</span>SP<span class="o">)</span>
-     anonymous_func.go:11    0x40105f        48c7042400010000        MOVQ <span class="nv">$0</span>x100, 0<span class="o">(</span>SP<span class="o">)</span>
+     anonymous_func.go:11    0x40105f        48c7042400010000        MOVQ <span class="nv">$0</span>x100, <span class="m">0</span><span class="o">(</span>SP<span class="o">)</span>
      anonymous_func.go:11    0x401067        488b5c2408              MOVQ 0x8<span class="o">(</span>SP<span class="o">)</span>, BX
      anonymous_func.go:11    0x40106c        4889da                  MOVQ BX, DX
-     anonymous_func.go:11    0x40106f        488b1a                  MOVQ 0<span class="o">(</span>DX<span class="o">)</span>, BX
+     anonymous_func.go:11    0x40106f        488b1a                  MOVQ <span class="m">0</span><span class="o">(</span>DX<span class="o">)</span>, BX
      anonymous_func.go:11    0x401072        ffd3                    CALL BX
-     anonymous_func.go:12    0x401074        48c7042400010000        MOVQ <span class="nv">$0</span>x100, 0<span class="o">(</span>SP<span class="o">)</span>
+     anonymous_func.go:12    0x401074        48c7042400010000        MOVQ <span class="nv">$0</span>x100, <span class="m">0</span><span class="o">(</span>SP<span class="o">)</span>
      anonymous_func.go:12    0x40107c        e87fffffff              CALL main.myFunc<span class="o">(</span>SB<span class="o">)</span>
      anonymous_func.go:13    0x401081        4883c410                ADDQ <span class="nv">$0</span>x10, SP
      anonymous_func.go:13    0x401085        c3                      RET
@@ -234,21 +210,21 @@ TEXT main.main<span class="o">(</span>SB<span class="o">)</span> /root/data/exam
 <div class="highlight"><pre><span></span>gdb main
 Reading symbols from test...done.
 <span class="o">(</span>gdb<span class="o">)</span> b main.main
-Breakpoint <span class="m">1</span> at 0x401040: file /root/data/example/closures/anonymous_func.go, line 7.
+Breakpoint <span class="m">1</span> at 0x401040: file /root/data/example/closures/anonymous_func.go, line <span class="m">7</span>.
 <span class="o">(</span>gdb<span class="o">)</span> r
 Starting program: /root/data/example/closures/test
-<span class="o">[</span>New LWP 2067<span class="o">]</span>
-<span class="o">[</span>New LWP 2068<span class="o">]</span>
-<span class="o">[</span>New LWP 2069<span class="o">]</span>
+<span class="o">[</span>New LWP <span class="m">2067</span><span class="o">]</span>
+<span class="o">[</span>New LWP <span class="m">2068</span><span class="o">]</span>
+<span class="o">[</span>New LWP <span class="m">2069</span><span class="o">]</span>
 
-Breakpoint 1, main.main <span class="o">()</span> at /root/data/example/closures/anonymous_func.go:7
+Breakpoint <span class="m">1</span>, main.main <span class="o">()</span> at /root/data/example/closures/anonymous_func.go:7
 <span class="m">7</span>       func main<span class="o">()</span> <span class="o">{</span>
 <span class="o">(</span>gdb<span class="o">)</span> l
-2
+<span class="m">2</span>
 <span class="m">3</span>       func myFunc<span class="o">(</span>message int<span class="o">)</span> <span class="o">{</span>
 <span class="m">4</span>               println<span class="o">(</span>message<span class="o">)</span>
 <span class="m">5</span>       <span class="o">}</span>
-6
+<span class="m">6</span>
 <span class="m">7</span>       func main<span class="o">()</span> <span class="o">{</span>
 <span class="m">8</span>               f :<span class="o">=</span> func<span class="o">(</span>message int<span class="o">)</span> <span class="o">{</span>
 <span class="m">9</span>                       println<span class="o">(</span>message<span class="o">)</span>
@@ -260,12 +236,12 @@ Breakpoint 1, main.main <span class="o">()</span> at /root/data/example/closures
 0xc820039f40:   0x000000c820000180
 </pre></div>
 <p>上面在 gdb 里面把断点设置在 <tt class="docutils literal">main.main</tt> 处，然后通过输出当前的环境变量可以看到变量 f。这时候显示 f 指针指向的内存内容。</p>
-<div class="highlight"><pre><span></span><span class="o">(</span>gdb<span class="o">)</span> b 11
-Breakpoint <span class="m">2</span> at 0x40105f: file /root/data/example/closures/anonymous_func.go, line 11.
+<div class="highlight"><pre><span></span><span class="o">(</span>gdb<span class="o">)</span> b <span class="m">11</span>
+Breakpoint <span class="m">2</span> at 0x40105f: file /root/data/example/closures/anonymous_func.go, line <span class="m">11</span>.
 <span class="o">(</span>gdb<span class="o">)</span> c
 Continuing.
 
-Breakpoint 2, main.main <span class="o">()</span> at /root/data/example/closures/anonymous_func.go:11
+Breakpoint <span class="m">2</span>, main.main <span class="o">()</span> at /root/data/example/closures/anonymous_func.go:11
 <span class="m">11</span>              f<span class="o">(</span>0x100<span class="o">)</span>
 <span class="o">(</span>gdb<span class="o">)</span> i locals
 <span class="nv">f</span> <span class="o">=</span> <span class="o">{</span>void <span class="o">(</span>int<span class="o">)}</span> 0xc820039f40
@@ -280,8 +256,8 @@ main.main.func1 in section .text of /root/data/example/closures/test
 </pre></div>
 <p>然后在调用匿名函数 <tt class="docutils literal">f</tt> 的地方再设置一个断点， <tt class="docutils literal">c</tt> 让程序执行到新的断点。再输出 f 指针指向的内存，发现里面的内容已经改变了，输出符号名可以看到符号是 <tt class="docutils literal">main.main.func1.f</tt>, 这个是编译器提我们生成的符号名，然后看一下这个地址指向的内容，会发现 <tt class="docutils literal">main.main.func1</tt> ，也就是就是我们的匿名函数。接着跟</p>
 <div class="highlight"><pre><span></span><span class="o">(</span>gdb<span class="o">)</span> i r
-  rax            0xc820000180     859530330496
-  rbx            0x489370 4756336
+  rax            0xc820000180     <span class="m">859530330496</span>
+  rbx            0x489370 <span class="m">4756336</span>
   ...
 <span class="o">(</span>gdb<span class="o">)</span> disassemble
 Dump of assembler code <span class="k">for</span> <span class="k">function</span> main.main:
@@ -346,10 +322,10 @@ End of assembler dump.
 <span class="o">(</span>gdb<span class="o">)</span> ni
 0x0000000000401072      <span class="m">11</span>              f<span class="o">(</span>0x100<span class="o">)</span>
 <span class="o">(</span>gdb<span class="o">)</span> p <span class="nv">$rbx</span>
-<span class="nv">$5</span> <span class="o">=</span> 4198544
+<span class="nv">$5</span> <span class="o">=</span> <span class="m">4198544</span>
 <span class="o">(</span>gdb<span class="o">)</span> i r
-rax            0xc820000180     859530330496
-rbx            0x401090 4198544
+rax            0xc820000180     <span class="m">859530330496</span>
+rbx            0x401090 <span class="m">4198544</span>
 ...
 <span class="o">(</span>gdb<span class="o">)</span> x/1xg 0x401090
 0x401090 &lt;main.main.func1&gt;:     0xfffff8250c8b4864
@@ -389,19 +365,19 @@ rbx            0x401090 4198544
 
 $ gdb closure_func
 <span class="o">(</span>gdb<span class="o">)</span> b main.main
-Breakpoint <span class="m">1</span> at 0x4010d0: file /root/data/example/closures/closure_func.go, line 11.
+Breakpoint <span class="m">1</span> at 0x4010d0: file /root/data/example/closures/closure_func.go, line <span class="m">11</span>.
 <span class="o">(</span>gdb<span class="o">)</span> r
 Starting program: /root/data/example/closures/closure_func
-<span class="o">[</span>New LWP 5367<span class="o">]</span>
-<span class="o">[</span>New LWP 5368<span class="o">]</span>
-<span class="o">[</span>New LWP 5370<span class="o">]</span>
-<span class="o">[</span>New LWP 5369<span class="o">]</span>
+<span class="o">[</span>New LWP <span class="m">5367</span><span class="o">]</span>
+<span class="o">[</span>New LWP <span class="m">5368</span><span class="o">]</span>
+<span class="o">[</span>New LWP <span class="m">5370</span><span class="o">]</span>
+<span class="o">[</span>New LWP <span class="m">5369</span><span class="o">]</span>
 
-Breakpoint 1, main.main <span class="o">()</span> at /root/data/example/closures/closure_func.go:11
+Breakpoint <span class="m">1</span>, main.main <span class="o">()</span> at /root/data/example/closures/closure_func.go:11
 <span class="m">11</span>      func main<span class="o">()</span> <span class="o">{</span>
 <span class="o">(</span>gdb<span class="o">)</span> i locals
-<span class="nv">value_2</span> <span class="o">=</span> 859530428512
-<span class="nv">value_1</span> <span class="o">=</span> 0
+<span class="nv">value_2</span> <span class="o">=</span> <span class="m">859530428512</span>
+<span class="nv">value_1</span> <span class="o">=</span> <span class="m">0</span>
 <span class="nv">bar</span> <span class="o">=</span> <span class="o">{</span>void <span class="o">(</span>int *<span class="o">)}</span> 0xc820039f40
 </pre></div>
 <p><tt class="docutils literal">gdb</tt> 在 <tt class="docutils literal">main.main</tt> 设置断点并输出环境变量可以看到 <tt class="docutils literal">bar</tt>，而且 <tt class="docutils literal">bar</tt> 是一个指针。</p>
@@ -418,8 +394,8 @@ Breakpoint 1, main.main <span class="o">()</span> at /root/data/example/closures
     0x00000000004010f6 &lt;+38&gt;:    mov    %rbx,%rdx
     ...
 <span class="o">(</span>gdb<span class="o">)</span> i r
-rax            0x80000  524288
-rbx            0xc82000a140     859530371392
+rax            0x80000  <span class="m">524288</span>
+rbx            0xc82000a140     <span class="m">859530371392</span>
 ...
 <span class="o">(</span>gdb<span class="o">)</span> x/2xg 0xc82000a140
 0xc82000a140:   0x0000000000401170      0x000000c82000a0b8
@@ -447,7 +423,7 @@ End of assembler dump.
 <span class="o">(</span>gdb<span class="o">)</span> ni
 0x00000000004010fc      <span class="m">13</span>              value_1 :<span class="o">=</span> bar<span class="o">()</span>
 <span class="o">(</span>gdb<span class="o">)</span> si
-main.myFunc.func1 <span class="o">(</span>~r0<span class="o">=</span>859530371392<span class="o">)</span> at /root/data/example/closures/closure_func.go:5
+main.myFunc.func1 <span class="o">(</span>~r0<span class="o">=</span><span class="m">859530371392</span><span class="o">)</span> at /root/data/example/closures/closure_func.go:5
 <span class="m">5</span>               <span class="k">return</span> func<span class="o">()</span> int <span class="o">{</span>
 <span class="o">(</span>gdb<span class="o">)</span> disassemble
 Dump of assembler code <span class="k">for</span> <span class="k">function</span> main.myFunc.func1:
@@ -460,10 +436,10 @@ Dump of assembler code <span class="k">for</span> <span class="k">function</span
   ...
 End of assembler dump.
 <span class="o">(</span>gdb<span class="o">)</span> i r
-rax            0x80000  524288
-rbx            0x401170 4198768
-rcx            0xc820000180     859530330496
-rdx            0xc82000a140     859530371392
+rax            0x80000  <span class="m">524288</span>
+rbx            0x401170 <span class="m">4198768</span>
+rcx            0xc820000180     <span class="m">859530330496</span>
+rdx            0xc82000a140     <span class="m">859530371392</span>
 ...
 <span class="o">(</span>gdb<span class="o">)</span> x/2xg 0xc82000a140
 0xc82000a140:   0x0000000000401170      0x000000c82000a0b8
@@ -473,12 +449,12 @@ rdx            0xc82000a140     859530371392
 0xc82000a0b8:   0x0000000000000000      0x3d534e4d554c4f43
 </pre></div>
 <p>让程序执行到 +44 行，<tt class="docutils literal">si</tt> 进入到匿名函数内部。在 <tt class="docutils literal">func1</tt> 内部可以看到从 <tt class="docutils literal">rdx</tt> 取数据。输出 <tt class="docutils literal">rdx</tt> 内容，可以看到前面指向匿名函数，而后面则指向另外的内容 <tt class="docutils literal">0x0000000000000000</tt>。</p>
-<div class="highlight"><pre><span></span><span class="o">(</span>gdb<span class="o">)</span> b 14
-Breakpoint <span class="m">2</span> at 0x401107: file /root/data/example/closures/closure_func.go, line 14.
+<div class="highlight"><pre><span></span><span class="o">(</span>gdb<span class="o">)</span> b <span class="m">14</span>
+Breakpoint <span class="m">2</span> at 0x401107: file /root/data/example/closures/closure_func.go, line <span class="m">14</span>.
 <span class="o">(</span>gdb<span class="o">)</span> c
 Continuing.
 
-Breakpoint 2, main.main <span class="o">()</span> at /root/data/example/closures/closure_func.go:14
+Breakpoint <span class="m">2</span>, main.main <span class="o">()</span> at /root/data/example/closures/closure_func.go:14
 <span class="m">14</span>              value_2 :<span class="o">=</span> bar<span class="o">()</span>
 <span class="m">14</span>              value_2 :<span class="o">=</span> bar<span class="o">()</span>
 <span class="o">(</span>gdb<span class="o">)</span> disassemble
@@ -503,7 +479,7 @@ Dump of assembler code <span class="k">for</span> <span class="k">function</span
   0x0000000000401114 &lt;+68&gt;:    mov    <span class="o">(</span>%rsp<span class="o">)</span>,%rbx
   ...
 End of assembler dump.
-<span class="o">(</span>gdb<span class="o">)</span> ni 3
+<span class="o">(</span>gdb<span class="o">)</span> ni <span class="m">3</span>
 0x0000000000401112      <span class="m">14</span>              value_2 :<span class="o">=</span> bar<span class="o">()</span>
 <span class="o">(</span>gdb<span class="o">)</span> disassemble
 Dump of assembler code <span class="k">for</span> <span class="k">function</span> main.main:
@@ -528,7 +504,7 @@ Dump of assembler code <span class="k">for</span> <span class="k">function</span
   ...
 End of assembler dump.
 <span class="o">(</span>gdb<span class="o">)</span> si
-main.myFunc.func1 <span class="o">(</span>~r0<span class="o">=</span>1<span class="o">)</span> at /root/data/example/closures/closure_func.go:5
+main.myFunc.func1 <span class="o">(</span>~r0<span class="o">=</span><span class="m">1</span><span class="o">)</span> at /root/data/example/closures/closure_func.go:5
 <span class="m">5</span>               <span class="k">return</span> func<span class="o">()</span> int <span class="o">{</span>
 <span class="o">(</span>gdb<span class="o">)</span> disassemble
 Dump of assembler code <span class="k">for</span> <span class="k">function</span> main.myFunc.func1:
@@ -541,10 +517,10 @@ Dump of assembler code <span class="k">for</span> <span class="k">function</span
   ...
 End of assembler dump.
 <span class="o">(</span>gdb<span class="o">)</span> i r
-rax            0x80000  524288
-rbx            0x401170 4198768
-rcx            0xc820000180     859530330496
-rdx            0xc82000a140     859530371392
+rax            0x80000  <span class="m">524288</span>
+rbx            0x401170 <span class="m">4198768</span>
+rcx            0xc820000180     <span class="m">859530330496</span>
+rdx            0xc82000a140     <span class="m">859530371392</span>
 ...
 <span class="o">(</span>gdb<span class="o">)</span> x/2xg 0xc82000a140
 0xc82000a140:   0x0000000000401170      0x000000c82000a0b8
@@ -566,42 +542,62 @@ rdx            0xc82000a140     859530371392
 <p>PS: 有些 Blog 写的内容都是错的还自诩对 Go 底层非常了解，这种误人子弟的不要太多。</p>
 </div>
 
-        </div>
-        <div class="post_list">
-            <span>By </span>
-            <a href="http://sunisdown.me/author/sunisdown.html">@SunisDown</a>
-            <span> in </span>
-            <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark" title="Permalink to articles">[ articles ]</a></span>
-            <span class="post_date">Wed 14 September 2016</span>
-            <div><span>Tags : </span>
-                <span><a href="http://sunisdown.me/tag/closures.html">#closures, </a></span>
-                <span><a href="http://sunisdown.me/tag/go.html">#go, </a></span>
             </div>
+            <div class="post_list">
+                <span>By </span>
+                <a href="http://sunisdown.me/author/sunisdown.html">@SunisDown</a>
+                <span> in </span>
+                <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark"
+                                               title="Permalink to articles">[ articles ]</a></span>
+                <span class="post_date">Wed 14 September 2016</span>
+                <div><span>Tags : </span>
+                            <span><a href="http://sunisdown.me/tag/closures.html">#closures, </a></span>
+                            <span><a href="http://sunisdown.me/tag/go.html">#go, </a></span>
+                </div>
 
-            <div class="entry-social">
-                <span class="twitter"><a target="_blank" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;" title="Twitter" href="https://twitter.com/share?url=http://sunisdown.me/closures-in-go.html&text=Closures in Go&via="><img src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
+                <div class="entry-social">
+                    <span class="twitter"><a target="_blank" rel="nofollow"
+                                             onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;"
+                                             title="Twitter"
+                                             href="https://twitter.com/share?url=http://sunisdown.me/closures-in-go.html&text=Closures in Go&via="><img
+                            src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
 
-                <span class="gplus"><a target="_blank" title="Google +" href="https://plus.google.com/share?url=http://sunisdown.me/closures-in-go.html&hl=fr" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
+                    <span class="gplus"><a target="_blank" title="Google +"
+                                           href="https://plus.google.com/share?url=http://sunisdown.me/closures-in-go.html&hl=fr"
+                                           rel="nofollow"
+                                           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
 
-                <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;" href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/closures-in-go.html&t=Closures in Go"><img src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
+                    <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow"
+                                              onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;"
+                                              href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/closures-in-go.html&t=Closures in Go"><img
+                            src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
 
-                <a  target="_blank" title="Linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/closures-in-go.html&title=Closures in Go" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
+                    <a target="_blank" title="Linkedin"
+                       href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/closures-in-go.html&title=Closures in Go"
+                       rel="nofollow"
+                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
 
-                <span class="mail"><a href="mailto:?subject=Closures in Go&amp;body=Viens découvrir un article à propos de [Closures in Go] sur le site de sunisdown. http://sunisdown.me/closures-in-go.html" title="Share by Email" target="_blank"><img src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+                    <span class="mail"><a
+                            href="mailto:?subject=Closures in Go&amp;body=Viens découvrir un article à propos de [Closures in Go] sur le site de sunisdown. http://sunisdown.me/closures-in-go.html"
+                            title="Share by Email" target="_blank"><img
+                            src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+                </div>
             </div>
-        </div>
-    </article>
-</section>
-  </article>
+        </article>
+    </section>
+</article>
 
-  <!-- Footer -->
-  <footer>
-    <p>
-      Blog powered by <a href="http://getpelican.com/">Pelican</a>, 
-      which takes great advantage of <a href="http://python.org">Python</a>.
-      Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a href="https://parbhatpuri.com/">@parbhat</a>.
-    </p>
-  </footer>
+<!-- Footer -->
+    <footer>
+        <p>
+            Blog powered by <a href="http://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a href="http://python.org">Python</a>.
+            Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a
+                href="https://parbhatpuri.com/">@parbhat</a>.
+        </p>
+    </footer>
 
 
 </body>

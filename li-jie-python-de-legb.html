@@ -1,127 +1,93 @@
 <!doctype html>
 <html lang="zh" itemscope itemtype="http://schema.org/Person">
 <head>
-  <meta charset="utf-8">
-  <!-- Site Meta Data -->
-  <title>理解 Python 的 LEGB</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="sunisdown">
+            <meta charset="utf-8">
+        <!-- Site Meta Data -->
+        <title>理解 Python 的 LEGB</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="sunisdown">
 
-  <link rel="shortcut icon" href="">
+        <link rel="shortcut icon" href="">
 
-  <!-- schema.org -->
-  <meta itemprop="name" content="SunisDown">
-  <meta itemprop="image" content="">
-  <meta itemprop="description" content="">
+        <!-- schema.org -->
+        <meta itemprop="name" content="SunisDown">
+        <meta itemprop="image" content="">
+        <meta itemprop="description" content="">
 
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
-  <!-- Style Meta Data -->
-  <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css" />
-  <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css" />
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+        <!-- Style Meta Data -->
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css"/>
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css"/>
 
-  <!-- Feed Meta Data -->
-    <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="SunisDown ATOM Feed" />
+        <!-- Feed Meta Data -->
+            <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+                  title="SunisDown ATOM Feed"/>
 
-  <!-- Twitter Feed -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="">
-  <meta name="twitter:image" content="">
+        <!-- Twitter Feed -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="">
+        <meta name="twitter:image" content="">
 
-<meta name="twitter:creator" content="">
-<meta name="twitter:url" content="http://sunisdown.me/li-jie-python-de-legb.html">
-<meta name="twitter:title" content="SunisDown ~ 理解 Python 的 LEGB">
-<meta name="twitter:description" content='<div class="section" id="id1">
-<h2>名字空间</h2>
-<p>Python 的名字空间是 Python 一个非常核心的内容。 其他语言中如 C
-中，变量名是内存地址的别名，而在 Python
-中，名字是一个字符串对象，它与他指向的对象构成一个{name:object}关联。
-Python 由很多名字空间，而 LEGB 则是名字空间的一种查找规则。</p>
-</div>
-<div class="section" id="id2">
-<h2>作用域</h2>
-<p>Python
-中<tt class="docutils literal"><span class="pre">name-object</span></tt>的关联存储在不同的作用域中，各个不同的作用域是相互独立的。而我们就在不同的作用域中搜索<tt class="docutils literal"><span class="pre">name-object</span></tt>。</p>
-<p>举个栗子，来说明作用域是相互独立的。</p>
-<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;G&quot;</span>
+    <meta name="twitter:creator" content="">
+    <meta name="twitter:url" content="http://sunisdown.me/li-jie-python-de-legb.html">
+    <meta name="twitter:title" content="SunisDown ~ 理解 Python 的 LEGB">
+    <meta name="twitter:description" content="名字空间 Python 的名字空间是 Python 一个非常核心的内容。 其他语言中如 C 中，变量名是内存地址的别名，而在 Python 中，名字是一个字符串对象，它与他指向的对象构成一个{name:object}关联。 Python 由很多名字空间，而 LEGB 则是名字空间的一种查找规则。 作用域 Python 中name-object的关联存储在不同的作用域中，各个不同的作用域是相互独立的。而我们就在不同的作用域中搜索name-object。 举个栗子，来说明作用域是相互独立的。 In [11]: i = &#34;G&#34; In [12]: def test(): i = &#34;L&#34; print i, &#34;in locals&#34; ....: In [13]: test() L …">
 
-<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
-            <span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span>
-            <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;in locals&quot;</span>
-   <span class="o">....</span><span class="p">:</span>
-
-<span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">test</span><span class="p">()</span>
-        <span class="n">L ...</span></pre></div></div>'>
-
-<!-- Facebook Meta Data -->
-<meta property="og:title" content="SunisDown ~ 理解 Python 的 LEGB" />
-<meta property="og:description" content='<div class="section" id="id1">
-<h2>名字空间</h2>
-<p>Python 的名字空间是 Python 一个非常核心的内容。 其他语言中如 C
-中，变量名是内存地址的别名，而在 Python
-中，名字是一个字符串对象，它与他指向的对象构成一个{name:object}关联。
-Python 由很多名字空间，而 LEGB 则是名字空间的一种查找规则。</p>
-</div>
-<div class="section" id="id2">
-<h2>作用域</h2>
-<p>Python
-中<tt class="docutils literal"><span class="pre">name-object</span></tt>的关联存储在不同的作用域中，各个不同的作用域是相互独立的。而我们就在不同的作用域中搜索<tt class="docutils literal"><span class="pre">name-object</span></tt>。</p>
-<p>举个栗子，来说明作用域是相互独立的。</p>
-<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;G&quot;</span>
-
-<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
-            <span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span>
-            <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;in locals&quot;</span>
-   <span class="o">....</span><span class="p">:</span>
-
-<span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">test</span><span class="p">()</span>
-        <span class="n">L ...</span></pre></div></div>' />
-<meta property="og:image" content="" />
+    <!-- Facebook Meta Data -->
+    <meta property="og:title" content="SunisDown ~ 理解 Python 的 LEGB"/>
+    <meta property="og:description" content="名字空间 Python 的名字空间是 Python 一个非常核心的内容。 其他语言中如 C 中，变量名是内存地址的别名，而在 Python 中，名字是一个字符串对象，它与他指向的对象构成一个{name:object}关联。 Python 由很多名字空间，而 LEGB 则是名字空间的一种查找规则。 作用域 Python 中name-object的关联存储在不同的作用域中，各个不同的作用域是相互独立的。而我们就在不同的作用域中搜索name-object。 举个栗子，来说明作用域是相互独立的。 In [11]: i = &#34;G&#34; In [12]: def test(): i = &#34;L&#34; print i, &#34;in locals&#34; ....: In [13]: test() L …"/>
+    <meta property="og:image" content=""/>
 </head>
 
 <body>
-  <!-- Sidebar -->
-  <aside>
+<!-- Sidebar -->
+<aside>
     <!--<center><a href="http://sunisdown.me"><img id="avatar" src=""></a></center>-->
     <h1>SunisDown</h1>
     <br>
 
 
     <nav class="nav">
-      <ul class="list-bare">
-      
-          <li><a class="nav__link" href="/index.html">Blog</a></li>
-          <li><a class="nav__link" href="/archives.html">Archives</a></li>
-          <li><a class="nav__link" href="/tags.html">Tags</a></li>
-         
-          <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
-         
-      </ul>
+        <ul class="list-bare">
+
+                <li><a class="nav__link" href="/index.html">Blog</a></li>
+                <li><a class="nav__link" href="/archives.html">Archives</a></li>
+                <li><a class="nav__link" href="/tags.html">Tags</a></li>
+
+                <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
+
+        </ul>
     </nav>
 
     <p class="social">
-        <a href="http://1024.today" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
-        <a href="https://twitter.com/SunisD0wn" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
-        <a href="https://github.com/sunisdown" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/github.png"></a>
-      <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
-        <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
+                <a href="http://1024.today" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
+                <a href="https://twitter.com/SunisD0wn" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
+                <a href="https://github.com/sunisdown" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/github.png"></a>
+            <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
+                <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
     </p>
 
-    <!--
-    <h2>Categories</h2>
-    <ul class="navbar">
-      <li class="active"><a href="http://sunisdown.me/category/articles.html">articles</a></li>
-    </ul> 
-    -->
-  </aside>
+        <h2>Categories</h2>
+        <ul class="navbar">
+                <li class="active"><a
+                        href="http://sunisdown.me/category/articles.html">articles</a></li>
+        </ul>
 
-  <!-- Content -->
-  <article>
-<section id="content">
-    <article>
-        <h2 class="post_title post_detail"><a href="http://sunisdown.me/li-jie-python-de-legb.html" rel="bookmark" title="Permalink to 理解 Python 的 LEGB">理解 Python 的 LEGB</a></h2>
-        <div class="entry-content blog-post">
-            <div class="section" id="id1">
+
+</aside>
+
+<!-- Content -->
+<article>
+    <section id="content">
+        <article>
+            <h2 class="post_title post_detail"><a href="http://sunisdown.me/li-jie-python-de-legb.html" rel="bookmark"
+                                                  title="Permalink to 理解 Python 的 LEGB">理解 Python 的 LEGB</a></h2>
+            <div class="entry-content blog-post">
+                <div class="section" id="id1">
 <h2>名字空间</h2>
 <p>Python 的名字空间是 Python 一个非常核心的内容。 其他语言中如 C
 中，变量名是内存地址的别名，而在 Python
@@ -273,42 +239,62 @@ builtins
 的名字空间，将名字<tt class="docutils literal">b</tt>与值<tt class="docutils literal">&quot;builtins&quot;</tt>进行关联，就可以正常调用了。这种非常规用法不建议使用。</p>
 </div>
 
-        </div>
-        <div class="post_list">
-            <span>By </span>
-            <a href="http://sunisdown.me/author/sunisdown.html">@SunisDown</a>
-            <span> in </span>
-            <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark" title="Permalink to articles">[ articles ]</a></span>
-            <span class="post_date">Tue 03 February 2015</span>
-            <div><span>Tags : </span>
-                <span><a href="http://sunisdown.me/tag/python.html">#python, </a></span>
-                <span><a href="http://sunisdown.me/tag/legb.html">#legb, </a></span>
             </div>
+            <div class="post_list">
+                <span>By </span>
+                <a href="http://sunisdown.me/author/sunisdown.html">@SunisDown</a>
+                <span> in </span>
+                <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark"
+                                               title="Permalink to articles">[ articles ]</a></span>
+                <span class="post_date">Tue 03 February 2015</span>
+                <div><span>Tags : </span>
+                            <span><a href="http://sunisdown.me/tag/python.html">#python, </a></span>
+                            <span><a href="http://sunisdown.me/tag/legb.html">#legb, </a></span>
+                </div>
 
-            <div class="entry-social">
-                <span class="twitter"><a target="_blank" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;" title="Twitter" href="https://twitter.com/share?url=http://sunisdown.me/li-jie-python-de-legb.html&text=理解 Python 的 LEGB&via="><img src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
+                <div class="entry-social">
+                    <span class="twitter"><a target="_blank" rel="nofollow"
+                                             onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;"
+                                             title="Twitter"
+                                             href="https://twitter.com/share?url=http://sunisdown.me/li-jie-python-de-legb.html&text=理解 Python 的 LEGB&via="><img
+                            src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
 
-                <span class="gplus"><a target="_blank" title="Google +" href="https://plus.google.com/share?url=http://sunisdown.me/li-jie-python-de-legb.html&hl=fr" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
+                    <span class="gplus"><a target="_blank" title="Google +"
+                                           href="https://plus.google.com/share?url=http://sunisdown.me/li-jie-python-de-legb.html&hl=fr"
+                                           rel="nofollow"
+                                           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
 
-                <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;" href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/li-jie-python-de-legb.html&t=理解 Python 的 LEGB"><img src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
+                    <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow"
+                                              onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;"
+                                              href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/li-jie-python-de-legb.html&t=理解 Python 的 LEGB"><img
+                            src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
 
-                <a  target="_blank" title="Linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/li-jie-python-de-legb.html&title=理解 Python 的 LEGB" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
+                    <a target="_blank" title="Linkedin"
+                       href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/li-jie-python-de-legb.html&title=理解 Python 的 LEGB"
+                       rel="nofollow"
+                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
 
-                <span class="mail"><a href="mailto:?subject=理解 Python 的 LEGB&amp;body=Viens découvrir un article à propos de [理解 Python 的 LEGB] sur le site de sunisdown. http://sunisdown.me/li-jie-python-de-legb.html" title="Share by Email" target="_blank"><img src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+                    <span class="mail"><a
+                            href="mailto:?subject=理解 Python 的 LEGB&amp;body=Viens découvrir un article à propos de [理解 Python 的 LEGB] sur le site de sunisdown. http://sunisdown.me/li-jie-python-de-legb.html"
+                            title="Share by Email" target="_blank"><img
+                            src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+                </div>
             </div>
-        </div>
-    </article>
-</section>
-  </article>
+        </article>
+    </section>
+</article>
 
-  <!-- Footer -->
-  <footer>
-    <p>
-      Blog powered by <a href="http://getpelican.com/">Pelican</a>, 
-      which takes great advantage of <a href="http://python.org">Python</a>.
-      Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a href="https://parbhatpuri.com/">@parbhat</a>.
-    </p>
-  </footer>
+<!-- Footer -->
+    <footer>
+        <p>
+            Blog powered by <a href="http://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a href="http://python.org">Python</a>.
+            Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a
+                href="https://parbhatpuri.com/">@parbhat</a>.
+        </p>
+    </footer>
 
 
 </body>

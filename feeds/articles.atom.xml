@@ -1,5 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>SunisDown</title><link href="http://sunisdown.me/" rel="alternate"></link><link href="http://sunisdown.me/feeds/articles.atom.xml" rel="self"></link><id>http://sunisdown.me/</id><updated>2016-09-14T00:00:00+08:00</updated><entry><title>Closures in Go</title><link href="http://sunisdown.me/closures-in-go.html" rel="alternate"></link><published>2016-09-14T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2016-09-14:closures-in-go.html</id><summary type="html">&lt;p&gt;在 &lt;a class="reference external" href="https://qyuhen.bearychat.com"&gt;Qyuhen&lt;/a&gt; 老大那边潜水的时候，基本上过一段时间就会看见有人讨论闭包。而随手 &lt;tt class="docutils literal"&gt;Google&lt;/tt&gt; 也并没有看到哪些 Blog 说的很清楚，甚至有一些 &lt;tt class="docutils literal"&gt;Blog&lt;/tt&gt; 里面的内容都是错的。（当然，也有可能是我理解错了）所以就想自己写一下。&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>SunisDown - articles</title><link href="http://sunisdown.me/" rel="alternate"></link><link href="http://sunisdown.me/feeds/articles.atom.xml" rel="self"></link><id>http://sunisdown.me/</id><updated>2019-01-14T00:00:00+08:00</updated><entry><title>Learning Rust with LLDB</title><link href="http://sunisdown.me/learning-rust-with-lldb.html" rel="alternate"></link><published>2019-01-14T00:00:00+08:00</published><updated>2019-01-14T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2019-01-14:/learning-rust-with-lldb.html</id><summary type="html">&lt;p&gt;为什么要学习 &lt;cite&gt;Rust&lt;/cite&gt; 呢？因为 Go 自带的 GC 还不够强，同时 goroutine 的调度机制又导致 go 对 CPU 也没办法用的很充分。当需要写对 CPU 性能要求比较高的系统，就需要换一门新语言。同时因为不想写 Cpp，Rust 有媲美 Cpp 的性能，相对 Cpp 来讲更好维护的代码。学习一下没有毛病。&lt;/p&gt;
+&lt;div class="section" id="hello-hex"&gt;
+&lt;h2&gt;Hello Hex&lt;/h2&gt;
+&lt;p&gt;通常学习一门新语言都是用 &lt;cite&gt;Hello World&lt;/cite&gt; 来开始，但是因为字符串类型相比与int或者是 hex 要复杂的多，我们这里用 &lt;cite&gt;Hex&lt;/cite&gt; 来替代 &lt;cite&gt;Hello world&lt;/cite&gt; 。在之前我已经装好了 rust 的各种环境，包含 cargo 之类的包管理，在这里我用 …&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;为什么要学习 &lt;cite&gt;Rust&lt;/cite&gt; 呢？因为 Go 自带的 GC 还不够强，同时 goroutine 的调度机制又导致 go 对 CPU 也没办法用的很充分。当需要写对 CPU 性能要求比较高的系统，就需要换一门新语言。同时因为不想写 Cpp，Rust 有媲美 Cpp 的性能，相对 Cpp 来讲更好维护的代码。学习一下没有毛病。&lt;/p&gt;
+&lt;div class="section" id="hello-hex"&gt;
+&lt;h2&gt;Hello Hex&lt;/h2&gt;
+&lt;p&gt;通常学习一门新语言都是用 &lt;cite&gt;Hello World&lt;/cite&gt; 来开始，但是因为字符串类型相比与int或者是 hex 要复杂的多，我们这里用 &lt;cite&gt;Hex&lt;/cite&gt; 来替代 &lt;cite&gt;Hello world&lt;/cite&gt; 。在之前我已经装好了 rust 的各种环境，包含 cargo 之类的包管理，在这里我用 cargo 创建一个新的项目。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;cargo new helloHex
+&lt;span class="nb"&gt;cd&lt;/span&gt; helloHex
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然后将如下内容编辑到 &lt;cite&gt;src/main.rs&lt;/cite&gt; 里面，&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;fn&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kd"&gt;let&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mh"&gt;0x100&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;编辑完这个文件之后，我们再编译他，通常情况下为了方便调试，我们都会在编译的时候禁止编译器对程序进行优化，在 C/Go 中需要加一些参数来完成这项工作， &lt;cite&gt;cargo&lt;/cite&gt; 这个工具省略了这个步骤，直接会生成一个 debug 版本，我们可以直接拿来调试。编译命令如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;cargo build
+lldb target/debug/helloHex
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;现在我们已经进入到了 lldb 的调试界面中，然后我们可以设置断点，查看堆栈信息等。我们先做一些简单的操作来熟悉一下 lldb。 在指令后面我加上了注释，说明了每一条命令的作用。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$  lldb target/debug/helloHex
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; target create &lt;span class="s2"&gt;&amp;quot;target/debug/helloHex&amp;quot;&lt;/span&gt;
+Current executable &lt;span class="nb"&gt;set&lt;/span&gt; to &lt;span class="s1"&gt;&amp;#39;target/debug/helloHex&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;x86_64&lt;span class="o"&gt;)&lt;/span&gt;.
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; b helloHex::main  // 这条指令是对 helloHex 好个程序的 main 函数打一个断点
+Breakpoint &lt;span class="m"&gt;1&lt;/span&gt;: &lt;span class="nv"&gt;where&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; helloHex&lt;span class="sb"&gt;`&lt;/span&gt;helloHex::main::hc8d39b80069dcddb + &lt;span class="m"&gt;18&lt;/span&gt; at main.rs:2, &lt;span class="nv"&gt;address&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x00000001000011d2
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; r // run 开始执行 helloHex 程序
+Process &lt;span class="m"&gt;84414&lt;/span&gt; launched: &lt;span class="s1"&gt;&amp;#39;/Users/chaotang.sun/rust_project/rustlearing/lldb/helloHex/target/debug/helloHex&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;x86_64&lt;span class="o"&gt;)&lt;/span&gt;
+Process &lt;span class="m"&gt;84414&lt;/span&gt; stopped
+* thread &lt;span class="c1"&gt;#1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = breakpoint 1.1&lt;/span&gt;
+    frame &lt;span class="c1"&gt;#0: 0x00000001000011d2 helloHex`helloHex::main::hc8d39b80069dcddb at main.rs:2&lt;/span&gt;
+  &lt;span class="m"&gt;1&lt;/span&gt;    fn main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+-&amp;gt; &lt;span class="m"&gt;2&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x100&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="m"&gt;3&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;{}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="m"&gt;4&lt;/span&gt;    &lt;span class="o"&gt;}&lt;/span&gt;
+Target &lt;span class="m"&gt;0&lt;/span&gt;: &lt;span class="o"&gt;(&lt;/span&gt;helloHex&lt;span class="o"&gt;)&lt;/span&gt; stopped.
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; s // step 执行下一步机器指令
+Process &lt;span class="m"&gt;84414&lt;/span&gt; stopped
+* thread &lt;span class="c1"&gt;#1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = step in&lt;/span&gt;
+    frame &lt;span class="c1"&gt;#0: 0x00000001000011d9 helloHex`helloHex::main::hc8d39b80069dcddb at main.rs:3&lt;/span&gt;
+  &lt;span class="m"&gt;1&lt;/span&gt;    fn main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="m"&gt;2&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x100&lt;span class="p"&gt;;&lt;/span&gt;
+-&amp;gt; &lt;span class="m"&gt;3&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;{}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="m"&gt;4&lt;/span&gt;    &lt;span class="o"&gt;}&lt;/span&gt;
+Target &lt;span class="m"&gt;0&lt;/span&gt;: &lt;span class="o"&gt;(&lt;/span&gt;helloHex&lt;span class="o"&gt;)&lt;/span&gt; stopped.
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; frame v // 查看当前栈的变量
+&lt;span class="o"&gt;(&lt;/span&gt;int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;256&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; p x // 打印变量 x 的值
+&lt;span class="o"&gt;(&lt;/span&gt;int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;$0&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;256&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;$1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;256&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="variables-const"&gt;
+&lt;h2&gt;Variables &amp;amp; Const&lt;/h2&gt;
+&lt;p&gt;Rust 的变量相对 C 来说有一些特殊，有可变的变量跟不可变的变量。（这有点绕，不可变的变量还可以称之为变量嘛？ 他们有什么区别，除了在语法上的之外，我也很好奇对于CPU来说，处理这两种不同的变量有什么区别。
+在这里我创建两段不同的程序，一段是用 &lt;cite&gt;mutable&lt;/cite&gt; 的变量，一段是用 &lt;cite&gt;immutable&lt;/cite&gt; 的变量，然后反编译看一下这俩到底有什么区别。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="cp"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;cargo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;var_immut&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;fn&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kd"&gt;let&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mh"&gt;0x100&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kd"&gt;let&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mh"&gt;0x100&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="cp"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;cargo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;var_mut&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;fn&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kd"&gt;let&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;mut&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mh"&gt;0x100&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mh"&gt;0x100&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然后我们进入到 lldb 之中反编译这两段程序。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;lldb target/debug/var_mut
+lldb target/debug/var_immut
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;这两端程序反编译之后的结果机器相似，这里就只放其中一个截取的片段来展示：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; b var_mut::main
+ Breakpoint &lt;span class="m"&gt;1&lt;/span&gt;: &lt;span class="nv"&gt;where&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; var_mut&lt;span class="sb"&gt;`&lt;/span&gt;var_mut::main::hbe57c58c6c7f6d8b + &lt;span class="m"&gt;18&lt;/span&gt; at main.rs:2, &lt;span class="nv"&gt;address&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x00000001000012a2
+ &lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; r
+ Process &lt;span class="m"&gt;88038&lt;/span&gt; launched: &lt;span class="s1"&gt;&amp;#39;/Users/chaotang.sun/rust_project/rustlearing/lldb/var_mut/target/debug/var_mut&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;x86_64&lt;span class="o"&gt;)&lt;/span&gt;
+ Process &lt;span class="m"&gt;88038&lt;/span&gt; stopped
+ * thread &lt;span class="c1"&gt;#1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = breakpoint 1.1&lt;/span&gt;
+     frame &lt;span class="c1"&gt;#0: 0x00000001000012a2 var_mut`var_mut::main::hbe57c58c6c7f6d8b at main.rs:2&lt;/span&gt;
+   &lt;span class="m"&gt;1&lt;/span&gt;    fn main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+ -&amp;gt; &lt;span class="m"&gt;2&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; mut &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x100&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;3&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;4&lt;/span&gt;        &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; x + 0x100&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;5&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;6&lt;/span&gt;    &lt;span class="o"&gt;}&lt;/span&gt;
+ Target &lt;span class="m"&gt;0&lt;/span&gt;: &lt;span class="o"&gt;(&lt;/span&gt;var_mut&lt;span class="o"&gt;)&lt;/span&gt; stopped.
+ &lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
+ var_mut&lt;span class="sb"&gt;`&lt;/span&gt;var_mut::main::hbe57c58c6c7f6d8b:
+     0x100001290 &amp;lt;+0&amp;gt;:   pushq  %rbp
+     0x100001291 &amp;lt;+1&amp;gt;:   movq   %rsp, %rbp
+     0x100001294 &amp;lt;+4&amp;gt;:   subq   &lt;span class="nv"&gt;$0&lt;/span&gt;xf0, %rsp
+     0x10000129b &amp;lt;+11&amp;gt;:  leaq   0x4150e&lt;span class="o"&gt;(&lt;/span&gt;%rip&lt;span class="o"&gt;)&lt;/span&gt;, %rsi       &lt;span class="p"&gt;;&lt;/span&gt; core::fmt::num::_&lt;span class="nv"&gt;$LT$impl$u20$core&lt;/span&gt;..fmt..Display&lt;span class="nv"&gt;$u20$for$u20$i32$GT&lt;/span&gt;$::fmt::h04ca12b7570d3d05 at num.rs:201
+ -&amp;gt;  0x1000012a2 &amp;lt;+18&amp;gt;:  movl   &lt;span class="nv"&gt;$0&lt;/span&gt;x100, -0xa4&lt;span class="o"&gt;(&lt;/span&gt;%rbp&lt;span class="o"&gt;)&lt;/span&gt;       &lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="nv"&gt;imm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x100
+     0x1000012ac &amp;lt;+28&amp;gt;:  leaq   -0xa4&lt;span class="o"&gt;(&lt;/span&gt;%rbp&lt;span class="o"&gt;)&lt;/span&gt;, %rax
+
+     .....
+
+     0x100001328 &amp;lt;+152&amp;gt;: movq   &lt;span class="nv"&gt;$0&lt;/span&gt;x1, &lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;
+     0x100001330 &amp;lt;+160&amp;gt;: callq  0x100001100               &lt;span class="p"&gt;;&lt;/span&gt; core::fmt::Arguments::new_v1_formatted::h1a26f71ed7a6be2c at mod.rs:363
+     0x100001335 &amp;lt;+165&amp;gt;: leaq   -0xa0&lt;span class="o"&gt;(&lt;/span&gt;%rbp&lt;span class="o"&gt;)&lt;/span&gt;, %rdi
+     0x10000133c &amp;lt;+172&amp;gt;: callq  0x10000a010               &lt;span class="p"&gt;;&lt;/span&gt; std::io::stdio::_print::h85f0ba007302c9c0 at stdio.rs:708
+     0x100001341 &amp;lt;+177&amp;gt;: movl   -0xa4&lt;span class="o"&gt;(&lt;/span&gt;%rbp&lt;span class="o"&gt;)&lt;/span&gt;, %eax
+     0x100001347 &amp;lt;+183&amp;gt;: addl   &lt;span class="nv"&gt;$0&lt;/span&gt;x100, %eax              &lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="nv"&gt;imm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x100
+
+     ......
+
+     0x100001400 &amp;lt;+368&amp;gt;: addq   &lt;span class="nv"&gt;$0&lt;/span&gt;xf0, %rsp
+     0x100001407 &amp;lt;+375&amp;gt;: popq   %rbp
+     0x100001408 &amp;lt;+376&amp;gt;: retq
+     0x100001409 &amp;lt;+377&amp;gt;: leaq   0x53f40&lt;span class="o"&gt;(&lt;/span&gt;%rip&lt;span class="o"&gt;)&lt;/span&gt;, %rdi
+     0x100001410 &amp;lt;+384&amp;gt;: callq  0x100047bf0               &lt;span class="p"&gt;;&lt;/span&gt; core::panicking::panic::h3941d6082b26bb8e at panicking.rs:44
+     0x100001415 &amp;lt;+389&amp;gt;: nopw   %cs:&lt;span class="o"&gt;(&lt;/span&gt;%rax,%rax&lt;span class="o"&gt;)&lt;/span&gt;
+     0x10000141f &amp;lt;+399&amp;gt;: nop
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;这里先不关注这个函数栈内的数据转换，只关注两个程序里面不同的变量有什么异同，所以直接跳到变量初始化与赋值的地方，看一下有什么异同。 下面的 gdb 调试分为左右两列，左边为 mutable， 右边 为 immutable 的变量。在不同的阶段我们查看 x 变量的地址，可以看到 mutable 的变量 x 地址是不变的，后面的赋值都是基于栈上某一个固定地址进行值的修改。而 immutable 的 x 地址是会变化的，每一次初始化，都会在栈内重新分配一个新的地址。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; r                                                                                                               │&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; r
+Process &lt;span class="m"&gt;89402&lt;/span&gt; launched: &lt;span class="s1"&gt;&amp;#39;/Users/chaotang.sun/rust_project/rustlearing/lldb/var_mut/target/debug/var_mut&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;x86_64&lt;span class="o"&gt;)&lt;/span&gt;      │Process &lt;span class="m"&gt;89331&lt;/span&gt; launched: &lt;span class="s1"&gt;&amp;#39;/Users/chaotang.sun/rust_project/rustlearing/lldb/var_immut/target/debug/var_immut&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;x86_64&lt;span class="o"&gt;)&lt;/span&gt;
+Process &lt;span class="m"&gt;89402&lt;/span&gt; stopped                                                                                                  │Process &lt;span class="m"&gt;89331&lt;/span&gt; stopped
+* thread &lt;span class="c1"&gt;#1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = breakpoint 1.1                                             │* thread #1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = breakpoint 1.1&lt;/span&gt;
+    frame &lt;span class="c1"&gt;#0: 0x00000001000012a2 var_mut`var_mut::main::hbe57c58c6c7f6d8b at main.rs:2                                 │    frame #0: 0x0000000100001242 var_immut`var_immut::main::hab4d3d25ce94e8b3 at main.rs:2&lt;/span&gt;
+   &lt;span class="m"&gt;1&lt;/span&gt;    fn main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;                                                                                                    │   &lt;span class="m"&gt;1&lt;/span&gt;    fn main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+-&amp;gt; &lt;span class="m"&gt;2&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; mut &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x100&lt;span class="p"&gt;;&lt;/span&gt;                                                                                         │-&amp;gt; &lt;span class="m"&gt;2&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x100&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;3&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;                                                                      │   &lt;span class="m"&gt;3&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;4&lt;/span&gt;        &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; x + 0x100&lt;span class="p"&gt;;&lt;/span&gt;                                                                                             │   &lt;span class="m"&gt;4&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; x + 0x100&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;5&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;                                                                      │   &lt;span class="m"&gt;5&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;6&lt;/span&gt;    &lt;span class="o"&gt;}&lt;/span&gt;                                                                                                              │   &lt;span class="m"&gt;6&lt;/span&gt;    &lt;span class="o"&gt;}&lt;/span&gt;
+Target &lt;span class="m"&gt;0&lt;/span&gt;: &lt;span class="o"&gt;(&lt;/span&gt;var_mut&lt;span class="o"&gt;)&lt;/span&gt; stopped.                                                                                           │Target &lt;span class="m"&gt;0&lt;/span&gt;: &lt;span class="o"&gt;(&lt;/span&gt;var_immut&lt;span class="o"&gt;)&lt;/span&gt; stopped.
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; frame v                                                                                                         │&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; frame v
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; s                                                                                                               │&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; s
+Process &lt;span class="m"&gt;89402&lt;/span&gt; stopped                                                                                                  │Process &lt;span class="m"&gt;89331&lt;/span&gt; stopped
+* thread &lt;span class="c1"&gt;#1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = step in                                                    │* thread #1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = step in&lt;/span&gt;
+    frame &lt;span class="c1"&gt;#0: 0x00000001000012ac var_mut`var_mut::main::hbe57c58c6c7f6d8b at main.rs:3                                 │    frame #0: 0x000000010000124c var_immut`var_immut::main::hab4d3d25ce94e8b3 at main.rs:3&lt;/span&gt;
+   &lt;span class="m"&gt;1&lt;/span&gt;    fn main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;                                                                                                    │   &lt;span class="m"&gt;1&lt;/span&gt;    fn main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+   &lt;span class="m"&gt;2&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; mut &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x100&lt;span class="p"&gt;;&lt;/span&gt;                                                                                         │   &lt;span class="m"&gt;2&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x100&lt;span class="p"&gt;;&lt;/span&gt;
+-&amp;gt; &lt;span class="m"&gt;3&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;                                                                      │-&amp;gt; &lt;span class="m"&gt;3&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;4&lt;/span&gt;        &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; x + 0x100&lt;span class="p"&gt;;&lt;/span&gt;                                                                                             │   &lt;span class="m"&gt;4&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; x + 0x100&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;5&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;                                                                      │   &lt;span class="m"&gt;5&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;6&lt;/span&gt;    &lt;span class="o"&gt;}&lt;/span&gt;                                                                                                              │   &lt;span class="m"&gt;6&lt;/span&gt;    &lt;span class="o"&gt;}&lt;/span&gt;
+Target &lt;span class="m"&gt;0&lt;/span&gt;: &lt;span class="o"&gt;(&lt;/span&gt;var_mut&lt;span class="o"&gt;)&lt;/span&gt; stopped.                                                                                           │Target &lt;span class="m"&gt;0&lt;/span&gt;: &lt;span class="o"&gt;(&lt;/span&gt;var_immut&lt;span class="o"&gt;)&lt;/span&gt; stopped.
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; frame v                                                                                                         │&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; frame v
+&lt;span class="o"&gt;(&lt;/span&gt;int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;256&lt;/span&gt;                                                                                                          │&lt;span class="o"&gt;(&lt;/span&gt;int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;256&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt;                                                                                                                 │&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;256&lt;/span&gt;                                                                                                          │&lt;span class="o"&gt;(&lt;/span&gt;int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;256&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; p &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;x                                                                                                            │&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; p &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;x
+&lt;span class="o"&gt;(&lt;/span&gt;int *&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;$0&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x00007ffeefbff17c                                                                                        │&lt;span class="o"&gt;(&lt;/span&gt;int *&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;$0&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x00007ffeefbff164
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; x/xw 0x00007ffeefbff17c                                                                                         │&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; x/xw 0x00007ffeefbff164
+0x7ffeefbff17c: 0x00000100                                                                                             │0x7ffeefbff164: 0x00000100
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; n                                                                                                               │&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; n
+The value of x is: &lt;span class="m"&gt;256&lt;/span&gt;                                                                                                 │The value of x is: &lt;span class="m"&gt;256&lt;/span&gt;
+Process &lt;span class="m"&gt;89443&lt;/span&gt; stopped                                                                                                  │Process &lt;span class="m"&gt;89452&lt;/span&gt; stopped
+* thread &lt;span class="c1"&gt;#1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = step over                                                  │* thread #1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = step over&lt;/span&gt;
+    frame &lt;span class="c1"&gt;#0: 0x0000000100001341 var_mut`var_mut::main::hbe57c58c6c7f6d8b at main.rs:4                                 │    frame #0: 0x00000001000012e1 var_immut`var_immut::main::hab4d3d25ce94e8b3 at main.rs:4&lt;/span&gt;
+   &lt;span class="m"&gt;1&lt;/span&gt;    fn main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;                                                                                                    │   &lt;span class="m"&gt;1&lt;/span&gt;    fn main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+   &lt;span class="m"&gt;2&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; mut &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x100&lt;span class="p"&gt;;&lt;/span&gt;                                                                                         │   &lt;span class="m"&gt;2&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x100&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;3&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;                                                                      │   &lt;span class="m"&gt;3&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+-&amp;gt; &lt;span class="m"&gt;4&lt;/span&gt;        &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; x + 0x100&lt;span class="p"&gt;;&lt;/span&gt;                                                                                             │-&amp;gt; &lt;span class="m"&gt;4&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; x + 0x100&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;5&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;                                                                      │   &lt;span class="m"&gt;5&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;6&lt;/span&gt;    &lt;span class="o"&gt;}&lt;/span&gt;                                                                                                              │   &lt;span class="m"&gt;6&lt;/span&gt;    &lt;span class="o"&gt;}&lt;/span&gt;
+Target &lt;span class="m"&gt;0&lt;/span&gt;: &lt;span class="o"&gt;(&lt;/span&gt;var_mut&lt;span class="o"&gt;)&lt;/span&gt; stopped.                                                                                           │Target &lt;span class="m"&gt;0&lt;/span&gt;: &lt;span class="o"&gt;(&lt;/span&gt;var_immut&lt;span class="o"&gt;)&lt;/span&gt; stopped.
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; n                                                                                                               │&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; n
+Process &lt;span class="m"&gt;89443&lt;/span&gt; stopped                                                                                                  │Process &lt;span class="m"&gt;89452&lt;/span&gt; stopped
+* thread &lt;span class="c1"&gt;#1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = step over                                                  │* thread #1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = step over&lt;/span&gt;
+    frame &lt;span class="c1"&gt;#0: 0x0000000100001371 var_mut`var_mut::main::hbe57c58c6c7f6d8b at main.rs:5                                 │    frame #0: 0x000000010000130e var_immut`var_immut::main::hab4d3d25ce94e8b3 at main.rs:5&lt;/span&gt;
+   &lt;span class="m"&gt;2&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; mut &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x100&lt;span class="p"&gt;;&lt;/span&gt;                                                                                         │   &lt;span class="m"&gt;2&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x100&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;3&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;                                                                      │   &lt;span class="m"&gt;3&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;4&lt;/span&gt;        &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; x + 0x100&lt;span class="p"&gt;;&lt;/span&gt;                                                                                             │   &lt;span class="m"&gt;4&lt;/span&gt;        &lt;span class="nb"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; x + 0x100&lt;span class="p"&gt;;&lt;/span&gt;
+-&amp;gt; &lt;span class="m"&gt;5&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;                                                                      │-&amp;gt; &lt;span class="m"&gt;5&lt;/span&gt;        println!&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The value of x is: {}&amp;quot;&lt;/span&gt;, x&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+   &lt;span class="m"&gt;6&lt;/span&gt;    &lt;span class="o"&gt;}&lt;/span&gt;                                                                                                              │   &lt;span class="m"&gt;6&lt;/span&gt;    &lt;span class="o"&gt;}&lt;/span&gt;
+Target &lt;span class="m"&gt;0&lt;/span&gt;: &lt;span class="o"&gt;(&lt;/span&gt;var_mut&lt;span class="o"&gt;)&lt;/span&gt; stopped.                                                                                           │Target &lt;span class="m"&gt;0&lt;/span&gt;: &lt;span class="o"&gt;(&lt;/span&gt;var_immut&lt;span class="o"&gt;)&lt;/span&gt; stopped.
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; frame v                                                                                                         │&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; frame v
+&lt;span class="o"&gt;(&lt;/span&gt;int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;512&lt;/span&gt;                                                                                                          │&lt;span class="o"&gt;(&lt;/span&gt;int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;256&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; p &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;x                                                                                                            │&lt;span class="o"&gt;(&lt;/span&gt;int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;512&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;int *&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;$1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x00007ffeefbff17c                                                                                        │&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; p &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;x
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt;                                                                                                                 │&lt;span class="o"&gt;(&lt;/span&gt;int *&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;$1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0x00007ffeefbff1bc
+&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; x/xw 0x00007ffeefbff17c                                                                                         │&lt;span class="o"&gt;(&lt;/span&gt;lldb&lt;span class="o"&gt;)&lt;/span&gt; x/xw 0x00007ffeefbff1bc
+0x7ffeefbff17c: 0x00000200                                                                                             │0x7ffeefbff1bc: 0x00000200
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+</content><category term="rust"></category></entry><entry><title>Closures in Go</title><link href="http://sunisdown.me/closures-in-go.html" rel="alternate"></link><published>2016-09-14T00:00:00+08:00</published><updated>2016-09-14T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2016-09-14:/closures-in-go.html</id><summary type="html">&lt;p&gt;在 &lt;a class="reference external" href="https://qyuhen.bearychat.com"&gt;Qyuhen&lt;/a&gt; 老大那边潜水的时候，基本上过一段时间就会看见有人讨论闭包。而随手 &lt;tt class="docutils literal"&gt;Google&lt;/tt&gt; 也并没有看到哪些 Blog 说的很清楚，甚至有一些 &lt;tt class="docutils literal"&gt;Blog&lt;/tt&gt; 里面的内容都是错的。（当然，也有可能是我理解错了）所以就想自己写一下。&lt;/p&gt;
+&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;什么是闭包&lt;/h2&gt;
+&lt;p&gt;在谈起闭包(Closure)的时候，经常也会说起匿名函数。在 &lt;a class="reference external" href="https://gobyexample.com/closures"&gt;gobyexample&lt;/a&gt; 里面这两个概念也是放在一起的，很多人搞不清楚闭包与匿名函数有什么关系。这两者确实经常会一起出现，但是并不是一个概念。闭包是闭包，匿名函数是匿名函数。&lt;/p&gt;
+&lt;div class="section" id="id2"&gt;
+&lt;h3&gt;匿名函数&lt;/h3&gt;
+&lt;p&gt;匿名函数与正常的函数区别不大，只是这个函数没有名字。在 &lt;tt class="docutils literal"&gt;Go&lt;/tt&gt; 里面，一个真正的函数里面&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;Foo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="c1"&gt;// 声明一个正常的函数&lt;/span&gt;
+    &lt;span class="nb"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;Foo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;hello world!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;里面有函数名，有函数主体。但是匿名函数的类似与下面这样子 …&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;在 &lt;a class="reference external" href="https://qyuhen.bearychat.com"&gt;Qyuhen&lt;/a&gt; 老大那边潜水的时候，基本上过一段时间就会看见有人讨论闭包。而随手 &lt;tt class="docutils literal"&gt;Google&lt;/tt&gt; 也并没有看到哪些 Blog 说的很清楚，甚至有一些 &lt;tt class="docutils literal"&gt;Blog&lt;/tt&gt; 里面的内容都是错的。（当然，也有可能是我理解错了）所以就想自己写一下。&lt;/p&gt;
 &lt;div class="section" id="id1"&gt;
 &lt;h2&gt;什么是闭包&lt;/h2&gt;
 &lt;p&gt;在谈起闭包(Closure)的时候，经常也会说起匿名函数。在 &lt;a class="reference external" href="https://gobyexample.com/closures"&gt;gobyexample&lt;/a&gt; 里面这两个概念也是放在一起的，很多人搞不清楚闭包与匿名函数有什么关系。这两者确实经常会一起出现，但是并不是一个概念。闭包是闭包，匿名函数是匿名函数。&lt;/p&gt;
@@ -91,7 +292,7 @@
 &lt;p&gt;首先我们将上面的代码编译&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;go build -gcflags &lt;span class="s2"&gt;&amp;quot;-N -l -m&amp;quot;&lt;/span&gt; -o &lt;span class="nb"&gt;test&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;生成一个 elf 格式的文件 test。&lt;/p&gt;
+&lt;p&gt;生成一个 elf 格式的文件 main。&lt;/p&gt;
 &lt;p&gt;然后我们通过 go 提供的反汇编工具，反编译我们刚刚生成的 test 文件。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$go&lt;/span&gt; tool objdump -s &lt;span class="s2"&gt;&amp;quot;main\.main&amp;quot;&lt;/span&gt; ./test
 TEXT main.main&lt;span class="o"&gt;(&lt;/span&gt;SB&lt;span class="o"&gt;)&lt;/span&gt; /root/data/example/closures/anonymous_func.go
@@ -101,12 +302,12 @@ TEXT main.main&lt;span class="o"&gt;(&lt;/span&gt;SB&lt;span class="o"&gt;)&lt;/
      anonymous_func.go:7     0x40104f        4883ec10                SUBQ &lt;span class="nv"&gt;$0&lt;/span&gt;x10, SP
      anonymous_func.go:8     0x401053        488d1d16830800          LEAQ 0x88316&lt;span class="o"&gt;(&lt;/span&gt;IP&lt;span class="o"&gt;)&lt;/span&gt;, BX
      anonymous_func.go:8     0x40105a        48895c2408              MOVQ BX, 0x8&lt;span class="o"&gt;(&lt;/span&gt;SP&lt;span class="o"&gt;)&lt;/span&gt;
-     anonymous_func.go:11    0x40105f        48c7042400010000        MOVQ &lt;span class="nv"&gt;$0&lt;/span&gt;x100, 0&lt;span class="o"&gt;(&lt;/span&gt;SP&lt;span class="o"&gt;)&lt;/span&gt;
+     anonymous_func.go:11    0x40105f        48c7042400010000        MOVQ &lt;span class="nv"&gt;$0&lt;/span&gt;x100, &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;SP&lt;span class="o"&gt;)&lt;/span&gt;
      anonymous_func.go:11    0x401067        488b5c2408              MOVQ 0x8&lt;span class="o"&gt;(&lt;/span&gt;SP&lt;span class="o"&gt;)&lt;/span&gt;, BX
      anonymous_func.go:11    0x40106c        4889da                  MOVQ BX, DX
-     anonymous_func.go:11    0x40106f        488b1a                  MOVQ 0&lt;span class="o"&gt;(&lt;/span&gt;DX&lt;span class="o"&gt;)&lt;/span&gt;, BX
+     anonymous_func.go:11    0x40106f        488b1a                  MOVQ &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;DX&lt;span class="o"&gt;)&lt;/span&gt;, BX
      anonymous_func.go:11    0x401072        ffd3                    CALL BX
-     anonymous_func.go:12    0x401074        48c7042400010000        MOVQ &lt;span class="nv"&gt;$0&lt;/span&gt;x100, 0&lt;span class="o"&gt;(&lt;/span&gt;SP&lt;span class="o"&gt;)&lt;/span&gt;
+     anonymous_func.go:12    0x401074        48c7042400010000        MOVQ &lt;span class="nv"&gt;$0&lt;/span&gt;x100, &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;SP&lt;span class="o"&gt;)&lt;/span&gt;
      anonymous_func.go:12    0x40107c        e87fffffff              CALL main.myFunc&lt;span class="o"&gt;(&lt;/span&gt;SB&lt;span class="o"&gt;)&lt;/span&gt;
      anonymous_func.go:13    0x401081        4883c410                ADDQ &lt;span class="nv"&gt;$0&lt;/span&gt;x10, SP
      anonymous_func.go:13    0x401085        c3                      RET
@@ -122,21 +323,21 @@ TEXT main.main&lt;span class="o"&gt;(&lt;/span&gt;SB&lt;span class="o"&gt;)&lt;/
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;gdb main
 Reading symbols from test...done.
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; b main.main
-Breakpoint &lt;span class="m"&gt;1&lt;/span&gt; at 0x401040: file /root/data/example/closures/anonymous_func.go, line 7.
+Breakpoint &lt;span class="m"&gt;1&lt;/span&gt; at 0x401040: file /root/data/example/closures/anonymous_func.go, line &lt;span class="m"&gt;7&lt;/span&gt;.
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; r
 Starting program: /root/data/example/closures/test
-&lt;span class="o"&gt;[&lt;/span&gt;New LWP 2067&lt;span class="o"&gt;]&lt;/span&gt;
-&lt;span class="o"&gt;[&lt;/span&gt;New LWP 2068&lt;span class="o"&gt;]&lt;/span&gt;
-&lt;span class="o"&gt;[&lt;/span&gt;New LWP 2069&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP &lt;span class="m"&gt;2067&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP &lt;span class="m"&gt;2068&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP &lt;span class="m"&gt;2069&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
 
-Breakpoint 1, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/example/closures/anonymous_func.go:7
+Breakpoint &lt;span class="m"&gt;1&lt;/span&gt;, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/example/closures/anonymous_func.go:7
 &lt;span class="m"&gt;7&lt;/span&gt;       func main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; l
-2
+&lt;span class="m"&gt;2&lt;/span&gt;
 &lt;span class="m"&gt;3&lt;/span&gt;       func myFunc&lt;span class="o"&gt;(&lt;/span&gt;message int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
 &lt;span class="m"&gt;4&lt;/span&gt;               println&lt;span class="o"&gt;(&lt;/span&gt;message&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;span class="m"&gt;5&lt;/span&gt;       &lt;span class="o"&gt;}&lt;/span&gt;
-6
+&lt;span class="m"&gt;6&lt;/span&gt;
 &lt;span class="m"&gt;7&lt;/span&gt;       func main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
 &lt;span class="m"&gt;8&lt;/span&gt;               f :&lt;span class="o"&gt;=&lt;/span&gt; func&lt;span class="o"&gt;(&lt;/span&gt;message int&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
 &lt;span class="m"&gt;9&lt;/span&gt;                       println&lt;span class="o"&gt;(&lt;/span&gt;message&lt;span class="o"&gt;)&lt;/span&gt;
@@ -148,12 +349,12 @@ Breakpoint 1, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/exam
 0xc820039f40:   0x000000c820000180
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;上面在 gdb 里面把断点设置在 &lt;tt class="docutils literal"&gt;main.main&lt;/tt&gt; 处，然后通过输出当前的环境变量可以看到变量 f。这时候显示 f 指针指向的内存内容。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; b 11
-Breakpoint &lt;span class="m"&gt;2&lt;/span&gt; at 0x40105f: file /root/data/example/closures/anonymous_func.go, line 11.
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; b &lt;span class="m"&gt;11&lt;/span&gt;
+Breakpoint &lt;span class="m"&gt;2&lt;/span&gt; at 0x40105f: file /root/data/example/closures/anonymous_func.go, line &lt;span class="m"&gt;11&lt;/span&gt;.
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; c
 Continuing.
 
-Breakpoint 2, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/example/closures/anonymous_func.go:11
+Breakpoint &lt;span class="m"&gt;2&lt;/span&gt;, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/example/closures/anonymous_func.go:11
 &lt;span class="m"&gt;11&lt;/span&gt;              f&lt;span class="o"&gt;(&lt;/span&gt;0x100&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i locals
 &lt;span class="nv"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;void &lt;span class="o"&gt;(&lt;/span&gt;int&lt;span class="o"&gt;)}&lt;/span&gt; 0xc820039f40
@@ -168,8 +369,8 @@ main.main.func1 in section .text of /root/data/example/closures/test
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;然后在调用匿名函数 &lt;tt class="docutils literal"&gt;f&lt;/tt&gt; 的地方再设置一个断点， &lt;tt class="docutils literal"&gt;c&lt;/tt&gt; 让程序执行到新的断点。再输出 f 指针指向的内存，发现里面的内容已经改变了，输出符号名可以看到符号是 &lt;tt class="docutils literal"&gt;main.main.func1.f&lt;/tt&gt;, 这个是编译器提我们生成的符号名，然后看一下这个地址指向的内容，会发现 &lt;tt class="docutils literal"&gt;main.main.func1&lt;/tt&gt; ，也就是就是我们的匿名函数。接着跟&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i r
-  rax            0xc820000180     859530330496
-  rbx            0x489370 4756336
+  rax            0xc820000180     &lt;span class="m"&gt;859530330496&lt;/span&gt;
+  rbx            0x489370 &lt;span class="m"&gt;4756336&lt;/span&gt;
   ...
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
 Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; main.main:
@@ -234,10 +435,10 @@ End of assembler dump.
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; ni
 0x0000000000401072      &lt;span class="m"&gt;11&lt;/span&gt;              f&lt;span class="o"&gt;(&lt;/span&gt;0x100&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; p &lt;span class="nv"&gt;$rbx&lt;/span&gt;
-&lt;span class="nv"&gt;$5&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 4198544
+&lt;span class="nv"&gt;$5&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;4198544&lt;/span&gt;
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i r
-rax            0xc820000180     859530330496
-rbx            0x401090 4198544
+rax            0xc820000180     &lt;span class="m"&gt;859530330496&lt;/span&gt;
+rbx            0x401090 &lt;span class="m"&gt;4198544&lt;/span&gt;
 ...
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/1xg 0x401090
 0x401090 &amp;lt;main.main.func1&amp;gt;:     0xfffff8250c8b4864
@@ -277,19 +478,19 @@ rbx            0x401090 4198544
 
 $ gdb closure_func
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; b main.main
-Breakpoint &lt;span class="m"&gt;1&lt;/span&gt; at 0x4010d0: file /root/data/example/closures/closure_func.go, line 11.
+Breakpoint &lt;span class="m"&gt;1&lt;/span&gt; at 0x4010d0: file /root/data/example/closures/closure_func.go, line &lt;span class="m"&gt;11&lt;/span&gt;.
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; r
 Starting program: /root/data/example/closures/closure_func
-&lt;span class="o"&gt;[&lt;/span&gt;New LWP 5367&lt;span class="o"&gt;]&lt;/span&gt;
-&lt;span class="o"&gt;[&lt;/span&gt;New LWP 5368&lt;span class="o"&gt;]&lt;/span&gt;
-&lt;span class="o"&gt;[&lt;/span&gt;New LWP 5370&lt;span class="o"&gt;]&lt;/span&gt;
-&lt;span class="o"&gt;[&lt;/span&gt;New LWP 5369&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP &lt;span class="m"&gt;5367&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP &lt;span class="m"&gt;5368&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP &lt;span class="m"&gt;5370&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;New LWP &lt;span class="m"&gt;5369&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
 
-Breakpoint 1, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/example/closures/closure_func.go:11
+Breakpoint &lt;span class="m"&gt;1&lt;/span&gt;, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/example/closures/closure_func.go:11
 &lt;span class="m"&gt;11&lt;/span&gt;      func main&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i locals
-&lt;span class="nv"&gt;value_2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 859530428512
-&lt;span class="nv"&gt;value_1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0
+&lt;span class="nv"&gt;value_2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;859530428512&lt;/span&gt;
+&lt;span class="nv"&gt;value_1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;
 &lt;span class="nv"&gt;bar&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;void &lt;span class="o"&gt;(&lt;/span&gt;int *&lt;span class="o"&gt;)}&lt;/span&gt; 0xc820039f40
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;tt class="docutils literal"&gt;gdb&lt;/tt&gt; 在 &lt;tt class="docutils literal"&gt;main.main&lt;/tt&gt; 设置断点并输出环境变量可以看到 &lt;tt class="docutils literal"&gt;bar&lt;/tt&gt;，而且 &lt;tt class="docutils literal"&gt;bar&lt;/tt&gt; 是一个指针。&lt;/p&gt;
@@ -306,8 +507,8 @@ Breakpoint 1, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/exam
     0x00000000004010f6 &amp;lt;+38&amp;gt;:    mov    %rbx,%rdx
     ...
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i r
-rax            0x80000  524288
-rbx            0xc82000a140     859530371392
+rax            0x80000  &lt;span class="m"&gt;524288&lt;/span&gt;
+rbx            0xc82000a140     &lt;span class="m"&gt;859530371392&lt;/span&gt;
 ...
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/2xg 0xc82000a140
 0xc82000a140:   0x0000000000401170      0x000000c82000a0b8
@@ -335,7 +536,7 @@ End of assembler dump.
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; ni
 0x00000000004010fc      &lt;span class="m"&gt;13&lt;/span&gt;              value_1 :&lt;span class="o"&gt;=&lt;/span&gt; bar&lt;span class="o"&gt;()&lt;/span&gt;
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; si
-main.myFunc.func1 &lt;span class="o"&gt;(&lt;/span&gt;~r0&lt;span class="o"&gt;=&lt;/span&gt;859530371392&lt;span class="o"&gt;)&lt;/span&gt; at /root/data/example/closures/closure_func.go:5
+main.myFunc.func1 &lt;span class="o"&gt;(&lt;/span&gt;~r0&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;859530371392&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; at /root/data/example/closures/closure_func.go:5
 &lt;span class="m"&gt;5&lt;/span&gt;               &lt;span class="k"&gt;return&lt;/span&gt; func&lt;span class="o"&gt;()&lt;/span&gt; int &lt;span class="o"&gt;{&lt;/span&gt;
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
 Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; main.myFunc.func1:
@@ -348,10 +549,10 @@ Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"
   ...
 End of assembler dump.
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i r
-rax            0x80000  524288
-rbx            0x401170 4198768
-rcx            0xc820000180     859530330496
-rdx            0xc82000a140     859530371392
+rax            0x80000  &lt;span class="m"&gt;524288&lt;/span&gt;
+rbx            0x401170 &lt;span class="m"&gt;4198768&lt;/span&gt;
+rcx            0xc820000180     &lt;span class="m"&gt;859530330496&lt;/span&gt;
+rdx            0xc82000a140     &lt;span class="m"&gt;859530371392&lt;/span&gt;
 ...
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/2xg 0xc82000a140
 0xc82000a140:   0x0000000000401170      0x000000c82000a0b8
@@ -361,12 +562,12 @@ rdx            0xc82000a140     859530371392
 0xc82000a0b8:   0x0000000000000000      0x3d534e4d554c4f43
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;让程序执行到 +44 行，&lt;tt class="docutils literal"&gt;si&lt;/tt&gt; 进入到匿名函数内部。在 &lt;tt class="docutils literal"&gt;func1&lt;/tt&gt; 内部可以看到从 &lt;tt class="docutils literal"&gt;rdx&lt;/tt&gt; 取数据。输出 &lt;tt class="docutils literal"&gt;rdx&lt;/tt&gt; 内容，可以看到前面指向匿名函数，而后面则指向另外的内容 &lt;tt class="docutils literal"&gt;0x0000000000000000&lt;/tt&gt;。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; b 14
-Breakpoint &lt;span class="m"&gt;2&lt;/span&gt; at 0x401107: file /root/data/example/closures/closure_func.go, line 14.
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; b &lt;span class="m"&gt;14&lt;/span&gt;
+Breakpoint &lt;span class="m"&gt;2&lt;/span&gt; at 0x401107: file /root/data/example/closures/closure_func.go, line &lt;span class="m"&gt;14&lt;/span&gt;.
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; c
 Continuing.
 
-Breakpoint 2, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/example/closures/closure_func.go:14
+Breakpoint &lt;span class="m"&gt;2&lt;/span&gt;, main.main &lt;span class="o"&gt;()&lt;/span&gt; at /root/data/example/closures/closure_func.go:14
 &lt;span class="m"&gt;14&lt;/span&gt;              value_2 :&lt;span class="o"&gt;=&lt;/span&gt; bar&lt;span class="o"&gt;()&lt;/span&gt;
 &lt;span class="m"&gt;14&lt;/span&gt;              value_2 :&lt;span class="o"&gt;=&lt;/span&gt; bar&lt;span class="o"&gt;()&lt;/span&gt;
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
@@ -391,7 +592,7 @@ Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"
   0x0000000000401114 &amp;lt;+68&amp;gt;:    mov    &lt;span class="o"&gt;(&lt;/span&gt;%rsp&lt;span class="o"&gt;)&lt;/span&gt;,%rbx
   ...
 End of assembler dump.
-&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; ni 3
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; ni &lt;span class="m"&gt;3&lt;/span&gt;
 0x0000000000401112      &lt;span class="m"&gt;14&lt;/span&gt;              value_2 :&lt;span class="o"&gt;=&lt;/span&gt; bar&lt;span class="o"&gt;()&lt;/span&gt;
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
 Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; main.main:
@@ -416,7 +617,7 @@ Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"
   ...
 End of assembler dump.
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; si
-main.myFunc.func1 &lt;span class="o"&gt;(&lt;/span&gt;~r0&lt;span class="o"&gt;=&lt;/span&gt;1&lt;span class="o"&gt;)&lt;/span&gt; at /root/data/example/closures/closure_func.go:5
+main.myFunc.func1 &lt;span class="o"&gt;(&lt;/span&gt;~r0&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; at /root/data/example/closures/closure_func.go:5
 &lt;span class="m"&gt;5&lt;/span&gt;               &lt;span class="k"&gt;return&lt;/span&gt; func&lt;span class="o"&gt;()&lt;/span&gt; int &lt;span class="o"&gt;{&lt;/span&gt;
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; disassemble
 Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; main.myFunc.func1:
@@ -429,10 +630,10 @@ Dump of assembler code &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="k"
   ...
 End of assembler dump.
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; i r
-rax            0x80000  524288
-rbx            0x401170 4198768
-rcx            0xc820000180     859530330496
-rdx            0xc82000a140     859530371392
+rax            0x80000  &lt;span class="m"&gt;524288&lt;/span&gt;
+rbx            0x401170 &lt;span class="m"&gt;4198768&lt;/span&gt;
+rcx            0xc820000180     &lt;span class="m"&gt;859530330496&lt;/span&gt;
+rdx            0xc82000a140     &lt;span class="m"&gt;859530371392&lt;/span&gt;
 ...
 &lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt; x/2xg 0xc82000a140
 0xc82000a140:   0x0000000000401170      0x000000c82000a0b8
@@ -453,7 +654,17 @@ rdx            0xc82000a140     859530371392
 &lt;/ol&gt;
 &lt;p&gt;PS: 有些 Blog 写的内容都是错的还自诩对 Go 底层非常了解，这种误人子弟的不要太多。&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="closures"></category><category term="go"></category></entry><entry><title>GoBeansDB 架构设计</title><link href="http://sunisdown.me/gobeansdb-jia-gou-she-ji.html" rel="alternate"></link><published>2016-09-06T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2016-09-06:gobeansdb-jia-gou-she-ji.html</id><summary type="html">&lt;p&gt;从产品转系统有一段时间了，转到核心系统之后一直在维护 GoBeansDB，最近也在慢慢的熟悉另外一个新的项目（暂时保密）。&lt;/p&gt;
+</content><category term="closures"></category><category term="go"></category></entry><entry><title>GoBeansDB 架构设计</title><link href="http://sunisdown.me/gobeansdb-jia-gou-she-ji.html" rel="alternate"></link><published>2016-09-06T00:00:00+08:00</published><updated>2016-09-06T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2016-09-06:/gobeansdb-jia-gou-she-ji.html</id><summary type="html">&lt;p&gt;从产品转系统有一段时间了，转到核心系统之后一直在维护 GoBeansDB，最近也在慢慢的熟悉另外一个新的项目（暂时保密）。&lt;/p&gt;
+&lt;p&gt;BeansDB 是豆瓣内部实现的分布式存储系统，最开始的时候是 &lt;a class="reference external" href="https://github.com/davies"&gt;Davies&lt;/a&gt; 用 C 来实现的。2015 年的时候，内部决定开始用 Go 来重新写 BeansDB，然后 xiufeng 与 zzl 就实现了现在的 GoBeansDB。&lt;/p&gt;
+&lt;div class="section" id="k-v"&gt;
+&lt;h2&gt;为什么要自己实现一套 k/v 存储&lt;/h2&gt;
+&lt;p&gt;我在刚刚接手 GoBeansDB 的时候，想过这个问题。既然有那么多优秀的数据库系统，为什么豆瓣还需要自己重新实现一套 k/v 存储？
+这个问题可以拆分成两个方面，一个是为什么要用 K/V 数据库。一个是为什么要自己造轮子。&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;首先是因为数据大，而且数据是非结构化数据，像豆瓣的日记，就是一批很长的字符串。&lt;/li&gt;
+&lt;li&gt;其次是非常多的随机读。&lt;/li&gt;
+&lt;li&gt;有的时候会有大量的写操作&lt;/li&gt;
+&lt;li&gt;不需要外键什么的 …&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;从产品转系统有一段时间了，转到核心系统之后一直在维护 GoBeansDB，最近也在慢慢的熟悉另外一个新的项目（暂时保密）。&lt;/p&gt;
 &lt;p&gt;BeansDB 是豆瓣内部实现的分布式存储系统，最开始的时候是 &lt;a class="reference external" href="https://github.com/davies"&gt;Davies&lt;/a&gt; 用 C 来实现的。2015 年的时候，内部决定开始用 Go 来重新写 BeansDB，然后 xiufeng 与 zzl 就实现了现在的 GoBeansDB。&lt;/p&gt;
 &lt;div class="section" id="k-v"&gt;
 &lt;h2&gt;为什么要自己实现一套 k/v 存储&lt;/h2&gt;
@@ -516,7 +727,16 @@ rdx            0xc82000a140     859530371392
 &lt;p&gt;这就是 GoBeansDB 大概的架构。当然，整个系统里面还会涉及到很多细节这篇文章没有覆盖到。如果你对更多细节感兴趣，可以联系我们。&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-</summary><category term="database"></category><category term="kv"></category></entry><entry><title>One Year</title><link href="http://sunisdown.me/one-year.html" rel="alternate"></link><published>2016-02-02T00:00:00+08:00</published><author><name>Sunisdown</name></author><id>tag:sunisdown.me,2016-02-02:one-year.html</id><summary type="html">&lt;p&gt;看一下其实有一年没有更新 Blog。再不写点什么对不起自己域名ˊㅅˋ&lt;/p&gt;
+</content><category term="database"></category><category term="kv"></category></entry><entry><title>One Year</title><link href="http://sunisdown.me/one-year.html" rel="alternate"></link><published>2016-02-02T00:00:00+08:00</published><updated>2016-02-02T00:00:00+08:00</updated><author><name>Sunisdown</name></author><id>tag:sunisdown.me,2016-02-02:/one-year.html</id><summary type="html">&lt;p&gt;看一下其实有一年没有更新 Blog。再不写点什么对不起自己域名ˊㅅˋ&lt;/p&gt;
+&lt;p&gt;再过几天应该就来豆厂一周年了，豆厂大把的业余时间我都拿来做自己感兴趣的事儿。
+比如看 v6 代码，研究了下 paxos（然后并没有卵用，还是不懂）。&lt;/p&gt;
+&lt;p&gt;认真想一下其实很难写出什么高质量的 Blog，在豆瓣一年，貌似工作中并没有形成成体系的内容。而平时自己折腾的东西，也很难形成体系，写不出很高质量的 Blog。
+不过平时自己折腾的东西，倒是可以形成一本笔记，方便自己查阅。所以16年应该会以发布笔记为主，更新 Blog 为辅助。&lt;/p&gt;
+&lt;p&gt;我很喜欢豆厂工程师之间沟通的方式，直接在 github 上面沟通代码，每次代码都有人 review 的真的有点幸福。
+要知道帮别人 review 代码是一个比较耗费精力的工作，你需要了解这次提交的目的，看一下实现是否优雅，尽可能发现潜在的问题。
+所以有一堆技术还不错的小伙伴帮 review 代码，在自己的代码风格上，代码的简洁程度上，都有一定的提升，
+至少在提交代码的时候会比较谨慎，不会审核恶心的代码都往里面堆。一定程度上提高了自己对自己的要求。&lt;/p&gt;
+&lt;p&gt;之前来豆瓣面试的时候 …&lt;/p&gt;</summary><content type="html">&lt;p&gt;看一下其实有一年没有更新 Blog。再不写点什么对不起自己域名ˊㅅˋ&lt;/p&gt;
 &lt;p&gt;再过几天应该就来豆厂一周年了，豆厂大把的业余时间我都拿来做自己感兴趣的事儿。
 比如看 v6 代码，研究了下 paxos（然后并没有卵用，还是不懂）。&lt;/p&gt;
 &lt;p&gt;认真想一下其实很难写出什么高质量的 Blog，在豆瓣一年，貌似工作中并没有形成成体系的内容。而平时自己折腾的东西，也很难形成体系，写不出很高质量的 Blog。
@@ -528,7 +748,27 @@ rdx            0xc82000a140     859530371392
 &lt;p&gt;之前来豆瓣面试的时候，也曾经表示过自己想要进 DAE 或者做 anti，但是日军哥哥跟我说 anti 跟我现在组用的是同一套东西，技术上基本上是通的的。
 于是我来了现在这个组 O_O，经过这一年的接触，我发现还是喜欢 anti 或者 DAE 更多一些。&lt;/p&gt;
 &lt;p&gt;所以还是安安静静的做自己的事儿，安安静静做自己感兴趣的事儿。&lt;/p&gt;
-</summary></entry><entry><title>理解 Python 的 LEGB</title><link href="http://sunisdown.me/li-jie-python-de-legb.html" rel="alternate"></link><published>2015-02-03T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2015-02-03:li-jie-python-de-legb.html</id><summary type="html">&lt;div class="section" id="id1"&gt;
+</content></entry><entry><title>理解 Python 的 LEGB</title><link href="http://sunisdown.me/li-jie-python-de-legb.html" rel="alternate"></link><published>2015-02-03T00:00:00+08:00</published><updated>2015-02-03T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2015-02-03:/li-jie-python-de-legb.html</id><summary type="html">&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;名字空间&lt;/h2&gt;
+&lt;p&gt;Python 的名字空间是 Python 一个非常核心的内容。 其他语言中如 C
+中，变量名是内存地址的别名，而在 Python
+中，名字是一个字符串对象，它与他指向的对象构成一个{name:object}关联。
+Python 由很多名字空间，而 LEGB 则是名字空间的一种查找规则。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id2"&gt;
+&lt;h2&gt;作用域&lt;/h2&gt;
+&lt;p&gt;Python
+中&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;name-object&lt;/span&gt;&lt;/tt&gt;的关联存储在不同的作用域中，各个不同的作用域是相互独立的。而我们就在不同的作用域中搜索&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;name-object&lt;/span&gt;&lt;/tt&gt;。&lt;/p&gt;
+&lt;p&gt;举个栗子，来说明作用域是相互独立的。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;11&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;G&amp;quot;&lt;/span&gt;
+
+&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+            &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;L&amp;quot;&lt;/span&gt;
+            &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;in locals&amp;quot;&lt;/span&gt;
+   &lt;span class="o"&gt;....&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+
+&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;13&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="n"&gt;L …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</summary><content type="html">&lt;div class="section" id="id1"&gt;
 &lt;h2&gt;名字空间&lt;/h2&gt;
 &lt;p&gt;Python 的名字空间是 Python 一个非常核心的内容。 其他语言中如 C
 中，变量名是内存地址的别名，而在 Python
@@ -679,7 +919,22 @@ Python3下面才可以正常运行的：&lt;/p&gt;
 builtins
 的名字空间，将名字&lt;tt class="docutils literal"&gt;b&lt;/tt&gt;与值&lt;tt class="docutils literal"&gt;&amp;quot;builtins&amp;quot;&lt;/tt&gt;进行关联，就可以正常调用了。这种非常规用法不建议使用。&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="python"></category><category term="legb"></category></entry><entry><title>Python 之 GIL</title><link href="http://sunisdown.me/python-zhi-gil.html" rel="alternate"></link><published>2015-02-03T00:00:00+08:00</published><author><name>Sunisdown</name></author><id>tag:sunisdown.me,2015-02-03:python-zhi-gil.html</id><summary type="html">&lt;p&gt;注: 本篇 Blog 是参照
+</content><category term="python"></category><category term="legb"></category></entry><entry><title>Python 之 GIL</title><link href="http://sunisdown.me/python-zhi-gil.html" rel="alternate"></link><published>2015-02-03T00:00:00+08:00</published><updated>2015-02-03T00:00:00+08:00</updated><author><name>Sunisdown</name></author><id>tag:sunisdown.me,2015-02-03:/python-zhi-gil.html</id><summary type="html">&lt;p&gt;注: 本篇 Blog 是参照
+&lt;a class="reference external" href="http://book.douban.com/subject/3117898/"&gt;Python源码剖析&lt;/a&gt;过的 Python 源
+码,内容算是读书笔记吧,中间还不小心翻错了分支,翻到了3.4版本,不过看起来3.4的 GIL
+处理要比2.7的优雅一些.总之,感谢陈孺大神&lt;/p&gt;
+&lt;div class="section" id="gil"&gt;
+&lt;h2&gt;什么是 GIL&lt;/h2&gt;
+&lt;p&gt;GIL(Global Interpreter Lock)
+是解释器全局锁,用来互斥线程对于Python虚拟机的使用.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;为什么用 GIL&lt;/h2&gt;
+&lt;p&gt;我们知道 Python
+的线程调度是由机器来调度的,在线程执行的时候,我们不能决定线程什么时候挂起.假设线程
+A与线程 B 都保存在对象
+Obj_1,而这种情况下有可能会发生一些比较坑的问题:比如 A 在销毁 Obj_1
+的过程中被挂起,而这时候 B 线程开始执行销毁操作,而且正常的将 …&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;注: 本篇 Blog 是参照
 &lt;a class="reference external" href="http://book.douban.com/subject/3117898/"&gt;Python源码剖析&lt;/a&gt;过的 Python 源
 码,内容算是读书笔记吧,中间还不小心翻错了分支,翻到了3.4版本,不过看起来3.4的 GIL
 处理要比2.7的优雅一些.总之,感谢陈孺大神&lt;/p&gt;
@@ -871,7 +1126,28 @@ GIL.总之,`PyEval_InitThreads
 会通过&lt;a class="reference external" href="https://github.com/python/cpython/blob/2.7/Python/ceval.c#L254"&gt;PyThread_acquire_lock&lt;/a&gt;
 来获取 GIL.&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="Python"></category><category term="GIL"></category></entry><entry><title>Python 元类</title><link href="http://sunisdown.me/python-yuan-lei.html" rel="alternate"></link><published>2014-12-29T00:00:00+08:00</published><author><name>Sunisdown</name></author><id>tag:sunisdown.me,2014-12-29:python-yuan-lei.html</id><summary type="html">&lt;p&gt;&lt;tt class="docutils literal"&gt;Python&lt;/tt&gt;中有三个概念比较难懂，分别是：&lt;/p&gt;
+</content><category term="Python"></category><category term="GIL"></category></entry><entry><title>Python 元类</title><link href="http://sunisdown.me/python-yuan-lei.html" rel="alternate"></link><published>2014-12-29T00:00:00+08:00</published><updated>2014-12-29T00:00:00+08:00</updated><author><name>Sunisdown</name></author><id>tag:sunisdown.me,2014-12-29:/python-yuan-lei.html</id><summary type="html">&lt;p&gt;&lt;tt class="docutils literal"&gt;Python&lt;/tt&gt;中有三个概念比较难懂，分别是：&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;装饰器&lt;/li&gt;
+&lt;li&gt;描述符&lt;/li&gt;
+&lt;li&gt;元类&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这三种概念里面，元类又最为难懂，威力最强。&lt;/p&gt;
+&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;类型，类，对象&lt;/h2&gt;
+&lt;p&gt;神说&lt;tt class="docutils literal"&gt;万物皆对象&lt;/tt&gt;，Python
+中一切都是对象，凡是对象必先有类型。类，也是对象的一种。Python
+中所有的对象都有一些相同的内容，包含在对象的&lt;a class="reference external" href="https://github.com/python/cpython/blob/2.7/Include/object.h#L106"&gt;头部信息&lt;/a&gt;中。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;_object&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;PyObject_HEAD&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="n"&gt;PyObject&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;在
+&lt;a class="reference external" href="https://github.com/python/cpython/blob/2.7/Include/object.h#L78"&gt;PyObject&lt;/a&gt;
+的定义中，&lt;tt class="docutils literal"&gt;ob_refcnt&lt;/tt&gt;
+是&lt;tt class="docutils literal"&gt;应用计数&lt;/tt&gt;，用来做内存管理垃圾回收有关，这里暂时不细说。有兴趣的可以查看&lt;a class="reference external" href="https://github.com/qyuhen/book"&gt;Q.yuhen的
+Python 笔记&lt;/a&gt;,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cm"&gt;/* PyObject_HEAD defines the initial segment of every PyObject …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;&lt;tt class="docutils literal"&gt;Python&lt;/tt&gt;中有三个概念比较难懂，分别是：&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;装饰器&lt;/li&gt;
 &lt;li&gt;描述符&lt;/li&gt;
@@ -911,19 +1187,19 @@ Python 笔记&lt;/a&gt;,&lt;/p&gt;
 
 &lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;newdata&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;NewData&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
-&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;NewData&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__class__&lt;/span&gt;
+&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;NewData&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__class__&lt;/span&gt;
 &lt;span class="n"&gt;Out&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;
 
 &lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NewData&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;Out&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;
 
-&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;newdata&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__class__&lt;/span&gt;
+&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;newdata&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__class__&lt;/span&gt;
 &lt;span class="n"&gt;Out&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;__main__&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;NewData&lt;/span&gt;
 
 &lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;newdata&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;Out&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;__main__&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;NewData&lt;/span&gt;
 
-&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__class__&lt;/span&gt;
+&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__class__&lt;/span&gt;
 &lt;span class="n"&gt;Out&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;
 
 &lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__base__&lt;/span&gt;
@@ -935,7 +1211,7 @@ Python 笔记&lt;/a&gt;,&lt;/p&gt;
 &lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;Out&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;
 
-&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;11&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__class__&lt;/span&gt;
+&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;11&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__class__&lt;/span&gt;
 &lt;span class="n"&gt;Out&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;11&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;从上面的栗子中我们可以观察到，&lt;tt class="docutils literal"&gt;NewData&lt;/tt&gt;与&lt;tt class="docutils literal"&gt;type&lt;/tt&gt;以及&lt;tt class="docutils literal"&gt;object&lt;/tt&gt;的类型都是
@@ -977,13 +1253,13 @@ Python 笔记&lt;/a&gt;,&lt;/p&gt;
 里面抹去这种事儿不能忍，这种情况下也可以蛋疼的用元类（这真的是一个
 蛋疼的栗子）：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;AuthMeta&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__new__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cls&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bases&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__new__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cls&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bases&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__new__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bases&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="fm"&gt;__new__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bases&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
         &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;auth&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;SunisDown&amp;quot;&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;
 
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Blog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="n"&gt;__metaclass__&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;AuthMeta&lt;/span&gt;
+    &lt;span class="vm"&gt;__metaclass__&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;AuthMeta&lt;/span&gt;
     &lt;span class="k"&gt;pass&lt;/span&gt;
 
 &lt;span class="n"&gt;aaa&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Blog&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
@@ -1009,7 +1285,33 @@ Python 笔记&lt;/a&gt;,&lt;/p&gt;
 &lt;p&gt;这种简单方便的
 API，用户可以直接使用，而后面负责的逻辑，就隐藏在元类之中。&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="python"></category></entry><entry><title>如何利用决策树来决定去不去年会</title><link href="http://sunisdown.me/ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html" rel="alternate"></link><published>2014-11-06T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-11-06:ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html</id><summary type="html">&lt;p&gt;又到一年年会时,吸引大家去年会的,要么是冲奖品去,要么是为了看表演的妹子,作为一个好青年我排除掉看妹子的选项,仅用奖品来做价值来决定&lt;strong&gt;到底年会值不值得去!!!&lt;/strong&gt;&lt;/p&gt;
+</content><category term="python"></category></entry><entry><title>如何利用决策树来决定去不去年会</title><link href="http://sunisdown.me/ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html" rel="alternate"></link><published>2014-11-06T00:00:00+08:00</published><updated>2014-11-06T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-11-06:/ru-he-li-yong-jue-ce-shu-lai-jue-ding-qu-bu-qu-nian-hui.html</id><summary type="html">&lt;p&gt;又到一年年会时,吸引大家去年会的,要么是冲奖品去,要么是为了看表演的妹子,作为一个好青年我排除掉看妹子的选项,仅用奖品来做价值来决定&lt;strong&gt;到底年会值不值得去!!!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;如果我们去年会的话,有可能得到一个
+iMac,如果我们不去,那我们可能什么都得不到.但是
+如果去年会,我们需要花路费,假设我们需要坐一次公交￥1,然后再坐一次地铁￥3,现在帝都公交地
+铁都涨价了,出门的成本也增加了T
+T.有的小伙伴可能会开车,这样路费比公共交通更贵.反正我没有车,一天的来回路费按￥8计算.&lt;/p&gt;
+&lt;p&gt;通过上面的简单计算,如果我们去年会,则肯定需要支出￥8的成本,但是有可能会收获一台价
+值￥8000的 iMac,看起来不错,即使没有抽到
+iMac,其他的奖品也还是不错的~但是前提是你 人品要好.这是一个概率事件.&lt;/p&gt;
+&lt;table border="1" class="docutils"&gt;
+&lt;colgroup&gt;
+&lt;col width="25%" /&gt;
+&lt;col width="26%" /&gt;
+&lt;col width="26%" /&gt;
+&lt;col width="23%" /&gt;
+&lt;/colgroup&gt;
+&lt;thead valign="bottom"&gt;
+&lt;tr&gt;&lt;th class="head"&gt;抽奖顺序&lt;/th&gt;
+&lt;th class="head"&gt;奖品级别&lt;/th&gt;
+&lt;th class="head"&gt;价值￥&lt;/th&gt;
+&lt;th class="head"&gt;人数&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;4等&lt;/td&gt;
+&lt;td&gt;200 …&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</summary><content type="html">&lt;p&gt;又到一年年会时,吸引大家去年会的,要么是冲奖品去,要么是为了看表演的妹子,作为一个好青年我排除掉看妹子的选项,仅用奖品来做价值来决定&lt;strong&gt;到底年会值不值得去!!!&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;如果我们去年会的话,有可能得到一个
 iMac,如果我们不去,那我们可能什么都得不到.但是
 如果去年会,我们需要花路费,假设我们需要坐一次公交￥1,然后再坐一次地铁￥3,现在帝都公交地
@@ -1122,7 +1424,22 @@ iMac,其他的奖品也还是不错的~但是前提是你 人品要好.这是一
 &lt;p&gt;嗯,通过最终的简化图,我们可以看到,如果去年会,我们会有￥32.85
 的收益,对我们是有好处的.So,还是去吧~&lt;/p&gt;
 &lt;p&gt;当然,如果是周末开年会的话,计算的时候就需要再加上时间成本,小伙伴们自己来算吧:)&lt;/p&gt;
-</summary></entry><entry><title>一致性哈希</title><link href="http://sunisdown.me/yi-zhi-xing-ha-xi.html" rel="alternate"></link><published>2014-11-06T00:00:00+08:00</published><author><name>Sunisdown</name></author><id>tag:sunisdown.me,2014-11-06:yi-zhi-xing-ha-xi.html</id><summary type="html">&lt;p&gt;&lt;em&gt;一致性哈希&lt;/em&gt;，顾名思义，是一种哈希算法。比较常用的哈希算法应该是取模，通常在数据库需要分库的时候，大家都会用取模哈希。但是取模有一个缺点，就是，就是增加或者删除一个槽位的时候，几乎需要对所有的关键字进行重新映射，而分库的时候用这种方法，则所有的数据都需要重新录入。&lt;/p&gt;
+</content></entry><entry><title>一致性哈希</title><link href="http://sunisdown.me/yi-zhi-xing-ha-xi.html" rel="alternate"></link><published>2014-11-06T00:00:00+08:00</published><updated>2014-11-06T00:00:00+08:00</updated><author><name>Sunisdown</name></author><id>tag:sunisdown.me,2014-11-06:/yi-zhi-xing-ha-xi.html</id><summary type="html">&lt;p&gt;&lt;em&gt;一致性哈希&lt;/em&gt;，顾名思义，是一种哈希算法。比较常用的哈希算法应该是取模，通常在数据库需要分库的时候，大家都会用取模哈希。但是取模有一个缺点，就是，就是增加或者删除一个槽位的时候，几乎需要对所有的关键字进行重新映射，而分库的时候用这种方法，则所有的数据都需要重新录入。&lt;/p&gt;
+&lt;p&gt;在我们做分布式缓存的时候，我们需要把对 A 的请求，映射到某一个节点
+node_a，如果是取模来做哈希，假设我们是资源
+6，集群中有4个几点，取4的模为，则资源缓存到
+node_2。如果我们向集群中添加一台设备，则需要取5的模，资源6会缓存到
+node_1。实际上如果用取模来做哈希，无论是增加还是删除节点，都是灾难性的。大部分数据都需要重新映射，集群内的内容也需要重新缓存。这种情况下请求则会击穿缓存，请求到数据库，给数据库带来很大的压力。这种情况下，我们会需要&lt;strong&gt;一致性哈希&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://people.csail.mit.edu/karger/"&gt;David
+Karger&lt;/a&gt;及其合作者列出了使得一致哈希在互联网分布式缓存中非常有用的几个特性：&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;冗余少&lt;/li&gt;
+&lt;li&gt;负载均衡&lt;/li&gt;
+&lt;li&gt;过渡平滑&lt;/li&gt;
+&lt;li&gt;存储均衡&lt;/li&gt;
+&lt;li&gt;关键词单调&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一致性哈希最基础的想法是对所有的对象都使用相同的函数来映射缓存。这样可以尽可能的将同一个资源映射到同一个节点上面 …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;em&gt;一致性哈希&lt;/em&gt;，顾名思义，是一种哈希算法。比较常用的哈希算法应该是取模，通常在数据库需要分库的时候，大家都会用取模哈希。但是取模有一个缺点，就是，就是增加或者删除一个槽位的时候，几乎需要对所有的关键字进行重新映射，而分库的时候用这种方法，则所有的数据都需要重新录入。&lt;/p&gt;
 &lt;p&gt;在我们做分布式缓存的时候，我们需要把对 A 的请求，映射到某一个节点
 node_a，如果是取模来做哈希，假设我们是资源
 6，集群中有4个几点，取4的模为，则资源缓存到
@@ -1173,7 +1490,7 @@ node40上，并不能够做到均衡，从而导致数据倾斜。为了解决�
 
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;HashRing&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
 
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nodes&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;replicas&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nodes&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;replicas&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Manages a hash ring.
 
         `nodes` is a list of objects that have a proper __str__ representation.
@@ -1261,7 +1578,36 @@ node40上，并不能够做到均衡，从而导致数据倾斜。为了解决�
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;long&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hexdigest&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="mi"&gt;16&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;
 &lt;/div&gt;
-</summary><category term="Python"></category><category term="GIL"></category><category term="Hash"></category></entry><entry><title>Emacs 速查手册</title><link href="http://sunisdown.me/emacs-su-cha-shou-ce.html" rel="alternate"></link><published>2014-10-24T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-10-24:emacs-su-cha-shou-ce.html</id><summary type="html">&lt;p&gt;&lt;em&gt;注：&lt;/em&gt;&lt;/p&gt;
+</content><category term="Python"></category><category term="GIL"></category><category term="Hash"></category></entry><entry><title>Emacs 速查手册</title><link href="http://sunisdown.me/emacs-su-cha-shou-ce.html" rel="alternate"></link><published>2014-10-24T00:00:00+08:00</published><updated>2014-10-24T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-10-24:/emacs-su-cha-shou-ce.html</id><summary type="html">&lt;p&gt;&lt;em&gt;注：&lt;/em&gt;&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+本文是从 Emacs 官方文档 的 help-with-tutorial中文版摘抄而来的速查手册，译者名单见文章末尾
+&lt;/pre&gt;
+&lt;p&gt;重要提示：要退出 Emacs，请用 &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;C-x&lt;/span&gt; &lt;span class="pre"&gt;C-c&lt;/span&gt;&lt;/tt&gt;（两个连续的组合键）。
+要退出一个正在运行中的命令，请用 &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;C-g&lt;/span&gt;&lt;/tt&gt;。&lt;/p&gt;
+&lt;p&gt;以下命令在翻页浏览时相当有用：&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+C-v     向前移动一屏
+M-v     向后移动一屏
+C-l     重绘屏幕，并将光标所在行置于屏幕的中央
+        （注意是 CONTROL-L，不是 CONTROL-1）
+&lt;/pre&gt;
+&lt;div class="section" id="basic-cursor-control"&gt;
+&lt;h2&gt;基本的光标控制（BASIC CURSOR CONTROL）&lt;/h2&gt;
+&lt;pre class="literal-block"&gt;
+                     上一行 C-p
+                          :
+                          :
+    向左移 C-b .... 目前光标位置 .... 向右移 C-f
+                          :
+                          :
+                     下一行 C-n
+
+
+C-f     向右移动一个字符
+C-b     向左移动一个字符
+
+M-f     向右移动一个词【对中文是移动到下一个标点符号】
+M-b …&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;&lt;em&gt;注：&lt;/em&gt;&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
 本文是从 Emacs 官方文档 的 help-with-tutorial中文版摘抄而来的速查手册，译者名单见文章末尾
 &lt;/pre&gt;
@@ -1777,7 +2123,20 @@ incremental search    渐进式搜索 [3]
     择将“incremental search”译作“渐进式搜索”。
 &lt;/pre&gt;
 &lt;/div&gt;
-</summary><category term="emacs"></category></entry><entry><title>Unix/Linux终端下代理快速设置</title><link href="http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html" rel="alternate"></link><published>2014-10-22T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-10-22:unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html</id><summary type="html">&lt;p&gt;最近开始从 Vim 往 Emacs，这是一个痛苦的过程，不过好在有
+</content><category term="emacs"></category></entry><entry><title>Unix/Linux终端下代理快速设置</title><link href="http://sunisdown.me/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html" rel="alternate"></link><published>2014-10-22T00:00:00+08:00</published><updated>2014-10-22T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-10-22:/unixlinuxzhong-duan-xia-dai-li-kuai-su-she-zhi.html</id><summary type="html">&lt;p&gt;最近开始从 Vim 往 Emacs，这是一个痛苦的过程，不过好在有
+evil-mode，让这个迁移的过程不至于夭折。别问我为什么要背叛 Vim 。&lt;/p&gt;
+&lt;p&gt;像我这种 Emacs 新手难免会需要下载插件，而下载插件就需要FUCK GFW。笨笨用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;http_proxy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;http://host:port emacs -nw
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;这种方法来启动 emacs，简直要哭晕在地上。&lt;/p&gt;
+&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;设置方法&lt;/h2&gt;
+&lt;p&gt;所以在配置文件中加了下面的代码，方便在终端下控制当前环境变量下FUCK GFW：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;function&lt;/span&gt; proxy_on&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;no_proxy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;localhost,127.0.0.1,localaddress,.localdomain.com&amp;quot;&lt;/span&gt;
+    &lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;http_proxy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;http://host:port&amp;quot;&lt;/span&gt;
+    &lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;https_proxy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$http_proxy&lt;/span&gt;
+    &lt;span class="nb"&gt;echo …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;最近开始从 Vim 往 Emacs，这是一个痛苦的过程，不过好在有
 evil-mode，让这个迁移的过程不至于夭折。别问我为什么要背叛 Vim 。&lt;/p&gt;
 &lt;p&gt;像我这种 Emacs 新手难免会需要下载插件，而下载插件就需要FUCK GFW。笨笨用&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;http_proxy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;http://host:port emacs -nw
@@ -1819,7 +2178,22 @@ Proxy environment variable removed.
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;友情提示，请将 http://host:port 替换成自己的代理地址
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</summary><category term="linux"></category><category term="unix"></category><category term="proxy"></category></entry><entry><title>白话Python 进程，线程，协程</title><link href="http://sunisdown.me/bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html" rel="alternate"></link><published>2014-10-19T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-10-19:bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html</id><summary type="html">&lt;p&gt;Python被人诟病最多的大概就是性能差，在这里讲一下 Python
+</content><category term="linux"></category><category term="unix"></category><category term="proxy"></category></entry><entry><title>白话Python 进程，线程，协程</title><link href="http://sunisdown.me/bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html" rel="alternate"></link><published>2014-10-19T00:00:00+08:00</published><updated>2014-10-19T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-10-19:/bai-hua-python-jin-cheng-xian-cheng-xie-cheng.html</id><summary type="html">&lt;p&gt;Python被人诟病最多的大概就是性能差，在这里讲一下 Python
+的多进程，多线程与协程。首先声明这不是教程，看完这篇文章，大概能够对
+Python 的多进程与多线程有一定的了解。&lt;/p&gt;
+&lt;img alt="" src="images/process_thread.png" /&gt;
+&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;进程&lt;/h2&gt;
+&lt;p&gt;进程是正则执行的程序实例。执行程序的过程中，内核会讲程序代码载入虚拟内存，喂程序变量分配空间，建立bookkeeping 数据结构，来记录与进程有关的信息，比如进程 ID，用户 ID 等&lt;/p&gt;
+&lt;p&gt;创建进程的时候，内核会为进程分配一定的资源，并在进程存活的时候不断进行调整，比如内存，进程创建的时候会占有一部分内存。进程结束的时候资源会释放出来，来让其他资源使用。&lt;/p&gt;
+&lt;p&gt;我们可以把进程理解为一种容器，容器内的资源可多可少，但是在容器内的程序只能使用容器内的东西。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id2"&gt;
+&lt;h2&gt;线程&lt;/h2&gt;
+&lt;p&gt;UNIX
+中，一个进程中可以执行多个线程。多个线程共享进程内的资源。所以可以将线程可以看成是共享同一虚拟内存以及其他属性的进程。&lt;/p&gt;
+&lt;p&gt;线程相对于进程的优势在于同一进程下的不同线程之间的数据共享更加容易。&lt;/p&gt;
+&lt;p&gt;Python被诟病最多的大概就是解释器全局锁（GIL）了，GIL 的存在是为了实现Python 中对于共享资源访问的互斥。而且是非常霸道的解释器级别的互斥。在GIL的机制下，一个线程访问解释器之后，其他的线程就需要等待这个线程释放之后才可以访问 …&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;Python被人诟病最多的大概就是性能差，在这里讲一下 Python
 的多进程，多线程与协程。首先声明这不是教程，看完这篇文章，大概能够对
 Python 的多进程与多线程有一定的了解。&lt;/p&gt;
 &lt;img alt="" src="images/process_thread.png" /&gt;
@@ -1847,7 +2221,24 @@ Python 中，则通过软件模拟这种中断，来实现线程调度。&lt;/p&
 &lt;h2&gt;总结&lt;/h2&gt;
 &lt;p&gt;在 Python中，使用协程来做并发是对于系统资源消耗最小，可以最大化的做高并发，但是，需要我们自己来做调度，操作系统不会主动调度任务。&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="process"></category><category term="thread"></category><category term="coroutine"></category><category term="python"></category></entry><entry><title>Mininet Walkthrough</title><link href="http://sunisdown.me/mininet-walkthrough.html" rel="alternate"></link><published>2014-10-16T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-10-16:mininet-walkthrough.html</id><summary type="html">&lt;p&gt;译者注： 这篇 Blog 是在学习 SDN 过程中翻译的Mininet
+</content><category term="process"></category><category term="thread"></category><category term="coroutine"></category><category term="python"></category></entry><entry><title>Mininet Walkthrough</title><link href="http://sunisdown.me/mininet-walkthrough.html" rel="alternate"></link><published>2014-10-16T00:00:00+08:00</published><updated>2014-10-16T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2014-10-16:/mininet-walkthrough.html</id><summary type="html">&lt;p&gt;译者注： 这篇 Blog 是在学习 SDN 过程中翻译的Mininet
+官方的文档。文档主要是介绍了 Mininet
+的简单用法。会分成几个部分放出来，&lt;a class="reference external" href="http://mininet.org/walkthrough/#test-connectivity-between-hosts"&gt;原文&lt;/a&gt;。下面是正文&lt;/p&gt;
+&lt;div class="section" id="part-1-everyday-mininet-usage"&gt;
+&lt;h2&gt;Part 1: Everyday Mininet Usage&lt;/h2&gt;
+&lt;p&gt;首先是是命令语法&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;$&lt;/tt&gt; 这个符号代表现在处于 Linux 的shell 交互下，需要使用的是 Linux
+命令&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;mininet&amp;gt;&lt;/tt&gt; 这个符号表示现在处于 Mininet 交互下，需要使用的是
+Mininet 的命令&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;＃&lt;/tt&gt; 这个符号表示的是现在处于 Linux 的 root 权限下。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上相应的状态下下属于对应的命令，就能够得到正常的输出。需要注意的是&lt;tt class="docutils literal"&gt;mininet&amp;gt;&lt;/tt&gt;的情况比较特殊，需要使用
+minient 的命令来进行交互。&lt;/p&gt;
+&lt;div class="section" id="display-startup-options"&gt;
+&lt;h3&gt;Display Startup Options&lt;/h3&gt;
+&lt;p&gt;我们首先来启动 …&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;译者注： 这篇 Blog 是在学习 SDN 过程中翻译的Mininet
 官方的文档。文档主要是介绍了 Mininet
 的简单用法。会分成几个部分放出来，&lt;a class="reference external" href="http://mininet.org/walkthrough/#test-connectivity-between-hosts"&gt;原文&lt;/a&gt;。下面是正文&lt;/p&gt;
 &lt;div class="section" id="part-1-everyday-mininet-usage"&gt;
@@ -1998,7 +2389,7 @@ h1-eth0   Link encap:Ethernet  HWaddr 3e:94:43:b1:ad:48
           RX packets:22 errors:0 dropped:0 overruns:0 frame:0
           TX packets:8 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:1764 &lt;span class="o"&gt;(&lt;/span&gt;1.7 KB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;648.0 B&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:1764 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;.7 KB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;648&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;
 
 lo        Link encap:Local Loopback
           inet addr:127.0.0.1  Mask:255.0.0.0
@@ -2007,7 +2398,7 @@ lo        Link encap:Local Loopback
           RX packets:0 errors:0 dropped:0 overruns:0 frame:0
           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0
-          RX bytes:0 &lt;span class="o"&gt;(&lt;/span&gt;0.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:0 &lt;span class="o"&gt;(&lt;/span&gt;0.0 B&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:0 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:0 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;上面的输出中，可以看见 &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;h1-eth0&lt;/span&gt;&lt;/tt&gt; 跟 &lt;tt class="docutils literal"&gt;lo&lt;/tt&gt;两个接口，需要注意的是，在
 Linux 系统的 shell 中运行&lt;tt class="docutils literal"&gt;ifconfig&lt;/tt&gt;是看不到h1-eth0。&lt;/p&gt;
@@ -2015,14 +2406,14 @@ Linux 系统的 shell 中运行&lt;tt class="docutils literal"&gt;ifconfig&lt;/t
 的网络namespace上面，所以在&lt;tt class="docutils literal"&gt;switch&lt;/tt&gt;上执行命令与在 Linux 下的 shell
 中是一样的。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mininet&amp;gt; s1 ifconfig-a
-eth0      Link encap:Ethernet  HWaddr 08:00:27:98:dc:aa
+eth0      Link encap:Ethernet  HWaddr &lt;span class="m"&gt;08&lt;/span&gt;:00:27:98:dc:aa
           inet addr:10.0.2.15  Bcast:10.0.2.255  Mask:255.255.255.0
           inet6 addr: fe80::a00:27ff:fe98:dcaa/64 Scope:Link
           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
           RX packets:46716 errors:0 dropped:0 overruns:0 frame:0
           TX packets:40265 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:10804203 &lt;span class="o"&gt;(&lt;/span&gt;10.8 MB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:40122199 &lt;span class="o"&gt;(&lt;/span&gt;40.1 MB&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:10804203 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;.8 MB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:40122199 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;40&lt;/span&gt;.1 MB&lt;span class="o"&gt;)&lt;/span&gt;
 
 lo        Link encap:Local Loopback
           inet addr:127.0.0.1  Mask:255.0.0.0
@@ -2031,7 +2422,7 @@ lo        Link encap:Local Loopback
           RX packets:43654 errors:0 dropped:0 overruns:0 frame:0
           TX packets:43654 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0
-          RX bytes:37264504 &lt;span class="o"&gt;(&lt;/span&gt;37.2 MB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:37264504 &lt;span class="o"&gt;(&lt;/span&gt;37.2 MB&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:37264504 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;37&lt;/span&gt;.2 MB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:37264504 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;37&lt;/span&gt;.2 MB&lt;span class="o"&gt;)&lt;/span&gt;
 
 lxcbr0    Link encap:Ethernet  HWaddr fe:5e:f0:f7:a6:f3
           inet addr:10.0.3.1  Bcast:10.0.3.255  Mask:255.255.255.0
@@ -2040,14 +2431,14 @@ lxcbr0    Link encap:Ethernet  HWaddr fe:5e:f0:f7:a6:f3
           RX packets:52 errors:0 dropped:0 overruns:0 frame:0
           TX packets:20 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0
-          RX bytes:4759 &lt;span class="o"&gt;(&lt;/span&gt;4.7 KB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:2952 &lt;span class="o"&gt;(&lt;/span&gt;2.9 KB&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:4759 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;.7 KB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:2952 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;.9 KB&lt;span class="o"&gt;)&lt;/span&gt;
 
 ovs-system Link encap:Ethernet  HWaddr 3e:79:59:3d:d9:bb
           BROADCAST MULTICAST  MTU:1500  Metric:1
           RX packets:0 errors:0 dropped:0 overruns:0 frame:0
           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0
-          RX bytes:0 &lt;span class="o"&gt;(&lt;/span&gt;0.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:0 &lt;span class="o"&gt;(&lt;/span&gt;0.0 B&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:0 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:0 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;
 
 s1        Link encap:Ethernet  HWaddr 6e:8c:5d:91:d5:44
           inet6 addr: fe80::fc47:8aff:fe6a:4155/64 Scope:Link
@@ -2055,7 +2446,7 @@ s1        Link encap:Ethernet  HWaddr 6e:8c:5d:91:d5:44
           RX packets:13 errors:0 dropped:0 overruns:0 frame:0
           TX packets:8 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0
-          RX bytes:1026 &lt;span class="o"&gt;(&lt;/span&gt;1.0 KB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;648.0 B&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:1026 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;.0 KB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;648&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;
 
 s1-eth1   Link encap:Ethernet  HWaddr 5e:a2:f7:86:f3:b1
           inet6 addr: fe80::5ca2:f7ff:fe86:f3b1/64 Scope:Link
@@ -2063,7 +2454,7 @@ s1-eth1   Link encap:Ethernet  HWaddr 5e:a2:f7:86:f3:b1
           RX packets:8 errors:0 dropped:0 overruns:0 frame:0
           TX packets:22 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;648.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:1764 &lt;span class="o"&gt;(&lt;/span&gt;1.7 KB&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;648&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:1764 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;.7 KB&lt;span class="o"&gt;)&lt;/span&gt;
 
 s1-eth2   Link encap:Ethernet  HWaddr b2:c6:37:e0:d9:61
           inet6 addr: fe80::b0c6:37ff:fee0:d961/64 Scope:Link
@@ -2071,7 +2462,7 @@ s1-eth2   Link encap:Ethernet  HWaddr b2:c6:37:e0:d9:61
           RX packets:8 errors:0 dropped:0 overruns:0 frame:0
           TX packets:21 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;648.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:1674 &lt;span class="o"&gt;(&lt;/span&gt;1.6 KB&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;648&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:1674 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;.6 KB&lt;span class="o"&gt;)&lt;/span&gt;
 
 veth14524J Link encap:Ethernet  HWaddr fe:ca:13:f5:dd:b4
           inet6 addr: fe80::fcca:13ff:fef5:ddb4/64 Scope:Link
@@ -2079,7 +2470,7 @@ veth14524J Link encap:Ethernet  HWaddr fe:ca:13:f5:dd:b4
           RX packets:8 errors:0 dropped:0 overruns:0 frame:0
           TX packets:40 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;648.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:4190 &lt;span class="o"&gt;(&lt;/span&gt;4.1 KB&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;648&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:4190 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;.1 KB&lt;span class="o"&gt;)&lt;/span&gt;
 
 veth2K19CE Link encap:Ethernet  HWaddr fe:f1:f7:e8:49:45
           inet6 addr: fe80::fcf1:f7ff:fee8:4945/64 Scope:Link
@@ -2087,7 +2478,7 @@ veth2K19CE Link encap:Ethernet  HWaddr fe:f1:f7:e8:49:45
           RX packets:8 errors:0 dropped:0 overruns:0 frame:0
           TX packets:42 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;648.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:4370 &lt;span class="o"&gt;(&lt;/span&gt;4.3 KB&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;648&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:4370 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;.3 KB&lt;span class="o"&gt;)&lt;/span&gt;
 
 veth9WSHRK Link encap:Ethernet  HWaddr fe:87:1d:33:f6:41
           inet6 addr: fe80::fc87:1dff:fe33:f641/64 Scope:Link
@@ -2095,7 +2486,7 @@ veth9WSHRK Link encap:Ethernet  HWaddr fe:87:1d:33:f6:41
           RX packets:8 errors:0 dropped:0 overruns:0 frame:0
           TX packets:43 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;648.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:4460 &lt;span class="o"&gt;(&lt;/span&gt;4.4 KB&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:648 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;648&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:4460 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;.4 KB&lt;span class="o"&gt;)&lt;/span&gt;
 
 vethH2K7R5 Link encap:Ethernet  HWaddr fe:5e:f0:f7:a6:f3
           inet6 addr: fe80::fc5e:f0ff:fef7:a6f3/64 Scope:Link
@@ -2103,7 +2494,7 @@ vethH2K7R5 Link encap:Ethernet  HWaddr fe:5e:f0:f7:a6:f3
           RX packets:14 errors:0 dropped:0 overruns:0 frame:0
           TX packets:48 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:1776 &lt;span class="o"&gt;(&lt;/span&gt;1.7 KB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:5030 &lt;span class="o"&gt;(&lt;/span&gt;5.0 KB&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:1776 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;.7 KB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:5030 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;.0 KB&lt;span class="o"&gt;)&lt;/span&gt;
 
 vethO99MI2 Link encap:Ethernet  HWaddr fe:cf:ee:97:fb:7f
           inet6 addr: fe80::fccf:eeff:fe97:fb7f/64 Scope:Link
@@ -2111,7 +2502,7 @@ vethO99MI2 Link encap:Ethernet  HWaddr fe:cf:ee:97:fb:7f
           RX packets:14 errors:0 dropped:0 overruns:0 frame:0
           TX packets:51 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:1767 &lt;span class="o"&gt;(&lt;/span&gt;1.7 KB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:5294 &lt;span class="o"&gt;(&lt;/span&gt;5.2 KB&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:1767 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;.7 KB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:5294 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;.2 KB&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;上面的输出中包含交换机的虚拟网卡 s1，以及主机的 eth0。&lt;/p&gt;
 &lt;p&gt;为了区别显示host
@@ -2119,22 +2510,22 @@ vethO99MI2 Link encap:Ethernet  HWaddr fe:cf:ee:97:fb:7f
 s1与h1上面演示如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mininet&amp;gt; s1 arp
 Address                  HWtype  HWaddress           Flags Mask            Iface
-localhost                ether   00:16:3e:54:9c:03   C                     lxcbr0
-localhost                ether   52:54:00:12:35:02   C                     eth0
-localhost                ether   52:54:00:12:35:03   C                     eth0
-localhost                ether   00:16:3e:51:24:a7   C                     lxcbr0
+localhost                ether   &lt;span class="m"&gt;00&lt;/span&gt;:16:3e:54:9c:03   C                     lxcbr0
+localhost                ether   &lt;span class="m"&gt;52&lt;/span&gt;:54:00:12:35:02   C                     eth0
+localhost                ether   &lt;span class="m"&gt;52&lt;/span&gt;:54:00:12:35:03   C                     eth0
+localhost                ether   &lt;span class="m"&gt;00&lt;/span&gt;:16:3e:51:24:a7   C                     lxcbr0
 mininet&amp;gt; s1 route
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-default         localhost       0.0.0.0         UG    &lt;span class="m"&gt;0&lt;/span&gt;      &lt;span class="m"&gt;0&lt;/span&gt;        &lt;span class="m"&gt;0&lt;/span&gt; eth0
-10.0.2.0        *               255.255.255.0   U     &lt;span class="m"&gt;0&lt;/span&gt;      &lt;span class="m"&gt;0&lt;/span&gt;        &lt;span class="m"&gt;0&lt;/span&gt; eth0
-10.0.3.0        *               255.255.255.0   U     &lt;span class="m"&gt;0&lt;/span&gt;      &lt;span class="m"&gt;0&lt;/span&gt;        &lt;span class="m"&gt;0&lt;/span&gt; lxcbr0
-172.17.0.0      *               255.255.0.0     U     &lt;span class="m"&gt;0&lt;/span&gt;      &lt;span class="m"&gt;0&lt;/span&gt;        &lt;span class="m"&gt;0&lt;/span&gt; docker0
+default         localhost       &lt;span class="m"&gt;0&lt;/span&gt;.0.0.0         UG    &lt;span class="m"&gt;0&lt;/span&gt;      &lt;span class="m"&gt;0&lt;/span&gt;        &lt;span class="m"&gt;0&lt;/span&gt; eth0
+&lt;span class="m"&gt;10&lt;/span&gt;.0.2.0        *               &lt;span class="m"&gt;255&lt;/span&gt;.255.255.0   U     &lt;span class="m"&gt;0&lt;/span&gt;      &lt;span class="m"&gt;0&lt;/span&gt;        &lt;span class="m"&gt;0&lt;/span&gt; eth0
+&lt;span class="m"&gt;10&lt;/span&gt;.0.3.0        *               &lt;span class="m"&gt;255&lt;/span&gt;.255.255.0   U     &lt;span class="m"&gt;0&lt;/span&gt;      &lt;span class="m"&gt;0&lt;/span&gt;        &lt;span class="m"&gt;0&lt;/span&gt; lxcbr0
+&lt;span class="m"&gt;172&lt;/span&gt;.17.0.0      *               &lt;span class="m"&gt;255&lt;/span&gt;.255.0.0     U     &lt;span class="m"&gt;0&lt;/span&gt;      &lt;span class="m"&gt;0&lt;/span&gt;        &lt;span class="m"&gt;0&lt;/span&gt; docker0
 mininet&amp;gt; h1 arp
 mininet&amp;gt; h1 route
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-10.0.0.0        *               255.0.0.0       U     &lt;span class="m"&gt;0&lt;/span&gt;      &lt;span class="m"&gt;0&lt;/span&gt;        &lt;span class="m"&gt;0&lt;/span&gt; h1-eth0
+&lt;span class="m"&gt;10&lt;/span&gt;.0.0.0        *               &lt;span class="m"&gt;255&lt;/span&gt;.0.0.0       U     &lt;span class="m"&gt;0&lt;/span&gt;      &lt;span class="m"&gt;0&lt;/span&gt;        &lt;span class="m"&gt;0&lt;/span&gt; h1-eth0
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这样可以做到将每一个主机，交换机，以及控制器都放到他自己的标准的 network
 namespace
@@ -2144,31 +2535,31 @@ namespace
 &lt;p&gt;&lt;em&gt;注意&lt;/em&gt;:只有网络是虚拟出来的，每一个主机里面的进程使用的都是同一套目录，可以看到相同的进程集合，我们打印不同主机下面的进程列表看看：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mininet&amp;gt; h1 ps -a
   PID TTY          TIME CMD
- &lt;span class="m"&gt;3899&lt;/span&gt; pts/3    00:00:00 tmux
- &lt;span class="m"&gt;4000&lt;/span&gt; pts/23   00:00:00 sudo
- &lt;span class="m"&gt;4001&lt;/span&gt; pts/23   00:00:51 wireshark
- &lt;span class="m"&gt;4030&lt;/span&gt; pts/23   00:00:00 dbus-launch
- &lt;span class="m"&gt;4530&lt;/span&gt; pts/23   00:00:43 dumpcap
- &lt;span class="m"&gt;4541&lt;/span&gt; pts/22   00:00:00 sudo
- &lt;span class="m"&gt;4542&lt;/span&gt; pts/22   00:00:00 mn
+ &lt;span class="m"&gt;3899&lt;/span&gt; pts/3    &lt;span class="m"&gt;00&lt;/span&gt;:00:00 tmux
+ &lt;span class="m"&gt;4000&lt;/span&gt; pts/23   &lt;span class="m"&gt;00&lt;/span&gt;:00:00 sudo
+ &lt;span class="m"&gt;4001&lt;/span&gt; pts/23   &lt;span class="m"&gt;00&lt;/span&gt;:00:51 wireshark
+ &lt;span class="m"&gt;4030&lt;/span&gt; pts/23   &lt;span class="m"&gt;00&lt;/span&gt;:00:00 dbus-launch
+ &lt;span class="m"&gt;4530&lt;/span&gt; pts/23   &lt;span class="m"&gt;00&lt;/span&gt;:00:43 dumpcap
+ &lt;span class="m"&gt;4541&lt;/span&gt; pts/22   &lt;span class="m"&gt;00&lt;/span&gt;:00:00 sudo
+ &lt;span class="m"&gt;4542&lt;/span&gt; pts/22   &lt;span class="m"&gt;00&lt;/span&gt;:00:00 mn
 mininet&amp;gt; h2 ps -a
   PID TTY          TIME CMD
- &lt;span class="m"&gt;3899&lt;/span&gt; pts/3    00:00:00 tmux
- &lt;span class="m"&gt;4000&lt;/span&gt; pts/23   00:00:00 sudo
- &lt;span class="m"&gt;4001&lt;/span&gt; pts/23   00:00:52 wireshark
- &lt;span class="m"&gt;4030&lt;/span&gt; pts/23   00:00:00 dbus-launch
- &lt;span class="m"&gt;4530&lt;/span&gt; pts/23   00:00:43 dumpcap
- &lt;span class="m"&gt;4541&lt;/span&gt; pts/22   00:00:00 sudo
- &lt;span class="m"&gt;4542&lt;/span&gt; pts/22   00:00:00 mn
+ &lt;span class="m"&gt;3899&lt;/span&gt; pts/3    &lt;span class="m"&gt;00&lt;/span&gt;:00:00 tmux
+ &lt;span class="m"&gt;4000&lt;/span&gt; pts/23   &lt;span class="m"&gt;00&lt;/span&gt;:00:00 sudo
+ &lt;span class="m"&gt;4001&lt;/span&gt; pts/23   &lt;span class="m"&gt;00&lt;/span&gt;:00:52 wireshark
+ &lt;span class="m"&gt;4030&lt;/span&gt; pts/23   &lt;span class="m"&gt;00&lt;/span&gt;:00:00 dbus-launch
+ &lt;span class="m"&gt;4530&lt;/span&gt; pts/23   &lt;span class="m"&gt;00&lt;/span&gt;:00:43 dumpcap
+ &lt;span class="m"&gt;4541&lt;/span&gt; pts/22   &lt;span class="m"&gt;00&lt;/span&gt;:00:00 sudo
+ &lt;span class="m"&gt;4542&lt;/span&gt; pts/22   &lt;span class="m"&gt;00&lt;/span&gt;:00:00 mn
 mininet&amp;gt; s1 ps -a
   PID TTY          TIME CMD
- &lt;span class="m"&gt;3899&lt;/span&gt; pts/3    00:00:00 tmux
- &lt;span class="m"&gt;4000&lt;/span&gt; pts/23   00:00:00 sudo
- &lt;span class="m"&gt;4001&lt;/span&gt; pts/23   00:00:54 wireshark
- &lt;span class="m"&gt;4030&lt;/span&gt; pts/23   00:00:00 dbus-launch
- &lt;span class="m"&gt;4530&lt;/span&gt; pts/23   00:00:46 dumpcap
- &lt;span class="m"&gt;4541&lt;/span&gt; pts/22   00:00:00 sudo
- &lt;span class="m"&gt;4542&lt;/span&gt; pts/22   00:00:00 mn
+ &lt;span class="m"&gt;3899&lt;/span&gt; pts/3    &lt;span class="m"&gt;00&lt;/span&gt;:00:00 tmux
+ &lt;span class="m"&gt;4000&lt;/span&gt; pts/23   &lt;span class="m"&gt;00&lt;/span&gt;:00:00 sudo
+ &lt;span class="m"&gt;4001&lt;/span&gt; pts/23   &lt;span class="m"&gt;00&lt;/span&gt;:00:54 wireshark
+ &lt;span class="m"&gt;4030&lt;/span&gt; pts/23   &lt;span class="m"&gt;00&lt;/span&gt;:00:00 dbus-launch
+ &lt;span class="m"&gt;4530&lt;/span&gt; pts/23   &lt;span class="m"&gt;00&lt;/span&gt;:00:46 dumpcap
+ &lt;span class="m"&gt;4541&lt;/span&gt; pts/22   &lt;span class="m"&gt;00&lt;/span&gt;:00:00 sudo
+ &lt;span class="m"&gt;4542&lt;/span&gt; pts/22   &lt;span class="m"&gt;00&lt;/span&gt;:00:00 mn
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;如上所示， h1，h2，s1三个进程列表是完全相同的。&lt;/p&gt;
 &lt;p&gt;其实完全可以做到各个主机完全独立，就想 LXC 那样，但是目前 Mininet
@@ -2179,13 +2570,13 @@ Linux的 shell
 &lt;div class="section" id="test-connectivity-between-hosts"&gt;
 &lt;h3&gt;Test connectivity between hosts&lt;/h3&gt;
 &lt;p&gt;现在，验证您可以h1 ping 通 h2:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mininet&amp;gt; h1 ping h2 -c 1
-PING 10.0.0.2 &lt;span class="o"&gt;(&lt;/span&gt;10.0.0.2&lt;span class="o"&gt;)&lt;/span&gt; 56&lt;span class="o"&gt;(&lt;/span&gt;84&lt;span class="o"&gt;)&lt;/span&gt; bytes of data.
-&lt;span class="m"&gt;64&lt;/span&gt; bytes from 10.0.0.2: &lt;span class="nv"&gt;icmp_seq&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="nv"&gt;ttl&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;64&lt;/span&gt; &lt;span class="nv"&gt;time&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;8.57 ms
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mininet&amp;gt; h1 ping h2 -c &lt;span class="m"&gt;1&lt;/span&gt;
+PING &lt;span class="m"&gt;10&lt;/span&gt;.0.0.2 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;.0.0.2&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="m"&gt;56&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;84&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; bytes of data.
+&lt;span class="m"&gt;64&lt;/span&gt; bytes from &lt;span class="m"&gt;10&lt;/span&gt;.0.0.2: &lt;span class="nv"&gt;icmp_seq&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="nv"&gt;ttl&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;64&lt;/span&gt; &lt;span class="nv"&gt;time&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;8&lt;/span&gt;.57 ms
 
---- 10.0.0.2 ping statistics ---
-&lt;span class="m"&gt;1&lt;/span&gt; packets transmitted, &lt;span class="m"&gt;1&lt;/span&gt; received, 0% packet loss, &lt;span class="nb"&gt;time&lt;/span&gt; 0ms
-rtt min/avg/max/mdev &lt;span class="o"&gt;=&lt;/span&gt; 8.576/8.576/8.576/0.000 ms
+--- &lt;span class="m"&gt;10&lt;/span&gt;.0.0.2 ping statistics ---
+&lt;span class="m"&gt;1&lt;/span&gt; packets transmitted, &lt;span class="m"&gt;1&lt;/span&gt; received, &lt;span class="m"&gt;0&lt;/span&gt;% packet loss, &lt;span class="nb"&gt;time&lt;/span&gt; 0ms
+rtt min/avg/max/mdev &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;8&lt;/span&gt;.576/8.576/8.576/0.000 ms
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;mininet中的命令语法如上所示。&lt;tt class="docutils literal"&gt;host1 command&amp;nbsp; host2&lt;/tt&gt;。&lt;/p&gt;
 &lt;p&gt;在 Wireshark 中可以看到 OpenFlow 的控制流量，可以看到h1 ARPs h2的
@@ -2213,15 +2604,15 @@ Linux下的命令或者程序都可以在 Mininet 中运行：&lt;/p&gt;
 &lt;p&gt;接下来，尝试开始于h1启动一个简单的HTTP服务器上，然后从h2发出请求，最后关闭Web服务器：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mininet&amp;gt; h1 python -m SimpleHTTPServer &lt;span class="m"&gt;80&lt;/span&gt; &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;
 mininet&amp;gt; h2 wget h1
---2014-09-15 08:10:11--  http://10.0.0.1/
-Connecting to 10.0.0.1:80... connected.
+--2014-09-15 &lt;span class="m"&gt;08&lt;/span&gt;:10:11--  http://10.0.0.1/
+Connecting to &lt;span class="m"&gt;10&lt;/span&gt;.0.0.1:80... connected.
 HTTP request sent, awaiting response... &lt;span class="m"&gt;200&lt;/span&gt; OK
-Length: &lt;span class="m"&gt;2647&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;2.6K&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;text/html&lt;span class="o"&gt;]&lt;/span&gt;
+Length: &lt;span class="m"&gt;2647&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;.6K&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;text/html&lt;span class="o"&gt;]&lt;/span&gt;
 Saving to: ‘index.html’
 
-     0K ..                                                    100% 71.7M&lt;span class="o"&gt;=&lt;/span&gt;0s
+     0K ..                                                    &lt;span class="m"&gt;100&lt;/span&gt;% &lt;span class="m"&gt;71&lt;/span&gt;.7M&lt;span class="o"&gt;=&lt;/span&gt;0s
 
-2014-09-15 08:10:11 &lt;span class="o"&gt;(&lt;/span&gt;71.7 MB/s&lt;span class="o"&gt;)&lt;/span&gt; - ‘index.html’ saved &lt;span class="o"&gt;[&lt;/span&gt;2647/2647&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="m"&gt;2014&lt;/span&gt;-09-15 &lt;span class="m"&gt;08&lt;/span&gt;:10:11 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;71&lt;/span&gt;.7 MB/s&lt;span class="o"&gt;)&lt;/span&gt; - ‘index.html’ saved &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;2647&lt;/span&gt;/2647&lt;span class="o"&gt;]&lt;/span&gt;
 mininet&amp;gt; h1 &lt;span class="nb"&gt;kill&lt;/span&gt; %python
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;退出mininet交互命令：&lt;/p&gt;
@@ -2268,7 +2659,7 @@ ping connectivity）。：&lt;/p&gt;
 &lt;div class="section" id="link-variations"&gt;
 &lt;h3&gt;链路变化 Link variations&lt;/h3&gt;
 &lt;p&gt;Mininet2.0允许你设置连接参数，甚至可以通过命令行实现自动化设置：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo mn --link tc,bw&lt;span class="o"&gt;=&lt;/span&gt;10,delay&lt;span class="o"&gt;=&lt;/span&gt;10ms
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo mn --link tc,bw&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;,delay&lt;span class="o"&gt;=&lt;/span&gt;10ms
  mininet&amp;gt; iperf
  ...
  mininet&amp;gt; h1 ping -c10 h2
@@ -2315,11 +2706,11 @@ PythonAPI 我们可以很简单的来定义拓扑结构。
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyTopo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="n"&gt;Topo&lt;/span&gt; &lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="s2"&gt;&amp;quot;Simple topology example.&amp;quot;&lt;/span&gt;
 
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt; &lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt; &lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="s2"&gt;&amp;quot;Create custom topo.&amp;quot;&lt;/span&gt;
 
         &lt;span class="c1"&gt;# Initialize topology&lt;/span&gt;
-        &lt;span class="n"&gt;Topo&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;Topo&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
 
         &lt;span class="c1"&gt;# Add hosts and switches&lt;/span&gt;
         &lt;span class="n"&gt;leftHost&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;addHost&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;h1&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
@@ -2354,7 +2745,7 @@ s3 s4
 *** Ping: testing ping reachability
 h1 -&amp;gt; h2
 h2 -&amp;gt; h1
-*** Results: 0% dropped &lt;span class="o"&gt;(&lt;/span&gt;2/2 received&lt;span class="o"&gt;)&lt;/span&gt;
+*** Results: &lt;span class="m"&gt;0&lt;/span&gt;% dropped &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;/2 received&lt;span class="o"&gt;)&lt;/span&gt;
 *** Stopping &lt;span class="m"&gt;2&lt;/span&gt; switches
 s3 ..s4 ..
 *** Stopping &lt;span class="m"&gt;2&lt;/span&gt; hosts
@@ -2362,7 +2753,7 @@ h1 h2
 *** Stopping &lt;span class="m"&gt;1&lt;/span&gt; controllers
 c0
 *** Done
-completed in 1.220 seconds
+completed in &lt;span class="m"&gt;1&lt;/span&gt;.220 seconds
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="id-mac"&gt;
@@ -2381,7 +2772,7 @@ h1-eth0   Link encap:Ethernet  HWaddr c2:d9:4a:37:25:17
           RX packets:17 errors:0 dropped:0 overruns:0 frame:0
           TX packets:7 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:1398 &lt;span class="o"&gt;(&lt;/span&gt;1.3 KB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:578 &lt;span class="o"&gt;(&lt;/span&gt;578.0 B&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:1398 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;.3 KB&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:578 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;578&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;
 
 lo        Link encap:Local Loopback
           inet addr:127.0.0.1  Mask:255.0.0.0
@@ -2390,7 +2781,7 @@ lo        Link encap:Local Loopback
           RX packets:0 errors:0 dropped:0 overruns:0 frame:0
           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0
-          RX bytes:0 &lt;span class="o"&gt;(&lt;/span&gt;0.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:0 &lt;span class="o"&gt;(&lt;/span&gt;0.0 B&lt;span class="o"&gt;)&lt;/span&gt;
+          RX bytes:0 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;  TX bytes:0 &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;.0 B&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;使用&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;--mac&lt;/span&gt;&lt;/tt&gt;参数：&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
@@ -2515,7 +2906,7 @@ Python 来执行。 这对于扩展 Mininet，探测 mininet的内部工作机�
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;打印 locals:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mininet&amp;gt; py locals&lt;span class="o"&gt;()&lt;/span&gt;
-&lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;h2&amp;#39;&lt;/span&gt;: &amp;lt;Host h2: h2-eth0:10.0.0.2 &lt;span class="nv"&gt;pid&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;5166&amp;gt; , &lt;span class="s1"&gt;&amp;#39;net&amp;#39;&lt;/span&gt;: &amp;lt;mininet.net.Mininet object at 0x7f7c47668ad0&amp;gt;, &lt;span class="s1"&gt;&amp;#39;h1&amp;#39;&lt;/span&gt;: &amp;lt;Host h1: h1-eth0:10.0.0.1 &lt;span class="nv"&gt;pid&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;5165&amp;gt; , &lt;span class="s1"&gt;&amp;#39;c0&amp;#39;&lt;/span&gt;: &amp;lt;OVSController c0: 127.0.0.1:6633 &lt;span class="nv"&gt;pid&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;5157&amp;gt; , &lt;span class="s1"&gt;&amp;#39;s1&amp;#39;&lt;/span&gt;: &amp;lt;OVSSwitch s1: lo:127.0.0.1,s1-eth1:None,s1-eth2:None &lt;span class="nv"&gt;pid&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;5169&amp;gt; &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;h2&amp;#39;&lt;/span&gt;: &amp;lt;Host h2: h2-eth0:10.0.0.2 &lt;span class="nv"&gt;pid&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;5166&lt;/span&gt;&amp;gt; , &lt;span class="s1"&gt;&amp;#39;net&amp;#39;&lt;/span&gt;: &amp;lt;mininet.net.Mininet object at 0x7f7c47668ad0&amp;gt;, &lt;span class="s1"&gt;&amp;#39;h1&amp;#39;&lt;/span&gt;: &amp;lt;Host h1: h1-eth0:10.0.0.1 &lt;span class="nv"&gt;pid&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;5165&lt;/span&gt;&amp;gt; , &lt;span class="s1"&gt;&amp;#39;c0&amp;#39;&lt;/span&gt;: &amp;lt;OVSController c0: &lt;span class="m"&gt;127&lt;/span&gt;.0.0.1:6633 &lt;span class="nv"&gt;pid&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;5157&lt;/span&gt;&amp;gt; , &lt;span class="s1"&gt;&amp;#39;s1&amp;#39;&lt;/span&gt;: &amp;lt;OVSSwitch s1: lo:127.0.0.1,s1-eth1:None,s1-eth2:None &lt;span class="nv"&gt;pid&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;5169&lt;/span&gt;&amp;gt; &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;还可以通过 dir()函数来查看节点的方法和属性：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mininet&amp;gt; py dir&lt;span class="o"&gt;(&lt;/span&gt;s1&lt;span class="o"&gt;)&lt;/span&gt;
@@ -2560,8 +2951,8 @@ Python 来执行。 这对于扩展 Mininet，探测 mininet的内部工作机�
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo ~/mininet/examples/sshd.py
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;在另外一个终端上，就可以ssh到任何主机并运行交互式命令：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ssh 10.0.0.1
-$ ping 10.0.0.2
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ssh &lt;span class="m"&gt;10&lt;/span&gt;.0.0.1
+$ ping &lt;span class="m"&gt;10&lt;/span&gt;.0.0.2
 ...
 $ &lt;span class="nb"&gt;exit&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -2607,7 +2998,7 @@ control）。&lt;/p&gt;
 $ ./pox.py forwarding.l2_learning
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;在另一个窗口，启动Mininet连接到“远程”控制器（这实际上是在本地运行，但Mininet的控制范围之外）：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo mn --controller&lt;span class="o"&gt;=&lt;/span&gt;remote,ip&lt;span class="o"&gt;=&lt;/span&gt;127.0.0.1,port&lt;span class="o"&gt;=&lt;/span&gt;6633
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo mn --controller&lt;span class="o"&gt;=&lt;/span&gt;remote,ip&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;127&lt;/span&gt;.0.0.1,port&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;6633&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;em&gt;注意，这些其实都是默认的IP地址和端口值。&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;如果你制造一些流量（如h1 ping h2），
@@ -2647,7 +3038,17 @@ Defaults        !env_reset
 &lt;p&gt;使运行sudo的时候的环境变量的设置不会改变。&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-</summary><category term="sdn"></category><category term="mininet"></category></entry><entry><title>Python 装饰器之 functools.wraps</title><link href="http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html" rel="alternate"></link><published>2013-07-08T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2013-07-08:python-zhuang-shi-qi-zhi-functoolswraps.html</id><summary type="html">&lt;p&gt;在看 Bottle 代码中看见 functools.wraps 这种用法。&lt;/p&gt;
+</content><category term="sdn"></category><category term="mininet"></category></entry><entry><title>Python 装饰器之 functools.wraps</title><link href="http://sunisdown.me/python-zhuang-shi-qi-zhi-functoolswraps.html" rel="alternate"></link><published>2013-07-08T00:00:00+08:00</published><updated>2013-07-08T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2013-07-08:/python-zhuang-shi-qi-zhi-functoolswraps.html</id><summary type="html">&lt;p&gt;在看 Bottle 代码中看见 functools.wraps 这种用法。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;make_default_app_wrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot; Return a callable that relays calls to the current default app. &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Bottle&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="nd"&gt;@functools.wraps&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Bottle&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;wrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;ka&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;ka&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;wrapper&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;之前没有看过，于是查文档了解了一下他的用处 先下定义： &lt;strong&gt;functools.wraps
+是 ``装饰器``的``装饰器 …&lt;/strong&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;在看 Bottle 代码中看见 functools.wraps 这种用法。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;make_default_app_wrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot; Return a callable that relays calls to the current default app. &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
     &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Bottle&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -2712,11 +3113,11 @@ inner，如上面的&lt;tt class="docutils literal"&gt;foo &amp;lt;function __ma
 Decorator。 假想我们有个coordinate类，而且这个类提供了
 &lt;tt class="docutils literal"&gt;x, y&lt;/tt&gt;坐标，而我们要对两个coordinate 对象进行计算。代码如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Coordinate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__repr__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Coord: &amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__dict__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__repr__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Coord: &amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__dict__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;Coordinate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -2775,9 +3176,9 @@ Decorator 来做一个检测再好不过了&lt;/p&gt;
 &lt;p&gt;这样，只计算的函数&lt;tt class="docutils literal"&gt;add&lt;/tt&gt;与&lt;tt class="docutils literal"&gt;sub&lt;/tt&gt;前面加一个 Decorator
 就可以完成坐标的校验。比在函数内实现要优雅一些。&lt;/p&gt;
 &lt;p&gt;Decorator 还可以为类增加额外的成员，&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;21&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cls&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-   &lt;span class="o"&gt;....&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;     &lt;span class="n"&gt;cls&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hello&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;staticmethod&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;HELLO&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-   &lt;span class="o"&gt;....&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;cls&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;21&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+   &lt;span class="o"&gt;....&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;     &lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hello&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;staticmethod&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;HELLO&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+   &lt;span class="o"&gt;....&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;cls&lt;/span&gt;
    &lt;span class="o"&gt;....&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 
 &lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;22&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="nd"&gt;@hello&lt;/span&gt;
@@ -2796,7 +3197,7 @@ Decorator 来做一个检测再好不过了&lt;/p&gt;
 stackoverflow 里面的栗子&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;logged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;with_logging&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot; was called&amp;quot;&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot; was called&amp;quot;&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;with_logging&lt;/span&gt;
 
@@ -2810,7 +3211,7 @@ stackoverflow 里面的栗子&lt;/p&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;
 &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;24&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__name__&lt;/span&gt;
+&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;24&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;
 &lt;span class="n"&gt;Out&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;24&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;with_logging&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;而functools.wraps 则可以将原函数对象的指定属性复制给包装函数对象, 默认有
@@ -2819,7 +3220,7 @@ stackoverflow 里面的栗子&lt;/p&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;logged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="nd"&gt;@wraps&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;with_logging&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot; was called&amp;quot;&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot; was called&amp;quot;&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;with_logging&lt;/span&gt;
 
@@ -2828,12 +3229,12 @@ stackoverflow 里面的栗子&lt;/p&gt;
    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;does some math&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;
 
-&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__name__&lt;/span&gt;  &lt;span class="c1"&gt;# prints &amp;#39;f&amp;#39;&lt;/span&gt;
-&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__doc__&lt;/span&gt;   &lt;span class="c1"&gt;# prints &amp;#39;does some math&amp;#39;&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;  &lt;span class="c1"&gt;# prints &amp;#39;f&amp;#39;&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__doc__&lt;/span&gt;   &lt;span class="c1"&gt;# prints &amp;#39;does some math&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-</summary><category term="python"></category><category term="decorator"></category></entry><entry><title>python之 unicode_literals</title><link href="http://sunisdown.me/pythonzhi-unicode_literals.html" rel="alternate"></link><published>2013-06-03T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2013-06-03:pythonzhi-unicode_literals.html</id><summary type="html">&lt;p&gt;在邮件列表中看见有人在讨论github上面的内容,然后看见一阁大牛说&amp;quot;看见别人的python代码没有from
+</content><category term="python"></category><category term="decorator"></category></entry><entry><title>python之 unicode_literals</title><link href="http://sunisdown.me/pythonzhi-unicode_literals.html" rel="alternate"></link><published>2013-06-03T00:00:00+08:00</published><updated>2013-06-03T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2013-06-03:/pythonzhi-unicode_literals.html</id><summary type="html">&lt;p&gt;在邮件列表中看见有人在讨论github上面的内容,然后看见一阁大牛说&amp;quot;看见别人的python代码没有from
 __future__ import unicode_literals就想fork改掉…&amp;quot;&lt;/p&gt;
 &lt;p&gt;之前代码中确实没有加这个,嗯,受教啦&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
@@ -2849,25 +3250,60 @@ In [5]: a = '你好'
 In [6]: a
 Out[6]: u'\u4f60\u597d'
 &lt;/pre&gt;
-</summary><category term="python"></category><category term="unicode"></category><category term="str"></category></entry><entry><title>Python 之 enumerate</title><link href="http://sunisdown.me/python-zhi-enumerate.html" rel="alternate"></link><published>2013-06-01T00:00:00+08:00</published><author><name>SunisDown</name></author><id>tag:sunisdown.me,2013-06-01:python-zhi-enumerate.html</id><summary type="html">&lt;p&gt;今天看到enumerate 这个函数,然后Google之,发现limodou大牛写过enumerate了~&lt;/p&gt;
+</summary><content type="html">&lt;p&gt;在邮件列表中看见有人在讨论github上面的内容,然后看见一阁大牛说&amp;quot;看见别人的python代码没有from
+__future__ import unicode_literals就想fork改掉…&amp;quot;&lt;/p&gt;
+&lt;p&gt;之前代码中确实没有加这个,嗯,受教啦&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+from __future__ import unicode_literals
+&lt;/pre&gt;
+&lt;p&gt;是python2.6
+之后新增加的新特性,可以使得所有的字符串文本成为Unicode字符串.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+In [4]: from __future__ import unicode_literals
+
+In [5]: a = '你好'
+
+In [6]: a
+Out[6]: u'\u4f60\u597d'
+&lt;/pre&gt;
+</content><category term="python"></category><category term="unicode"></category><category term="str"></category></entry><entry><title>Python 之 enumerate</title><link href="http://sunisdown.me/python-zhi-enumerate.html" rel="alternate"></link><published>2013-06-01T00:00:00+08:00</published><updated>2013-06-01T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2013-06-01:/python-zhi-enumerate.html</id><summary type="html">&lt;p&gt;今天看到enumerate 这个函数,然后Google之,发现limodou大牛写过enumerate了~&lt;/p&gt;
 &lt;p&gt;enumerate 主要是用再类似的场景:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;In &lt;span class="o"&gt;[&lt;/span&gt;20&lt;span class="o"&gt;]&lt;/span&gt;:for i in xrange&lt;span class="o"&gt;(&lt;/span&gt;len&lt;span class="o"&gt;(&lt;/span&gt;a&lt;span class="o"&gt;))&lt;/span&gt;:
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;In &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;20&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;:for i in xrange&lt;span class="o"&gt;(&lt;/span&gt;len&lt;span class="o"&gt;(&lt;/span&gt;a&lt;span class="o"&gt;))&lt;/span&gt;:
                     print i, a&lt;span class="o"&gt;[&lt;/span&gt;i&lt;span class="o"&gt;]&lt;/span&gt;
     ....:
-                &lt;span class="m"&gt;0&lt;/span&gt; 1
-                &lt;span class="m"&gt;1&lt;/span&gt; 2
-                &lt;span class="m"&gt;2&lt;/span&gt; 3
+                &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+                &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt;
+                &lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="m"&gt;3&lt;/span&gt;
                 &lt;span class="m"&gt;3&lt;/span&gt; alkj
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;使用enumerate可以简化代码为:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;In &lt;span class="o"&gt;[&lt;/span&gt;21&lt;span class="o"&gt;]&lt;/span&gt;: &lt;span class="k"&gt;for&lt;/span&gt; i, j in enumerate&lt;span class="o"&gt;(&lt;/span&gt;a&lt;span class="o"&gt;)&lt;/span&gt;:
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;In &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;21&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;: &lt;span class="k"&gt;for&lt;/span&gt; i, j in enumerate&lt;span class="o"&gt;(&lt;/span&gt;a&lt;span class="o"&gt;)&lt;/span&gt;:
     ....:     print i, j
     ....:
-                &lt;span class="m"&gt;0&lt;/span&gt; 1
-                &lt;span class="m"&gt;1&lt;/span&gt; 2
-                &lt;span class="m"&gt;2&lt;/span&gt; 3
+                &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+                &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt;
+                &lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="m"&gt;3&lt;/span&gt;
+                &lt;span class="m"&gt;3&lt;/span&gt; alkj
+
+&lt;span class="o"&gt;{&lt;/span&gt;i:j &lt;span class="k"&gt;for&lt;/span&gt; i …&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;今天看到enumerate 这个函数,然后Google之,发现limodou大牛写过enumerate了~&lt;/p&gt;
+&lt;p&gt;enumerate 主要是用再类似的场景:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;In &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;20&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;:for i in xrange&lt;span class="o"&gt;(&lt;/span&gt;len&lt;span class="o"&gt;(&lt;/span&gt;a&lt;span class="o"&gt;))&lt;/span&gt;:
+                    print i, a&lt;span class="o"&gt;[&lt;/span&gt;i&lt;span class="o"&gt;]&lt;/span&gt;
+    ....:
+                &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+                &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt;
+                &lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="m"&gt;3&lt;/span&gt;
+                &lt;span class="m"&gt;3&lt;/span&gt; alkj
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;使用enumerate可以简化代码为:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;In &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;21&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;: &lt;span class="k"&gt;for&lt;/span&gt; i, j in enumerate&lt;span class="o"&gt;(&lt;/span&gt;a&lt;span class="o"&gt;)&lt;/span&gt;:
+    ....:     print i, j
+    ....:
+                &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+                &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt;
+                &lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="m"&gt;3&lt;/span&gt;
                 &lt;span class="m"&gt;3&lt;/span&gt; alkj
 
 &lt;span class="o"&gt;{&lt;/span&gt;i:j &lt;span class="k"&gt;for&lt;/span&gt; i,j in enumerate&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;abcdef&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;)}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-</summary><category term="python"></category><category term="enumerate"></category></entry></feed>
+</content><category term="python"></category><category term="enumerate"></category></entry></feed>

@@ -1,121 +1,93 @@
 <!doctype html>
 <html lang="zh" itemscope itemtype="http://schema.org/Person">
 <head>
-  <meta charset="utf-8">
-  <!-- Site Meta Data -->
-  <title>Mininet Walkthrough</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="sunisdown">
+            <meta charset="utf-8">
+        <!-- Site Meta Data -->
+        <title>Mininet Walkthrough</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="sunisdown">
 
-  <link rel="shortcut icon" href="">
+        <link rel="shortcut icon" href="">
 
-  <!-- schema.org -->
-  <meta itemprop="name" content="SunisDown">
-  <meta itemprop="image" content="">
-  <meta itemprop="description" content="">
+        <!-- schema.org -->
+        <meta itemprop="name" content="SunisDown">
+        <meta itemprop="image" content="">
+        <meta itemprop="description" content="">
 
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
-  <!-- Style Meta Data -->
-  <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css" />
-  <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css" />
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+        <!-- Style Meta Data -->
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css"/>
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css"/>
 
-  <!-- Feed Meta Data -->
-    <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="SunisDown ATOM Feed" />
+        <!-- Feed Meta Data -->
+            <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+                  title="SunisDown ATOM Feed"/>
 
-  <!-- Twitter Feed -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="">
-  <meta name="twitter:image" content="">
+        <!-- Twitter Feed -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="">
+        <meta name="twitter:image" content="">
 
-<meta name="twitter:creator" content="">
-<meta name="twitter:url" content="http://sunisdown.me/mininet-walkthrough.html">
-<meta name="twitter:title" content="SunisDown ~ Mininet Walkthrough">
-<meta name="twitter:description" content='<p>译者注： 这篇 Blog 是在学习 SDN 过程中翻译的Mininet
-官方的文档。文档主要是介绍了 Mininet
-的简单用法。会分成几个部分放出来，<a class="reference external" href="http://mininet.org/walkthrough/#test-connectivity-between-hosts">原文</a>。下面是正文</p>
-<div class="section" id="part-1-everyday-mininet-usage">
-<h2>Part 1: Everyday Mininet Usage</h2>
-<p>首先是是命令语法</p>
-<ul class="simple">
-<li><tt class="docutils literal">$</tt> 这个符号代表现在处于 Linux 的shell 交互下，需要使用的是 Linux
-命令</li>
-<li><tt class="docutils literal">mininet&gt;</tt> 这个符号表示现在处于 Mininet 交互下，需要使用的是
-Mininet 的命令</li>
-<li><tt class="docutils literal">＃</tt> 这个符号表示的是现在处于 Linux 的 root 权限下。</li>
-</ul>
-<p>以上相应的状态下下属于对应的命令，就能够得到正常的输出。需要注意的是<tt class="docutils literal">mininet&gt;</tt>的情况比较特殊，需要使用
-minient 的命令来进行交互。</p>
-<div class="section" id="display-startup-options">
-<h3>Display Startup Options</h3>
-<p>我们首先来启动 ...</p></div></div>'>
+    <meta name="twitter:creator" content="">
+    <meta name="twitter:url" content="http://sunisdown.me/mininet-walkthrough.html">
+    <meta name="twitter:title" content="SunisDown ~ Mininet Walkthrough">
+    <meta name="twitter:description" content="译者注： 这篇 Blog 是在学习 SDN 过程中翻译的Mininet 官方的文档。文档主要是介绍了 Mininet 的简单用法。会分成几个部分放出来，原文。下面是正文 Part 1: Everyday Mininet Usage 首先是是命令语法 $ 这个符号代表现在处于 Linux 的shell 交互下，需要使用的是 Linux 命令 mininet&gt; 这个符号表示现在处于 Mininet 交互下，需要使用的是 Mininet 的命令 ＃ 这个符号表示的是现在处于 Linux 的 root 权限下。 以上相应的状态下下属于对应的命令，就能够得到正常的输出。需要注意的是mininet&gt;的情况比较特殊，需要使用 minient 的命令来进行交互。 Display Startup Options 我们首先来启动 …">
 
-<!-- Facebook Meta Data -->
-<meta property="og:title" content="SunisDown ~ Mininet Walkthrough" />
-<meta property="og:description" content='<p>译者注： 这篇 Blog 是在学习 SDN 过程中翻译的Mininet
-官方的文档。文档主要是介绍了 Mininet
-的简单用法。会分成几个部分放出来，<a class="reference external" href="http://mininet.org/walkthrough/#test-connectivity-between-hosts">原文</a>。下面是正文</p>
-<div class="section" id="part-1-everyday-mininet-usage">
-<h2>Part 1: Everyday Mininet Usage</h2>
-<p>首先是是命令语法</p>
-<ul class="simple">
-<li><tt class="docutils literal">$</tt> 这个符号代表现在处于 Linux 的shell 交互下，需要使用的是 Linux
-命令</li>
-<li><tt class="docutils literal">mininet&gt;</tt> 这个符号表示现在处于 Mininet 交互下，需要使用的是
-Mininet 的命令</li>
-<li><tt class="docutils literal">＃</tt> 这个符号表示的是现在处于 Linux 的 root 权限下。</li>
-</ul>
-<p>以上相应的状态下下属于对应的命令，就能够得到正常的输出。需要注意的是<tt class="docutils literal">mininet&gt;</tt>的情况比较特殊，需要使用
-minient 的命令来进行交互。</p>
-<div class="section" id="display-startup-options">
-<h3>Display Startup Options</h3>
-<p>我们首先来启动 ...</p></div></div>' />
-<meta property="og:image" content="" />
+    <!-- Facebook Meta Data -->
+    <meta property="og:title" content="SunisDown ~ Mininet Walkthrough"/>
+    <meta property="og:description" content="译者注： 这篇 Blog 是在学习 SDN 过程中翻译的Mininet 官方的文档。文档主要是介绍了 Mininet 的简单用法。会分成几个部分放出来，原文。下面是正文 Part 1: Everyday Mininet Usage 首先是是命令语法 $ 这个符号代表现在处于 Linux 的shell 交互下，需要使用的是 Linux 命令 mininet&gt; 这个符号表示现在处于 Mininet 交互下，需要使用的是 Mininet 的命令 ＃ 这个符号表示的是现在处于 Linux 的 root 权限下。 以上相应的状态下下属于对应的命令，就能够得到正常的输出。需要注意的是mininet&gt;的情况比较特殊，需要使用 minient 的命令来进行交互。 Display Startup Options 我们首先来启动 …"/>
+    <meta property="og:image" content=""/>
 </head>
 
 <body>
-  <!-- Sidebar -->
-  <aside>
+<!-- Sidebar -->
+<aside>
     <!--<center><a href="http://sunisdown.me"><img id="avatar" src=""></a></center>-->
     <h1>SunisDown</h1>
     <br>
 
 
     <nav class="nav">
-      <ul class="list-bare">
-      
-          <li><a class="nav__link" href="/index.html">Blog</a></li>
-          <li><a class="nav__link" href="/archives.html">Archives</a></li>
-          <li><a class="nav__link" href="/tags.html">Tags</a></li>
-         
-          <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
-         
-      </ul>
+        <ul class="list-bare">
+
+                <li><a class="nav__link" href="/index.html">Blog</a></li>
+                <li><a class="nav__link" href="/archives.html">Archives</a></li>
+                <li><a class="nav__link" href="/tags.html">Tags</a></li>
+
+                <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
+
+        </ul>
     </nav>
 
     <p class="social">
-        <a href="http://1024.today" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
-        <a href="https://twitter.com/SunisD0wn" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
-        <a href="https://github.com/sunisdown" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/github.png"></a>
-      <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
-        <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
+                <a href="http://1024.today" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
+                <a href="https://twitter.com/SunisD0wn" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
+                <a href="https://github.com/sunisdown" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/github.png"></a>
+            <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
+                <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
     </p>
 
-    <!--
-    <h2>Categories</h2>
-    <ul class="navbar">
-      <li class="active"><a href="http://sunisdown.me/category/articles.html">articles</a></li>
-    </ul> 
-    -->
-  </aside>
+        <h2>Categories</h2>
+        <ul class="navbar">
+                <li class="active"><a
+                        href="http://sunisdown.me/category/articles.html">articles</a></li>
+        </ul>
 
-  <!-- Content -->
-  <article>
-<section id="content">
-    <article>
-        <h2 class="post_title post_detail"><a href="http://sunisdown.me/mininet-walkthrough.html" rel="bookmark" title="Permalink to Mininet Walkthrough">Mininet Walkthrough</a></h2>
-        <div class="entry-content blog-post">
-            <p>译者注： 这篇 Blog 是在学习 SDN 过程中翻译的Mininet
+
+</aside>
+
+<!-- Content -->
+<article>
+    <section id="content">
+        <article>
+            <h2 class="post_title post_detail"><a href="http://sunisdown.me/mininet-walkthrough.html" rel="bookmark"
+                                                  title="Permalink to Mininet Walkthrough">Mininet Walkthrough</a></h2>
+            <div class="entry-content blog-post">
+                <p>译者注： 这篇 Blog 是在学习 SDN 过程中翻译的Mininet
 官方的文档。文档主要是介绍了 Mininet
 的简单用法。会分成几个部分放出来，<a class="reference external" href="http://mininet.org/walkthrough/#test-connectivity-between-hosts">原文</a>。下面是正文</p>
 <div class="section" id="part-1-everyday-mininet-usage">
@@ -266,7 +238,7 @@ h1-eth0   Link encap:Ethernet  HWaddr 3e:94:43:b1:ad:48
           RX packets:22 errors:0 dropped:0 overruns:0 frame:0
           TX packets:8 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:1764 <span class="o">(</span>1.7 KB<span class="o">)</span>  TX bytes:648 <span class="o">(</span>648.0 B<span class="o">)</span>
+          RX bytes:1764 <span class="o">(</span><span class="m">1</span>.7 KB<span class="o">)</span>  TX bytes:648 <span class="o">(</span><span class="m">648</span>.0 B<span class="o">)</span>
 
 lo        Link encap:Local Loopback
           inet addr:127.0.0.1  Mask:255.0.0.0
@@ -275,7 +247,7 @@ lo        Link encap:Local Loopback
           RX packets:0 errors:0 dropped:0 overruns:0 frame:0
           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0
-          RX bytes:0 <span class="o">(</span>0.0 B<span class="o">)</span>  TX bytes:0 <span class="o">(</span>0.0 B<span class="o">)</span>
+          RX bytes:0 <span class="o">(</span><span class="m">0</span>.0 B<span class="o">)</span>  TX bytes:0 <span class="o">(</span><span class="m">0</span>.0 B<span class="o">)</span>
 </pre></div>
 <p>上面的输出中，可以看见 <tt class="docutils literal"><span class="pre">h1-eth0</span></tt> 跟 <tt class="docutils literal">lo</tt>两个接口，需要注意的是，在
 Linux 系统的 shell 中运行<tt class="docutils literal">ifconfig</tt>是看不到h1-eth0。</p>
@@ -283,14 +255,14 @@ Linux 系统的 shell 中运行<tt class="docutils literal">ifconfig</tt>是看�
 的网络namespace上面，所以在<tt class="docutils literal">switch</tt>上执行命令与在 Linux 下的 shell
 中是一样的。</p>
 <div class="highlight"><pre><span></span>mininet&gt; s1 ifconfig-a
-eth0      Link encap:Ethernet  HWaddr 08:00:27:98:dc:aa
+eth0      Link encap:Ethernet  HWaddr <span class="m">08</span>:00:27:98:dc:aa
           inet addr:10.0.2.15  Bcast:10.0.2.255  Mask:255.255.255.0
           inet6 addr: fe80::a00:27ff:fe98:dcaa/64 Scope:Link
           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
           RX packets:46716 errors:0 dropped:0 overruns:0 frame:0
           TX packets:40265 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:10804203 <span class="o">(</span>10.8 MB<span class="o">)</span>  TX bytes:40122199 <span class="o">(</span>40.1 MB<span class="o">)</span>
+          RX bytes:10804203 <span class="o">(</span><span class="m">10</span>.8 MB<span class="o">)</span>  TX bytes:40122199 <span class="o">(</span><span class="m">40</span>.1 MB<span class="o">)</span>
 
 lo        Link encap:Local Loopback
           inet addr:127.0.0.1  Mask:255.0.0.0
@@ -299,7 +271,7 @@ lo        Link encap:Local Loopback
           RX packets:43654 errors:0 dropped:0 overruns:0 frame:0
           TX packets:43654 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0
-          RX bytes:37264504 <span class="o">(</span>37.2 MB<span class="o">)</span>  TX bytes:37264504 <span class="o">(</span>37.2 MB<span class="o">)</span>
+          RX bytes:37264504 <span class="o">(</span><span class="m">37</span>.2 MB<span class="o">)</span>  TX bytes:37264504 <span class="o">(</span><span class="m">37</span>.2 MB<span class="o">)</span>
 
 lxcbr0    Link encap:Ethernet  HWaddr fe:5e:f0:f7:a6:f3
           inet addr:10.0.3.1  Bcast:10.0.3.255  Mask:255.255.255.0
@@ -308,14 +280,14 @@ lxcbr0    Link encap:Ethernet  HWaddr fe:5e:f0:f7:a6:f3
           RX packets:52 errors:0 dropped:0 overruns:0 frame:0
           TX packets:20 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0
-          RX bytes:4759 <span class="o">(</span>4.7 KB<span class="o">)</span>  TX bytes:2952 <span class="o">(</span>2.9 KB<span class="o">)</span>
+          RX bytes:4759 <span class="o">(</span><span class="m">4</span>.7 KB<span class="o">)</span>  TX bytes:2952 <span class="o">(</span><span class="m">2</span>.9 KB<span class="o">)</span>
 
 ovs-system Link encap:Ethernet  HWaddr 3e:79:59:3d:d9:bb
           BROADCAST MULTICAST  MTU:1500  Metric:1
           RX packets:0 errors:0 dropped:0 overruns:0 frame:0
           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0
-          RX bytes:0 <span class="o">(</span>0.0 B<span class="o">)</span>  TX bytes:0 <span class="o">(</span>0.0 B<span class="o">)</span>
+          RX bytes:0 <span class="o">(</span><span class="m">0</span>.0 B<span class="o">)</span>  TX bytes:0 <span class="o">(</span><span class="m">0</span>.0 B<span class="o">)</span>
 
 s1        Link encap:Ethernet  HWaddr 6e:8c:5d:91:d5:44
           inet6 addr: fe80::fc47:8aff:fe6a:4155/64 Scope:Link
@@ -323,7 +295,7 @@ s1        Link encap:Ethernet  HWaddr 6e:8c:5d:91:d5:44
           RX packets:13 errors:0 dropped:0 overruns:0 frame:0
           TX packets:8 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0
-          RX bytes:1026 <span class="o">(</span>1.0 KB<span class="o">)</span>  TX bytes:648 <span class="o">(</span>648.0 B<span class="o">)</span>
+          RX bytes:1026 <span class="o">(</span><span class="m">1</span>.0 KB<span class="o">)</span>  TX bytes:648 <span class="o">(</span><span class="m">648</span>.0 B<span class="o">)</span>
 
 s1-eth1   Link encap:Ethernet  HWaddr 5e:a2:f7:86:f3:b1
           inet6 addr: fe80::5ca2:f7ff:fe86:f3b1/64 Scope:Link
@@ -331,7 +303,7 @@ s1-eth1   Link encap:Ethernet  HWaddr 5e:a2:f7:86:f3:b1
           RX packets:8 errors:0 dropped:0 overruns:0 frame:0
           TX packets:22 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:648 <span class="o">(</span>648.0 B<span class="o">)</span>  TX bytes:1764 <span class="o">(</span>1.7 KB<span class="o">)</span>
+          RX bytes:648 <span class="o">(</span><span class="m">648</span>.0 B<span class="o">)</span>  TX bytes:1764 <span class="o">(</span><span class="m">1</span>.7 KB<span class="o">)</span>
 
 s1-eth2   Link encap:Ethernet  HWaddr b2:c6:37:e0:d9:61
           inet6 addr: fe80::b0c6:37ff:fee0:d961/64 Scope:Link
@@ -339,7 +311,7 @@ s1-eth2   Link encap:Ethernet  HWaddr b2:c6:37:e0:d9:61
           RX packets:8 errors:0 dropped:0 overruns:0 frame:0
           TX packets:21 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:648 <span class="o">(</span>648.0 B<span class="o">)</span>  TX bytes:1674 <span class="o">(</span>1.6 KB<span class="o">)</span>
+          RX bytes:648 <span class="o">(</span><span class="m">648</span>.0 B<span class="o">)</span>  TX bytes:1674 <span class="o">(</span><span class="m">1</span>.6 KB<span class="o">)</span>
 
 veth14524J Link encap:Ethernet  HWaddr fe:ca:13:f5:dd:b4
           inet6 addr: fe80::fcca:13ff:fef5:ddb4/64 Scope:Link
@@ -347,7 +319,7 @@ veth14524J Link encap:Ethernet  HWaddr fe:ca:13:f5:dd:b4
           RX packets:8 errors:0 dropped:0 overruns:0 frame:0
           TX packets:40 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:648 <span class="o">(</span>648.0 B<span class="o">)</span>  TX bytes:4190 <span class="o">(</span>4.1 KB<span class="o">)</span>
+          RX bytes:648 <span class="o">(</span><span class="m">648</span>.0 B<span class="o">)</span>  TX bytes:4190 <span class="o">(</span><span class="m">4</span>.1 KB<span class="o">)</span>
 
 veth2K19CE Link encap:Ethernet  HWaddr fe:f1:f7:e8:49:45
           inet6 addr: fe80::fcf1:f7ff:fee8:4945/64 Scope:Link
@@ -355,7 +327,7 @@ veth2K19CE Link encap:Ethernet  HWaddr fe:f1:f7:e8:49:45
           RX packets:8 errors:0 dropped:0 overruns:0 frame:0
           TX packets:42 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:648 <span class="o">(</span>648.0 B<span class="o">)</span>  TX bytes:4370 <span class="o">(</span>4.3 KB<span class="o">)</span>
+          RX bytes:648 <span class="o">(</span><span class="m">648</span>.0 B<span class="o">)</span>  TX bytes:4370 <span class="o">(</span><span class="m">4</span>.3 KB<span class="o">)</span>
 
 veth9WSHRK Link encap:Ethernet  HWaddr fe:87:1d:33:f6:41
           inet6 addr: fe80::fc87:1dff:fe33:f641/64 Scope:Link
@@ -363,7 +335,7 @@ veth9WSHRK Link encap:Ethernet  HWaddr fe:87:1d:33:f6:41
           RX packets:8 errors:0 dropped:0 overruns:0 frame:0
           TX packets:43 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:648 <span class="o">(</span>648.0 B<span class="o">)</span>  TX bytes:4460 <span class="o">(</span>4.4 KB<span class="o">)</span>
+          RX bytes:648 <span class="o">(</span><span class="m">648</span>.0 B<span class="o">)</span>  TX bytes:4460 <span class="o">(</span><span class="m">4</span>.4 KB<span class="o">)</span>
 
 vethH2K7R5 Link encap:Ethernet  HWaddr fe:5e:f0:f7:a6:f3
           inet6 addr: fe80::fc5e:f0ff:fef7:a6f3/64 Scope:Link
@@ -371,7 +343,7 @@ vethH2K7R5 Link encap:Ethernet  HWaddr fe:5e:f0:f7:a6:f3
           RX packets:14 errors:0 dropped:0 overruns:0 frame:0
           TX packets:48 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:1776 <span class="o">(</span>1.7 KB<span class="o">)</span>  TX bytes:5030 <span class="o">(</span>5.0 KB<span class="o">)</span>
+          RX bytes:1776 <span class="o">(</span><span class="m">1</span>.7 KB<span class="o">)</span>  TX bytes:5030 <span class="o">(</span><span class="m">5</span>.0 KB<span class="o">)</span>
 
 vethO99MI2 Link encap:Ethernet  HWaddr fe:cf:ee:97:fb:7f
           inet6 addr: fe80::fccf:eeff:fe97:fb7f/64 Scope:Link
@@ -379,7 +351,7 @@ vethO99MI2 Link encap:Ethernet  HWaddr fe:cf:ee:97:fb:7f
           RX packets:14 errors:0 dropped:0 overruns:0 frame:0
           TX packets:51 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:1767 <span class="o">(</span>1.7 KB<span class="o">)</span>  TX bytes:5294 <span class="o">(</span>5.2 KB<span class="o">)</span>
+          RX bytes:1767 <span class="o">(</span><span class="m">1</span>.7 KB<span class="o">)</span>  TX bytes:5294 <span class="o">(</span><span class="m">5</span>.2 KB<span class="o">)</span>
 </pre></div>
 <p>上面的输出中包含交换机的虚拟网卡 s1，以及主机的 eth0。</p>
 <p>为了区别显示host
@@ -387,22 +359,22 @@ vethO99MI2 Link encap:Ethernet  HWaddr fe:cf:ee:97:fb:7f
 s1与h1上面演示如下：</p>
 <div class="highlight"><pre><span></span>mininet&gt; s1 arp
 Address                  HWtype  HWaddress           Flags Mask            Iface
-localhost                ether   00:16:3e:54:9c:03   C                     lxcbr0
-localhost                ether   52:54:00:12:35:02   C                     eth0
-localhost                ether   52:54:00:12:35:03   C                     eth0
-localhost                ether   00:16:3e:51:24:a7   C                     lxcbr0
+localhost                ether   <span class="m">00</span>:16:3e:54:9c:03   C                     lxcbr0
+localhost                ether   <span class="m">52</span>:54:00:12:35:02   C                     eth0
+localhost                ether   <span class="m">52</span>:54:00:12:35:03   C                     eth0
+localhost                ether   <span class="m">00</span>:16:3e:51:24:a7   C                     lxcbr0
 mininet&gt; s1 route
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-default         localhost       0.0.0.0         UG    <span class="m">0</span>      <span class="m">0</span>        <span class="m">0</span> eth0
-10.0.2.0        *               255.255.255.0   U     <span class="m">0</span>      <span class="m">0</span>        <span class="m">0</span> eth0
-10.0.3.0        *               255.255.255.0   U     <span class="m">0</span>      <span class="m">0</span>        <span class="m">0</span> lxcbr0
-172.17.0.0      *               255.255.0.0     U     <span class="m">0</span>      <span class="m">0</span>        <span class="m">0</span> docker0
+default         localhost       <span class="m">0</span>.0.0.0         UG    <span class="m">0</span>      <span class="m">0</span>        <span class="m">0</span> eth0
+<span class="m">10</span>.0.2.0        *               <span class="m">255</span>.255.255.0   U     <span class="m">0</span>      <span class="m">0</span>        <span class="m">0</span> eth0
+<span class="m">10</span>.0.3.0        *               <span class="m">255</span>.255.255.0   U     <span class="m">0</span>      <span class="m">0</span>        <span class="m">0</span> lxcbr0
+<span class="m">172</span>.17.0.0      *               <span class="m">255</span>.255.0.0     U     <span class="m">0</span>      <span class="m">0</span>        <span class="m">0</span> docker0
 mininet&gt; h1 arp
 mininet&gt; h1 route
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-10.0.0.0        *               255.0.0.0       U     <span class="m">0</span>      <span class="m">0</span>        <span class="m">0</span> h1-eth0
+<span class="m">10</span>.0.0.0        *               <span class="m">255</span>.0.0.0       U     <span class="m">0</span>      <span class="m">0</span>        <span class="m">0</span> h1-eth0
 </pre></div>
 <p>这样可以做到将每一个主机，交换机，以及控制器都放到他自己的标准的 network
 namespace
@@ -412,31 +384,31 @@ namespace
 <p><em>注意</em>:只有网络是虚拟出来的，每一个主机里面的进程使用的都是同一套目录，可以看到相同的进程集合，我们打印不同主机下面的进程列表看看：</p>
 <div class="highlight"><pre><span></span>mininet&gt; h1 ps -a
   PID TTY          TIME CMD
- <span class="m">3899</span> pts/3    00:00:00 tmux
- <span class="m">4000</span> pts/23   00:00:00 sudo
- <span class="m">4001</span> pts/23   00:00:51 wireshark
- <span class="m">4030</span> pts/23   00:00:00 dbus-launch
- <span class="m">4530</span> pts/23   00:00:43 dumpcap
- <span class="m">4541</span> pts/22   00:00:00 sudo
- <span class="m">4542</span> pts/22   00:00:00 mn
+ <span class="m">3899</span> pts/3    <span class="m">00</span>:00:00 tmux
+ <span class="m">4000</span> pts/23   <span class="m">00</span>:00:00 sudo
+ <span class="m">4001</span> pts/23   <span class="m">00</span>:00:51 wireshark
+ <span class="m">4030</span> pts/23   <span class="m">00</span>:00:00 dbus-launch
+ <span class="m">4530</span> pts/23   <span class="m">00</span>:00:43 dumpcap
+ <span class="m">4541</span> pts/22   <span class="m">00</span>:00:00 sudo
+ <span class="m">4542</span> pts/22   <span class="m">00</span>:00:00 mn
 mininet&gt; h2 ps -a
   PID TTY          TIME CMD
- <span class="m">3899</span> pts/3    00:00:00 tmux
- <span class="m">4000</span> pts/23   00:00:00 sudo
- <span class="m">4001</span> pts/23   00:00:52 wireshark
- <span class="m">4030</span> pts/23   00:00:00 dbus-launch
- <span class="m">4530</span> pts/23   00:00:43 dumpcap
- <span class="m">4541</span> pts/22   00:00:00 sudo
- <span class="m">4542</span> pts/22   00:00:00 mn
+ <span class="m">3899</span> pts/3    <span class="m">00</span>:00:00 tmux
+ <span class="m">4000</span> pts/23   <span class="m">00</span>:00:00 sudo
+ <span class="m">4001</span> pts/23   <span class="m">00</span>:00:52 wireshark
+ <span class="m">4030</span> pts/23   <span class="m">00</span>:00:00 dbus-launch
+ <span class="m">4530</span> pts/23   <span class="m">00</span>:00:43 dumpcap
+ <span class="m">4541</span> pts/22   <span class="m">00</span>:00:00 sudo
+ <span class="m">4542</span> pts/22   <span class="m">00</span>:00:00 mn
 mininet&gt; s1 ps -a
   PID TTY          TIME CMD
- <span class="m">3899</span> pts/3    00:00:00 tmux
- <span class="m">4000</span> pts/23   00:00:00 sudo
- <span class="m">4001</span> pts/23   00:00:54 wireshark
- <span class="m">4030</span> pts/23   00:00:00 dbus-launch
- <span class="m">4530</span> pts/23   00:00:46 dumpcap
- <span class="m">4541</span> pts/22   00:00:00 sudo
- <span class="m">4542</span> pts/22   00:00:00 mn
+ <span class="m">3899</span> pts/3    <span class="m">00</span>:00:00 tmux
+ <span class="m">4000</span> pts/23   <span class="m">00</span>:00:00 sudo
+ <span class="m">4001</span> pts/23   <span class="m">00</span>:00:54 wireshark
+ <span class="m">4030</span> pts/23   <span class="m">00</span>:00:00 dbus-launch
+ <span class="m">4530</span> pts/23   <span class="m">00</span>:00:46 dumpcap
+ <span class="m">4541</span> pts/22   <span class="m">00</span>:00:00 sudo
+ <span class="m">4542</span> pts/22   <span class="m">00</span>:00:00 mn
 </pre></div>
 <p>如上所示， h1，h2，s1三个进程列表是完全相同的。</p>
 <p>其实完全可以做到各个主机完全独立，就想 LXC 那样，但是目前 Mininet
@@ -447,13 +419,13 @@ Linux的 shell
 <div class="section" id="test-connectivity-between-hosts">
 <h3>Test connectivity between hosts</h3>
 <p>现在，验证您可以h1 ping 通 h2:</p>
-<div class="highlight"><pre><span></span>mininet&gt; h1 ping h2 -c 1
-PING 10.0.0.2 <span class="o">(</span>10.0.0.2<span class="o">)</span> 56<span class="o">(</span>84<span class="o">)</span> bytes of data.
-<span class="m">64</span> bytes from 10.0.0.2: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">1</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">64</span> <span class="nv">time</span><span class="o">=</span>8.57 ms
+<div class="highlight"><pre><span></span>mininet&gt; h1 ping h2 -c <span class="m">1</span>
+PING <span class="m">10</span>.0.0.2 <span class="o">(</span><span class="m">10</span>.0.0.2<span class="o">)</span> <span class="m">56</span><span class="o">(</span><span class="m">84</span><span class="o">)</span> bytes of data.
+<span class="m">64</span> bytes from <span class="m">10</span>.0.0.2: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">1</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">64</span> <span class="nv">time</span><span class="o">=</span><span class="m">8</span>.57 ms
 
---- 10.0.0.2 ping statistics ---
-<span class="m">1</span> packets transmitted, <span class="m">1</span> received, 0% packet loss, <span class="nb">time</span> 0ms
-rtt min/avg/max/mdev <span class="o">=</span> 8.576/8.576/8.576/0.000 ms
+--- <span class="m">10</span>.0.0.2 ping statistics ---
+<span class="m">1</span> packets transmitted, <span class="m">1</span> received, <span class="m">0</span>% packet loss, <span class="nb">time</span> 0ms
+rtt min/avg/max/mdev <span class="o">=</span> <span class="m">8</span>.576/8.576/8.576/0.000 ms
 </pre></div>
 <p>mininet中的命令语法如上所示。<tt class="docutils literal">host1 command&nbsp; host2</tt>。</p>
 <p>在 Wireshark 中可以看到 OpenFlow 的控制流量，可以看到h1 ARPs h2的
@@ -481,15 +453,15 @@ Linux下的命令或者程序都可以在 Mininet 中运行：</p>
 <p>接下来，尝试开始于h1启动一个简单的HTTP服务器上，然后从h2发出请求，最后关闭Web服务器：</p>
 <div class="highlight"><pre><span></span>mininet&gt; h1 python -m SimpleHTTPServer <span class="m">80</span> <span class="p">&amp;</span>
 mininet&gt; h2 wget h1
---2014-09-15 08:10:11--  http://10.0.0.1/
-Connecting to 10.0.0.1:80... connected.
+--2014-09-15 <span class="m">08</span>:10:11--  http://10.0.0.1/
+Connecting to <span class="m">10</span>.0.0.1:80... connected.
 HTTP request sent, awaiting response... <span class="m">200</span> OK
-Length: <span class="m">2647</span> <span class="o">(</span>2.6K<span class="o">)</span> <span class="o">[</span>text/html<span class="o">]</span>
+Length: <span class="m">2647</span> <span class="o">(</span><span class="m">2</span>.6K<span class="o">)</span> <span class="o">[</span>text/html<span class="o">]</span>
 Saving to: ‘index.html’
 
-     0K ..                                                    100% 71.7M<span class="o">=</span>0s
+     0K ..                                                    <span class="m">100</span>% <span class="m">71</span>.7M<span class="o">=</span>0s
 
-2014-09-15 08:10:11 <span class="o">(</span>71.7 MB/s<span class="o">)</span> - ‘index.html’ saved <span class="o">[</span>2647/2647<span class="o">]</span>
+<span class="m">2014</span>-09-15 <span class="m">08</span>:10:11 <span class="o">(</span><span class="m">71</span>.7 MB/s<span class="o">)</span> - ‘index.html’ saved <span class="o">[</span><span class="m">2647</span>/2647<span class="o">]</span>
 mininet&gt; h1 <span class="nb">kill</span> %python
 </pre></div>
 <p>退出mininet交互命令：</p>
@@ -536,7 +508,7 @@ ping connectivity）。：</p>
 <div class="section" id="link-variations">
 <h3>链路变化 Link variations</h3>
 <p>Mininet2.0允许你设置连接参数，甚至可以通过命令行实现自动化设置：</p>
-<div class="highlight"><pre><span></span>$ sudo mn --link tc,bw<span class="o">=</span>10,delay<span class="o">=</span>10ms
+<div class="highlight"><pre><span></span>$ sudo mn --link tc,bw<span class="o">=</span><span class="m">10</span>,delay<span class="o">=</span>10ms
  mininet&gt; iperf
  ...
  mininet&gt; h1 ping -c10 h2
@@ -583,11 +555,11 @@ PythonAPI 我们可以很简单的来定义拓扑结构。
 <span class="k">class</span> <span class="nc">MyTopo</span><span class="p">(</span> <span class="n">Topo</span> <span class="p">):</span>
     <span class="s2">&quot;Simple topology example.&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="s2">&quot;Create custom topo.&quot;</span>
 
         <span class="c1"># Initialize topology</span>
-        <span class="n">Topo</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span>
+        <span class="n">Topo</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span>
 
         <span class="c1"># Add hosts and switches</span>
         <span class="n">leftHost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">addHost</span><span class="p">(</span> <span class="s1">&#39;h1&#39;</span> <span class="p">)</span>
@@ -622,7 +594,7 @@ s3 s4
 *** Ping: testing ping reachability
 h1 -&gt; h2
 h2 -&gt; h1
-*** Results: 0% dropped <span class="o">(</span>2/2 received<span class="o">)</span>
+*** Results: <span class="m">0</span>% dropped <span class="o">(</span><span class="m">2</span>/2 received<span class="o">)</span>
 *** Stopping <span class="m">2</span> switches
 s3 ..s4 ..
 *** Stopping <span class="m">2</span> hosts
@@ -630,7 +602,7 @@ h1 h2
 *** Stopping <span class="m">1</span> controllers
 c0
 *** Done
-completed in 1.220 seconds
+completed in <span class="m">1</span>.220 seconds
 </pre></div>
 </div>
 <div class="section" id="id-mac">
@@ -649,7 +621,7 @@ h1-eth0   Link encap:Ethernet  HWaddr c2:d9:4a:37:25:17
           RX packets:17 errors:0 dropped:0 overruns:0 frame:0
           TX packets:7 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
-          RX bytes:1398 <span class="o">(</span>1.3 KB<span class="o">)</span>  TX bytes:578 <span class="o">(</span>578.0 B<span class="o">)</span>
+          RX bytes:1398 <span class="o">(</span><span class="m">1</span>.3 KB<span class="o">)</span>  TX bytes:578 <span class="o">(</span><span class="m">578</span>.0 B<span class="o">)</span>
 
 lo        Link encap:Local Loopback
           inet addr:127.0.0.1  Mask:255.0.0.0
@@ -658,7 +630,7 @@ lo        Link encap:Local Loopback
           RX packets:0 errors:0 dropped:0 overruns:0 frame:0
           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0
-          RX bytes:0 <span class="o">(</span>0.0 B<span class="o">)</span>  TX bytes:0 <span class="o">(</span>0.0 B<span class="o">)</span>
+          RX bytes:0 <span class="o">(</span><span class="m">0</span>.0 B<span class="o">)</span>  TX bytes:0 <span class="o">(</span><span class="m">0</span>.0 B<span class="o">)</span>
 </pre></div>
 <p>使用<tt class="docutils literal"><span class="pre">--mac</span></tt>参数：</p>
 <pre class="literal-block">
@@ -783,7 +755,7 @@ Python 来执行。 这对于扩展 Mininet，探测 mininet的内部工作机�
 </pre></div>
 <p>打印 locals:</p>
 <div class="highlight"><pre><span></span>mininet&gt; py locals<span class="o">()</span>
-<span class="o">{</span><span class="s1">&#39;h2&#39;</span>: &lt;Host h2: h2-eth0:10.0.0.2 <span class="nv">pid</span><span class="o">=</span>5166&gt; , <span class="s1">&#39;net&#39;</span>: &lt;mininet.net.Mininet object at 0x7f7c47668ad0&gt;, <span class="s1">&#39;h1&#39;</span>: &lt;Host h1: h1-eth0:10.0.0.1 <span class="nv">pid</span><span class="o">=</span>5165&gt; , <span class="s1">&#39;c0&#39;</span>: &lt;OVSController c0: 127.0.0.1:6633 <span class="nv">pid</span><span class="o">=</span>5157&gt; , <span class="s1">&#39;s1&#39;</span>: &lt;OVSSwitch s1: lo:127.0.0.1,s1-eth1:None,s1-eth2:None <span class="nv">pid</span><span class="o">=</span>5169&gt; <span class="o">}</span>
+<span class="o">{</span><span class="s1">&#39;h2&#39;</span>: &lt;Host h2: h2-eth0:10.0.0.2 <span class="nv">pid</span><span class="o">=</span><span class="m">5166</span>&gt; , <span class="s1">&#39;net&#39;</span>: &lt;mininet.net.Mininet object at 0x7f7c47668ad0&gt;, <span class="s1">&#39;h1&#39;</span>: &lt;Host h1: h1-eth0:10.0.0.1 <span class="nv">pid</span><span class="o">=</span><span class="m">5165</span>&gt; , <span class="s1">&#39;c0&#39;</span>: &lt;OVSController c0: <span class="m">127</span>.0.0.1:6633 <span class="nv">pid</span><span class="o">=</span><span class="m">5157</span>&gt; , <span class="s1">&#39;s1&#39;</span>: &lt;OVSSwitch s1: lo:127.0.0.1,s1-eth1:None,s1-eth2:None <span class="nv">pid</span><span class="o">=</span><span class="m">5169</span>&gt; <span class="o">}</span>
 </pre></div>
 <p>还可以通过 dir()函数来查看节点的方法和属性：</p>
 <div class="highlight"><pre><span></span>mininet&gt; py dir<span class="o">(</span>s1<span class="o">)</span>
@@ -828,8 +800,8 @@ Python 来执行。 这对于扩展 Mininet，探测 mininet的内部工作机�
 <div class="highlight"><pre><span></span>$ sudo ~/mininet/examples/sshd.py
 </pre></div>
 <p>在另外一个终端上，就可以ssh到任何主机并运行交互式命令：</p>
-<div class="highlight"><pre><span></span>$ ssh 10.0.0.1
-$ ping 10.0.0.2
+<div class="highlight"><pre><span></span>$ ssh <span class="m">10</span>.0.0.1
+$ ping <span class="m">10</span>.0.0.2
 ...
 $ <span class="nb">exit</span>
 </pre></div>
@@ -875,7 +847,7 @@ control）。</p>
 $ ./pox.py forwarding.l2_learning
 </pre></div>
 <p>在另一个窗口，启动Mininet连接到“远程”控制器（这实际上是在本地运行，但Mininet的控制范围之外）：</p>
-<div class="highlight"><pre><span></span>$ sudo mn --controller<span class="o">=</span>remote,ip<span class="o">=</span>127.0.0.1,port<span class="o">=</span>6633
+<div class="highlight"><pre><span></span>$ sudo mn --controller<span class="o">=</span>remote,ip<span class="o">=</span><span class="m">127</span>.0.0.1,port<span class="o">=</span><span class="m">6633</span>
 </pre></div>
 <p><em>注意，这些其实都是默认的IP地址和端口值。</em></p>
 <p>如果你制造一些流量（如h1 ping h2），
@@ -916,42 +888,62 @@ Defaults        !env_reset
 </div>
 </div>
 
-        </div>
-        <div class="post_list">
-            <span>By </span>
-            <a href="http://sunisdown.me/author/sunisdown.html">@SunisDown</a>
-            <span> in </span>
-            <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark" title="Permalink to articles">[ articles ]</a></span>
-            <span class="post_date">Thu 16 October 2014</span>
-            <div><span>Tags : </span>
-                <span><a href="http://sunisdown.me/tag/sdn.html">#sdn, </a></span>
-                <span><a href="http://sunisdown.me/tag/mininet.html">#mininet, </a></span>
             </div>
+            <div class="post_list">
+                <span>By </span>
+                <a href="http://sunisdown.me/author/sunisdown.html">@SunisDown</a>
+                <span> in </span>
+                <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark"
+                                               title="Permalink to articles">[ articles ]</a></span>
+                <span class="post_date">Thu 16 October 2014</span>
+                <div><span>Tags : </span>
+                            <span><a href="http://sunisdown.me/tag/sdn.html">#sdn, </a></span>
+                            <span><a href="http://sunisdown.me/tag/mininet.html">#mininet, </a></span>
+                </div>
 
-            <div class="entry-social">
-                <span class="twitter"><a target="_blank" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;" title="Twitter" href="https://twitter.com/share?url=http://sunisdown.me/mininet-walkthrough.html&text=Mininet Walkthrough&via="><img src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
+                <div class="entry-social">
+                    <span class="twitter"><a target="_blank" rel="nofollow"
+                                             onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;"
+                                             title="Twitter"
+                                             href="https://twitter.com/share?url=http://sunisdown.me/mininet-walkthrough.html&text=Mininet Walkthrough&via="><img
+                            src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
 
-                <span class="gplus"><a target="_blank" title="Google +" href="https://plus.google.com/share?url=http://sunisdown.me/mininet-walkthrough.html&hl=fr" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
+                    <span class="gplus"><a target="_blank" title="Google +"
+                                           href="https://plus.google.com/share?url=http://sunisdown.me/mininet-walkthrough.html&hl=fr"
+                                           rel="nofollow"
+                                           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
 
-                <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;" href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/mininet-walkthrough.html&t=Mininet Walkthrough"><img src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
+                    <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow"
+                                              onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;"
+                                              href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/mininet-walkthrough.html&t=Mininet Walkthrough"><img
+                            src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
 
-                <a  target="_blank" title="Linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/mininet-walkthrough.html&title=Mininet Walkthrough" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
+                    <a target="_blank" title="Linkedin"
+                       href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/mininet-walkthrough.html&title=Mininet Walkthrough"
+                       rel="nofollow"
+                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
 
-                <span class="mail"><a href="mailto:?subject=Mininet Walkthrough&amp;body=Viens découvrir un article à propos de [Mininet Walkthrough] sur le site de sunisdown. http://sunisdown.me/mininet-walkthrough.html" title="Share by Email" target="_blank"><img src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+                    <span class="mail"><a
+                            href="mailto:?subject=Mininet Walkthrough&amp;body=Viens découvrir un article à propos de [Mininet Walkthrough] sur le site de sunisdown. http://sunisdown.me/mininet-walkthrough.html"
+                            title="Share by Email" target="_blank"><img
+                            src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+                </div>
             </div>
-        </div>
-    </article>
-</section>
-  </article>
+        </article>
+    </section>
+</article>
 
-  <!-- Footer -->
-  <footer>
-    <p>
-      Blog powered by <a href="http://getpelican.com/">Pelican</a>, 
-      which takes great advantage of <a href="http://python.org">Python</a>.
-      Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a href="https://parbhatpuri.com/">@parbhat</a>.
-    </p>
-  </footer>
+<!-- Footer -->
+    <footer>
+        <p>
+            Blog powered by <a href="http://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a href="http://python.org">Python</a>.
+            Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a
+                href="https://parbhatpuri.com/">@parbhat</a>.
+        </p>
+    </footer>
 
 
 </body>

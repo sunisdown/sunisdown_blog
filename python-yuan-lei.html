@@ -1,129 +1,93 @@
 <!doctype html>
 <html lang="zh" itemscope itemtype="http://schema.org/Person">
 <head>
-  <meta charset="utf-8">
-  <!-- Site Meta Data -->
-  <title>Python 元类</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="sunisdown">
+            <meta charset="utf-8">
+        <!-- Site Meta Data -->
+        <title>Python 元类</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="sunisdown">
 
-  <link rel="shortcut icon" href="">
+        <link rel="shortcut icon" href="">
 
-  <!-- schema.org -->
-  <meta itemprop="name" content="SunisDown">
-  <meta itemprop="image" content="">
-  <meta itemprop="description" content="">
+        <!-- schema.org -->
+        <meta itemprop="name" content="SunisDown">
+        <meta itemprop="image" content="">
+        <meta itemprop="description" content="">
 
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
-  <!-- Style Meta Data -->
-  <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css" />
-  <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css" />
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+        <!-- Style Meta Data -->
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css"/>
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css"/>
 
-  <!-- Feed Meta Data -->
-    <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="SunisDown ATOM Feed" />
+        <!-- Feed Meta Data -->
+            <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+                  title="SunisDown ATOM Feed"/>
 
-  <!-- Twitter Feed -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="">
-  <meta name="twitter:image" content="">
+        <!-- Twitter Feed -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="">
+        <meta name="twitter:image" content="">
 
-<meta name="twitter:creator" content="">
-<meta name="twitter:url" content="http://sunisdown.me/python-yuan-lei.html">
-<meta name="twitter:title" content="SunisDown ~ Python 元类">
-<meta name="twitter:description" content='<p><tt class="docutils literal">Python</tt>中有三个概念比较难懂，分别是：</p>
-<ul class="simple">
-<li>装饰器</li>
-<li>描述符</li>
-<li>元类</li>
-</ul>
-<p>这三种概念里面，元类又最为难懂，威力最强。</p>
-<div class="section" id="id1">
-<h2>类型，类，对象</h2>
-<p>神说<tt class="docutils literal">万物皆对象</tt>，Python
-中一切都是对象，凡是对象必先有类型。类，也是对象的一种。Python
-中所有的对象都有一些相同的内容，包含在对象的<a class="reference external" href="https://github.com/python/cpython/blob/2.7/Include/object.h#L106">头部信息</a>中。</p>
-<div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_object</span> <span class="p">{</span>
-    <span class="n">PyObject_HEAD</span>
-<span class="p">}</span> <span class="n">PyObject</span><span class="p">;</span>
-</pre></div>
-<p>在
-<a class="reference external" href="https://github.com/python/cpython/blob/2.7/Include/object.h#L78">PyObject</a>
-的定义中，<tt class="docutils literal">ob_refcnt</tt>
-是<tt class="docutils literal">应用计数</tt>，用来做内存管理垃圾回收有关，这里暂时不细说。有兴趣的可以查看<a class="reference external" href="https://github.com/qyuhen/book">Q.yuhen的
-Python 笔记</a>,</p>
-<div class="highlight"><pre><span></span><span class="cm">/* PyObject_HEAD defines the initial segment of every PyObject ...</span></pre></div></div>'>
+    <meta name="twitter:creator" content="">
+    <meta name="twitter:url" content="http://sunisdown.me/python-yuan-lei.html">
+    <meta name="twitter:title" content="SunisDown ~ Python 元类">
+    <meta name="twitter:description" content="Python中有三个概念比较难懂，分别是： 装饰器 描述符 元类 这三种概念里面，元类又最为难懂，威力最强。 类型，类，对象 神说万物皆对象，Python 中一切都是对象，凡是对象必先有类型。类，也是对象的一种。Python 中所有的对象都有一些相同的内容，包含在对象的头部信息中。 typedef struct _object { PyObject_HEAD } PyObject; 在 PyObject 的定义中，ob_refcnt 是应用计数，用来做内存管理垃圾回收有关，这里暂时不细说。有兴趣的可以查看Q.yuhen的 Python 笔记, /* PyObject_HEAD defines the initial segment of every PyObject …">
 
-<!-- Facebook Meta Data -->
-<meta property="og:title" content="SunisDown ~ Python 元类" />
-<meta property="og:description" content='<p><tt class="docutils literal">Python</tt>中有三个概念比较难懂，分别是：</p>
-<ul class="simple">
-<li>装饰器</li>
-<li>描述符</li>
-<li>元类</li>
-</ul>
-<p>这三种概念里面，元类又最为难懂，威力最强。</p>
-<div class="section" id="id1">
-<h2>类型，类，对象</h2>
-<p>神说<tt class="docutils literal">万物皆对象</tt>，Python
-中一切都是对象，凡是对象必先有类型。类，也是对象的一种。Python
-中所有的对象都有一些相同的内容，包含在对象的<a class="reference external" href="https://github.com/python/cpython/blob/2.7/Include/object.h#L106">头部信息</a>中。</p>
-<div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_object</span> <span class="p">{</span>
-    <span class="n">PyObject_HEAD</span>
-<span class="p">}</span> <span class="n">PyObject</span><span class="p">;</span>
-</pre></div>
-<p>在
-<a class="reference external" href="https://github.com/python/cpython/blob/2.7/Include/object.h#L78">PyObject</a>
-的定义中，<tt class="docutils literal">ob_refcnt</tt>
-是<tt class="docutils literal">应用计数</tt>，用来做内存管理垃圾回收有关，这里暂时不细说。有兴趣的可以查看<a class="reference external" href="https://github.com/qyuhen/book">Q.yuhen的
-Python 笔记</a>,</p>
-<div class="highlight"><pre><span></span><span class="cm">/* PyObject_HEAD defines the initial segment of every PyObject ...</span></pre></div></div>' />
-<meta property="og:image" content="" />
+    <!-- Facebook Meta Data -->
+    <meta property="og:title" content="SunisDown ~ Python 元类"/>
+    <meta property="og:description" content="Python中有三个概念比较难懂，分别是： 装饰器 描述符 元类 这三种概念里面，元类又最为难懂，威力最强。 类型，类，对象 神说万物皆对象，Python 中一切都是对象，凡是对象必先有类型。类，也是对象的一种。Python 中所有的对象都有一些相同的内容，包含在对象的头部信息中。 typedef struct _object { PyObject_HEAD } PyObject; 在 PyObject 的定义中，ob_refcnt 是应用计数，用来做内存管理垃圾回收有关，这里暂时不细说。有兴趣的可以查看Q.yuhen的 Python 笔记, /* PyObject_HEAD defines the initial segment of every PyObject …"/>
+    <meta property="og:image" content=""/>
 </head>
 
 <body>
-  <!-- Sidebar -->
-  <aside>
+<!-- Sidebar -->
+<aside>
     <!--<center><a href="http://sunisdown.me"><img id="avatar" src=""></a></center>-->
     <h1>SunisDown</h1>
     <br>
 
 
     <nav class="nav">
-      <ul class="list-bare">
-      
-          <li><a class="nav__link" href="/index.html">Blog</a></li>
-          <li><a class="nav__link" href="/archives.html">Archives</a></li>
-          <li><a class="nav__link" href="/tags.html">Tags</a></li>
-         
-          <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
-         
-      </ul>
+        <ul class="list-bare">
+
+                <li><a class="nav__link" href="/index.html">Blog</a></li>
+                <li><a class="nav__link" href="/archives.html">Archives</a></li>
+                <li><a class="nav__link" href="/tags.html">Tags</a></li>
+
+                <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
+
+        </ul>
     </nav>
 
     <p class="social">
-        <a href="http://1024.today" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
-        <a href="https://twitter.com/SunisD0wn" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
-        <a href="https://github.com/sunisdown" target="_blank" ><img src="http://sunisdown.me/theme/images/icons/github.png"></a>
-      <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
-        <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
+                <a href="http://1024.today" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
+                <a href="https://twitter.com/SunisD0wn" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
+                <a href="https://github.com/sunisdown" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/github.png"></a>
+            <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
+                <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
     </p>
 
-    <!--
-    <h2>Categories</h2>
-    <ul class="navbar">
-      <li class="active"><a href="http://sunisdown.me/category/articles.html">articles</a></li>
-    </ul> 
-    -->
-  </aside>
+        <h2>Categories</h2>
+        <ul class="navbar">
+                <li class="active"><a
+                        href="http://sunisdown.me/category/articles.html">articles</a></li>
+        </ul>
 
-  <!-- Content -->
-  <article>
-<section id="content">
-    <article>
-        <h2 class="post_title post_detail"><a href="http://sunisdown.me/python-yuan-lei.html" rel="bookmark" title="Permalink to Python 元类">Python 元类</a></h2>
-        <div class="entry-content blog-post">
-            <p><tt class="docutils literal">Python</tt>中有三个概念比较难懂，分别是：</p>
+
+</aside>
+
+<!-- Content -->
+<article>
+    <section id="content">
+        <article>
+            <h2 class="post_title post_detail"><a href="http://sunisdown.me/python-yuan-lei.html" rel="bookmark"
+                                                  title="Permalink to Python 元类">Python 元类</a></h2>
+            <div class="entry-content blog-post">
+                <p><tt class="docutils literal">Python</tt>中有三个概念比较难懂，分别是：</p>
 <ul class="simple">
 <li>装饰器</li>
 <li>描述符</li>
@@ -163,19 +127,19 @@ Python 笔记</a>,</p>
 
 <span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">newdata</span> <span class="o">=</span> <span class="n">NewData</span><span class="p">()</span>
 
-<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">NewData</span><span class="o">.</span><span class="n">__class__</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">NewData</span><span class="o">.</span><span class="vm">__class__</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="nb">type</span>
 
 <span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="nb">type</span><span class="p">(</span><span class="n">NewData</span><span class="p">)</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="nb">type</span>
 
-<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">newdata</span><span class="o">.</span><span class="n">__class__</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">newdata</span><span class="o">.</span><span class="vm">__class__</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">__main__</span><span class="o">.</span><span class="n">NewData</span>
 
 <span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="nb">type</span><span class="p">(</span><span class="n">newdata</span><span class="p">)</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">__main__</span><span class="o">.</span><span class="n">NewData</span>
 
-<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="nb">type</span><span class="o">.</span><span class="n">__class__</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="nb">type</span><span class="o">.</span><span class="vm">__class__</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="nb">type</span>
 
 <span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="nb">type</span><span class="o">.</span><span class="n">__base__</span>
@@ -187,7 +151,7 @@ Python 笔记</a>,</p>
 <span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="nb">type</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="nb">type</span>
 
-<span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="nb">object</span><span class="o">.</span><span class="n">__class__</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="nb">object</span><span class="o">.</span><span class="vm">__class__</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="nb">type</span>
 </pre></div>
 <p>从上面的栗子中我们可以观察到，<tt class="docutils literal">NewData</tt>与<tt class="docutils literal">type</tt>以及<tt class="docutils literal">object</tt>的类型都是
@@ -229,13 +193,13 @@ Python 笔记</a>,</p>
 里面抹去这种事儿不能忍，这种情况下也可以蛋疼的用元类（这真的是一个
 蛋疼的栗子）：</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">AuthMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
         <span class="n">t</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="s2">&quot;SunisDown&quot;</span>
         <span class="k">return</span> <span class="n">t</span>
 
 <span class="k">class</span> <span class="nc">Blog</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">AuthMeta</span>
+    <span class="vm">__metaclass__</span> <span class="o">=</span> <span class="n">AuthMeta</span>
     <span class="k">pass</span>
 
 <span class="n">aaa</span> <span class="o">=</span> <span class="n">Blog</span><span class="p">()</span>
@@ -262,41 +226,61 @@ Python 笔记</a>,</p>
 API，用户可以直接使用，而后面负责的逻辑，就隐藏在元类之中。</p>
 </div>
 
-        </div>
-        <div class="post_list">
-            <span>By </span>
-            <a href="http://sunisdown.me/author/sunisdown.html">@Sunisdown</a>
-            <span> in </span>
-            <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark" title="Permalink to articles">[ articles ]</a></span>
-            <span class="post_date">Mon 29 December 2014</span>
-            <div><span>Tags : </span>
-                <span><a href="http://sunisdown.me/tag/python.html">#python, </a></span>
             </div>
+            <div class="post_list">
+                <span>By </span>
+                <a href="http://sunisdown.me/author/sunisdown.html">@Sunisdown</a>
+                <span> in </span>
+                <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark"
+                                               title="Permalink to articles">[ articles ]</a></span>
+                <span class="post_date">Mon 29 December 2014</span>
+                <div><span>Tags : </span>
+                            <span><a href="http://sunisdown.me/tag/python.html">#python, </a></span>
+                </div>
 
-            <div class="entry-social">
-                <span class="twitter"><a target="_blank" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;" title="Twitter" href="https://twitter.com/share?url=http://sunisdown.me/python-yuan-lei.html&text=Python 元类&via="><img src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
+                <div class="entry-social">
+                    <span class="twitter"><a target="_blank" rel="nofollow"
+                                             onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;"
+                                             title="Twitter"
+                                             href="https://twitter.com/share?url=http://sunisdown.me/python-yuan-lei.html&text=Python 元类&via="><img
+                            src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
 
-                <span class="gplus"><a target="_blank" title="Google +" href="https://plus.google.com/share?url=http://sunisdown.me/python-yuan-lei.html&hl=fr" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
+                    <span class="gplus"><a target="_blank" title="Google +"
+                                           href="https://plus.google.com/share?url=http://sunisdown.me/python-yuan-lei.html&hl=fr"
+                                           rel="nofollow"
+                                           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
 
-                <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;" href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/python-yuan-lei.html&t=Python 元类"><img src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
+                    <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow"
+                                              onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;"
+                                              href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/python-yuan-lei.html&t=Python 元类"><img
+                            src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
 
-                <a  target="_blank" title="Linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/python-yuan-lei.html&title=Python 元类" rel="nofollow" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
+                    <a target="_blank" title="Linkedin"
+                       href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/python-yuan-lei.html&title=Python 元类"
+                       rel="nofollow"
+                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
 
-                <span class="mail"><a href="mailto:?subject=Python 元类&amp;body=Viens découvrir un article à propos de [Python 元类] sur le site de sunisdown. http://sunisdown.me/python-yuan-lei.html" title="Share by Email" target="_blank"><img src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+                    <span class="mail"><a
+                            href="mailto:?subject=Python 元类&amp;body=Viens découvrir un article à propos de [Python 元类] sur le site de sunisdown. http://sunisdown.me/python-yuan-lei.html"
+                            title="Share by Email" target="_blank"><img
+                            src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+                </div>
             </div>
-        </div>
-    </article>
-</section>
-  </article>
+        </article>
+    </section>
+</article>
 
-  <!-- Footer -->
-  <footer>
-    <p>
-      Blog powered by <a href="http://getpelican.com/">Pelican</a>, 
-      which takes great advantage of <a href="http://python.org">Python</a>.
-      Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a href="https://parbhatpuri.com/">@parbhat</a>.
-    </p>
-  </footer>
+<!-- Footer -->
+    <footer>
+        <p>
+            Blog powered by <a href="http://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a href="http://python.org">Python</a>.
+            Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a
+                href="https://parbhatpuri.com/">@parbhat</a>.
+        </p>
+    </footer>
 
 
 </body>

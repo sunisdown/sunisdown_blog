@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="zh" itemscope itemtype="http://schema.org/Person">
+<head>
+            <meta charset="utf-8">
+        <!-- Site Meta Data -->
+        <title>Learning Rust with LLDB</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="sunisdown">
+
+        <link rel="shortcut icon" href="">
+
+        <!-- schema.org -->
+        <meta itemprop="name" content="SunisDown">
+        <meta itemprop="image" content="">
+        <meta itemprop="description" content="">
+
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+        <!-- Style Meta Data -->
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/style.css" type="text/css"/>
+        <link rel="stylesheet" href="http://sunisdown.me/theme/css/pygments.css" type="text/css"/>
+
+        <!-- Feed Meta Data -->
+            <link href="http://sunisdown.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+                  title="SunisDown ATOM Feed"/>
+
+        <!-- Twitter Feed -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="">
+        <meta name="twitter:image" content="">
+
+    <meta name="twitter:creator" content="">
+    <meta name="twitter:url" content="http://sunisdown.me/learning-rust-with-lldb.html">
+    <meta name="twitter:title" content="SunisDown ~ Learning Rust with LLDB">
+    <meta name="twitter:description" content="为什么要学习 Rust 呢？因为 Go 自带的 GC 还不够强，同时 goroutine 的调度机制又导致 go 对 CPU 也没办法用的很充分。当需要写对 CPU 性能要求比较高的系统，就需要换一门新语言。同时因为不想写 Cpp，Rust 有媲美 Cpp 的性能，相对 Cpp 来讲更好维护的代码。学习一下没有毛病。 Hello Hex 通常学习一门新语言都是用 Hello World 来开始，但是因为字符串类型相比与int或者是 hex 要复杂的多，我们这里用 Hex 来替代 Hello world 。在之前我已经装好了 rust 的各种环境，包含 cargo 之类的包管理，在这里我用 …">
+
+    <!-- Facebook Meta Data -->
+    <meta property="og:title" content="SunisDown ~ Learning Rust with LLDB"/>
+    <meta property="og:description" content="为什么要学习 Rust 呢？因为 Go 自带的 GC 还不够强，同时 goroutine 的调度机制又导致 go 对 CPU 也没办法用的很充分。当需要写对 CPU 性能要求比较高的系统，就需要换一门新语言。同时因为不想写 Cpp，Rust 有媲美 Cpp 的性能，相对 Cpp 来讲更好维护的代码。学习一下没有毛病。 Hello Hex 通常学习一门新语言都是用 Hello World 来开始，但是因为字符串类型相比与int或者是 hex 要复杂的多，我们这里用 Hex 来替代 Hello world 。在之前我已经装好了 rust 的各种环境，包含 cargo 之类的包管理，在这里我用 …"/>
+    <meta property="og:image" content=""/>
+</head>
+
+<body>
+<!-- Sidebar -->
+<aside>
+    <!--<center><a href="http://sunisdown.me"><img id="avatar" src=""></a></center>-->
+    <h1>SunisDown</h1>
+    <br>
+
+
+    <nav class="nav">
+        <ul class="list-bare">
+
+                <li><a class="nav__link" href="/index.html">Blog</a></li>
+                <li><a class="nav__link" href="/archives.html">Archives</a></li>
+                <li><a class="nav__link" href="/tags.html">Tags</a></li>
+
+                <li><a class="nav__link" href="http://sunisdown.me/pages/about.html">About</a></li>
+
+        </ul>
+    </nav>
+
+    <p class="social">
+                <a href="http://1024.today" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/notebook.png"></a>
+                <a href="https://twitter.com/SunisD0wn" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/twitter.png"></a>
+                <a href="https://github.com/sunisdown" target="_blank"><img
+                        src="http://sunisdown.me/theme/images/icons/github.png"></a>
+            <a href="http://sunisdown.me/feeds/all.atom.xml" rel="alternate">
+                <img src="http://sunisdown.me/theme/images/icons/rss.png"></a>
+    </p>
+
+        <h2>Categories</h2>
+        <ul class="navbar">
+                <li class="active"><a
+                        href="http://sunisdown.me/category/articles.html">articles</a></li>
+        </ul>
+
+
+</aside>
+
+<!-- Content -->
+<article>
+    <section id="content">
+        <article>
+            <h2 class="post_title post_detail"><a href="http://sunisdown.me/learning-rust-with-lldb.html" rel="bookmark"
+                                                  title="Permalink to Learning Rust with LLDB">Learning Rust with LLDB</a></h2>
+            <div class="entry-content blog-post">
+                <p>为什么要学习 <cite>Rust</cite> 呢？因为 Go 自带的 GC 还不够强，同时 goroutine 的调度机制又导致 go 对 CPU 也没办法用的很充分。当需要写对 CPU 性能要求比较高的系统，就需要换一门新语言。同时因为不想写 Cpp，Rust 有媲美 Cpp 的性能，相对 Cpp 来讲更好维护的代码。学习一下没有毛病。</p>
+<div class="section" id="hello-hex">
+<h2>Hello Hex</h2>
+<p>通常学习一门新语言都是用 <cite>Hello World</cite> 来开始，但是因为字符串类型相比与int或者是 hex 要复杂的多，我们这里用 <cite>Hex</cite> 来替代 <cite>Hello world</cite> 。在之前我已经装好了 rust 的各种环境，包含 cargo 之类的包管理，在这里我用 cargo 创建一个新的项目。</p>
+<div class="highlight"><pre><span></span>cargo new helloHex
+<span class="nb">cd</span> helloHex
+</pre></div>
+<p>然后将如下内容编辑到 <cite>src/main.rs</cite> 里面，</p>
+<div class="highlight"><pre><span></span><span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x100</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+<p>编辑完这个文件之后，我们再编译他，通常情况下为了方便调试，我们都会在编译的时候禁止编译器对程序进行优化，在 C/Go 中需要加一些参数来完成这项工作， <cite>cargo</cite> 这个工具省略了这个步骤，直接会生成一个 debug 版本，我们可以直接拿来调试。编译命令如下：</p>
+<div class="highlight"><pre><span></span>cargo build
+lldb target/debug/helloHex
+</pre></div>
+<p>现在我们已经进入到了 lldb 的调试界面中，然后我们可以设置断点，查看堆栈信息等。我们先做一些简单的操作来熟悉一下 lldb。 在指令后面我加上了注释，说明了每一条命令的作用。</p>
+<div class="highlight"><pre><span></span>$  lldb target/debug/helloHex
+<span class="o">(</span>lldb<span class="o">)</span> target create <span class="s2">&quot;target/debug/helloHex&quot;</span>
+Current executable <span class="nb">set</span> to <span class="s1">&#39;target/debug/helloHex&#39;</span> <span class="o">(</span>x86_64<span class="o">)</span>.
+<span class="o">(</span>lldb<span class="o">)</span> b helloHex::main  // 这条指令是对 helloHex 好个程序的 main 函数打一个断点
+Breakpoint <span class="m">1</span>: <span class="nv">where</span> <span class="o">=</span> helloHex<span class="sb">`</span>helloHex::main::hc8d39b80069dcddb + <span class="m">18</span> at main.rs:2, <span class="nv">address</span> <span class="o">=</span> 0x00000001000011d2
+<span class="o">(</span>lldb<span class="o">)</span> r // run 开始执行 helloHex 程序
+Process <span class="m">84414</span> launched: <span class="s1">&#39;/Users/chaotang.sun/rust_project/rustlearing/lldb/helloHex/target/debug/helloHex&#39;</span> <span class="o">(</span>x86_64<span class="o">)</span>
+Process <span class="m">84414</span> stopped
+* thread <span class="c1">#1, queue = &#39;com.apple.main-thread&#39;, stop reason = breakpoint 1.1</span>
+    frame <span class="c1">#0: 0x00000001000011d2 helloHex`helloHex::main::hc8d39b80069dcddb at main.rs:2</span>
+  <span class="m">1</span>    fn main<span class="o">()</span> <span class="o">{</span>
+-&gt; <span class="m">2</span>        <span class="nb">let</span> <span class="nv">x</span> <span class="o">=</span> 0x100<span class="p">;</span>
+  <span class="m">3</span>        println!<span class="o">(</span><span class="s2">&quot;{}&quot;</span>, x<span class="o">)</span><span class="p">;</span>
+  <span class="m">4</span>    <span class="o">}</span>
+Target <span class="m">0</span>: <span class="o">(</span>helloHex<span class="o">)</span> stopped.
+<span class="o">(</span>lldb<span class="o">)</span> s // step 执行下一步机器指令
+Process <span class="m">84414</span> stopped
+* thread <span class="c1">#1, queue = &#39;com.apple.main-thread&#39;, stop reason = step in</span>
+    frame <span class="c1">#0: 0x00000001000011d9 helloHex`helloHex::main::hc8d39b80069dcddb at main.rs:3</span>
+  <span class="m">1</span>    fn main<span class="o">()</span> <span class="o">{</span>
+  <span class="m">2</span>        <span class="nb">let</span> <span class="nv">x</span> <span class="o">=</span> 0x100<span class="p">;</span>
+-&gt; <span class="m">3</span>        println!<span class="o">(</span><span class="s2">&quot;{}&quot;</span>, x<span class="o">)</span><span class="p">;</span>
+  <span class="m">4</span>    <span class="o">}</span>
+Target <span class="m">0</span>: <span class="o">(</span>helloHex<span class="o">)</span> stopped.
+<span class="o">(</span>lldb<span class="o">)</span> frame v // 查看当前栈的变量
+<span class="o">(</span>int<span class="o">)</span> <span class="nv">x</span> <span class="o">=</span> <span class="m">256</span>
+<span class="o">(</span>lldb<span class="o">)</span> p x // 打印变量 x 的值
+<span class="o">(</span>int<span class="o">)</span> <span class="nv">$0</span> <span class="o">=</span> <span class="m">256</span>
+<span class="o">(</span>lldb<span class="o">)</span>
+<span class="o">(</span>int<span class="o">)</span> <span class="nv">$1</span> <span class="o">=</span> <span class="m">256</span>
+</pre></div>
+</div>
+<div class="section" id="variables-const">
+<h2>Variables &amp; Const</h2>
+<p>Rust 的变量相对 C 来说有一些特殊，有可变的变量跟不可变的变量。（这有点绕，不可变的变量还可以称之为变量嘛？ 他们有什么区别，除了在语法上的之外，我也很好奇对于CPU来说，处理这两种不同的变量有什么区别。
+在这里我创建两段不同的程序，一段是用 <cite>mutable</cite> 的变量，一段是用 <cite>immutable</cite> 的变量，然后反编译看一下这俩到底有什么区别。</p>
+<div class="highlight"><pre><span></span><span class="w"> </span><span class="cp">$</span><span class="w"> </span><span class="n">cargo</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">var_immut</span><span class="w"></span>
+<span class="w"> </span><span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x100</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;The value of x is: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mh">0x100</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;The value of x is: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+<div class="highlight"><pre><span></span><span class="w"> </span><span class="cp">$</span><span class="w"> </span><span class="n">cargo</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">var_mut</span><span class="w"></span>
+<span class="w"> </span><span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x100</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;The value of x is: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">  </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mh">0x100</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;The value of x is: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+<p>然后我们进入到 lldb 之中反编译这两段程序。</p>
+<div class="highlight"><pre><span></span>lldb target/debug/var_mut
+lldb target/debug/var_immut
+</pre></div>
+<p>这两端程序反编译之后的结果机器相似，这里就只放其中一个截取的片段来展示：</p>
+<div class="highlight"><pre><span></span><span class="o">(</span>lldb<span class="o">)</span> b var_mut::main
+ Breakpoint <span class="m">1</span>: <span class="nv">where</span> <span class="o">=</span> var_mut<span class="sb">`</span>var_mut::main::hbe57c58c6c7f6d8b + <span class="m">18</span> at main.rs:2, <span class="nv">address</span> <span class="o">=</span> 0x00000001000012a2
+ <span class="o">(</span>lldb<span class="o">)</span> r
+ Process <span class="m">88038</span> launched: <span class="s1">&#39;/Users/chaotang.sun/rust_project/rustlearing/lldb/var_mut/target/debug/var_mut&#39;</span> <span class="o">(</span>x86_64<span class="o">)</span>
+ Process <span class="m">88038</span> stopped
+ * thread <span class="c1">#1, queue = &#39;com.apple.main-thread&#39;, stop reason = breakpoint 1.1</span>
+     frame <span class="c1">#0: 0x00000001000012a2 var_mut`var_mut::main::hbe57c58c6c7f6d8b at main.rs:2</span>
+   <span class="m">1</span>    fn main<span class="o">()</span> <span class="o">{</span>
+ -&gt; <span class="m">2</span>        <span class="nb">let</span> mut <span class="nv">x</span> <span class="o">=</span> 0x100<span class="p">;</span>
+   <span class="m">3</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>
+   <span class="m">4</span>        <span class="nv">x</span> <span class="o">=</span> x + 0x100<span class="p">;</span>
+   <span class="m">5</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>
+   <span class="m">6</span>    <span class="o">}</span>
+ Target <span class="m">0</span>: <span class="o">(</span>var_mut<span class="o">)</span> stopped.
+ <span class="o">(</span>lldb<span class="o">)</span> disassemble
+ var_mut<span class="sb">`</span>var_mut::main::hbe57c58c6c7f6d8b:
+     0x100001290 &lt;+0&gt;:   pushq  %rbp
+     0x100001291 &lt;+1&gt;:   movq   %rsp, %rbp
+     0x100001294 &lt;+4&gt;:   subq   <span class="nv">$0</span>xf0, %rsp
+     0x10000129b &lt;+11&gt;:  leaq   0x4150e<span class="o">(</span>%rip<span class="o">)</span>, %rsi       <span class="p">;</span> core::fmt::num::_<span class="nv">$LT$impl$u20$core</span>..fmt..Display<span class="nv">$u20$for$u20$i32$GT</span>$::fmt::h04ca12b7570d3d05 at num.rs:201
+ -&gt;  0x1000012a2 &lt;+18&gt;:  movl   <span class="nv">$0</span>x100, -0xa4<span class="o">(</span>%rbp<span class="o">)</span>       <span class="p">;</span> <span class="nv">imm</span> <span class="o">=</span> 0x100
+     0x1000012ac &lt;+28&gt;:  leaq   -0xa4<span class="o">(</span>%rbp<span class="o">)</span>, %rax
+
+     .....
+
+     0x100001328 &lt;+152&gt;: movq   <span class="nv">$0</span>x1, <span class="o">(</span>%rsp<span class="o">)</span>
+     0x100001330 &lt;+160&gt;: callq  0x100001100               <span class="p">;</span> core::fmt::Arguments::new_v1_formatted::h1a26f71ed7a6be2c at mod.rs:363
+     0x100001335 &lt;+165&gt;: leaq   -0xa0<span class="o">(</span>%rbp<span class="o">)</span>, %rdi
+     0x10000133c &lt;+172&gt;: callq  0x10000a010               <span class="p">;</span> std::io::stdio::_print::h85f0ba007302c9c0 at stdio.rs:708
+     0x100001341 &lt;+177&gt;: movl   -0xa4<span class="o">(</span>%rbp<span class="o">)</span>, %eax
+     0x100001347 &lt;+183&gt;: addl   <span class="nv">$0</span>x100, %eax              <span class="p">;</span> <span class="nv">imm</span> <span class="o">=</span> 0x100
+
+     ......
+
+     0x100001400 &lt;+368&gt;: addq   <span class="nv">$0</span>xf0, %rsp
+     0x100001407 &lt;+375&gt;: popq   %rbp
+     0x100001408 &lt;+376&gt;: retq
+     0x100001409 &lt;+377&gt;: leaq   0x53f40<span class="o">(</span>%rip<span class="o">)</span>, %rdi
+     0x100001410 &lt;+384&gt;: callq  0x100047bf0               <span class="p">;</span> core::panicking::panic::h3941d6082b26bb8e at panicking.rs:44
+     0x100001415 &lt;+389&gt;: nopw   %cs:<span class="o">(</span>%rax,%rax<span class="o">)</span>
+     0x10000141f &lt;+399&gt;: nop
+</pre></div>
+<p>这里先不关注这个函数栈内的数据转换，只关注两个程序里面不同的变量有什么异同，所以直接跳到变量初始化与赋值的地方，看一下有什么异同。 下面的 gdb 调试分为左右两列，左边为 mutable， 右边 为 immutable 的变量。在不同的阶段我们查看 x 变量的地址，可以看到 mutable 的变量 x 地址是不变的，后面的赋值都是基于栈上某一个固定地址进行值的修改。而 immutable 的 x 地址是会变化的，每一次初始化，都会在栈内重新分配一个新的地址。</p>
+<div class="highlight"><pre><span></span><span class="o">(</span>lldb<span class="o">)</span> r                                                                                                               │<span class="o">(</span>lldb<span class="o">)</span> r
+Process <span class="m">89402</span> launched: <span class="s1">&#39;/Users/chaotang.sun/rust_project/rustlearing/lldb/var_mut/target/debug/var_mut&#39;</span> <span class="o">(</span>x86_64<span class="o">)</span>      │Process <span class="m">89331</span> launched: <span class="s1">&#39;/Users/chaotang.sun/rust_project/rustlearing/lldb/var_immut/target/debug/var_immut&#39;</span> <span class="o">(</span>x86_64<span class="o">)</span>
+Process <span class="m">89402</span> stopped                                                                                                  │Process <span class="m">89331</span> stopped
+* thread <span class="c1">#1, queue = &#39;com.apple.main-thread&#39;, stop reason = breakpoint 1.1                                             │* thread #1, queue = &#39;com.apple.main-thread&#39;, stop reason = breakpoint 1.1</span>
+    frame <span class="c1">#0: 0x00000001000012a2 var_mut`var_mut::main::hbe57c58c6c7f6d8b at main.rs:2                                 │    frame #0: 0x0000000100001242 var_immut`var_immut::main::hab4d3d25ce94e8b3 at main.rs:2</span>
+   <span class="m">1</span>    fn main<span class="o">()</span> <span class="o">{</span>                                                                                                    │   <span class="m">1</span>    fn main<span class="o">()</span> <span class="o">{</span>
+-&gt; <span class="m">2</span>        <span class="nb">let</span> mut <span class="nv">x</span> <span class="o">=</span> 0x100<span class="p">;</span>                                                                                         │-&gt; <span class="m">2</span>        <span class="nb">let</span> <span class="nv">x</span> <span class="o">=</span> 0x100<span class="p">;</span>
+   <span class="m">3</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>                                                                      │   <span class="m">3</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>
+   <span class="m">4</span>        <span class="nv">x</span> <span class="o">=</span> x + 0x100<span class="p">;</span>                                                                                             │   <span class="m">4</span>        <span class="nb">let</span> <span class="nv">x</span> <span class="o">=</span> x + 0x100<span class="p">;</span>
+   <span class="m">5</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>                                                                      │   <span class="m">5</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>
+   <span class="m">6</span>    <span class="o">}</span>                                                                                                              │   <span class="m">6</span>    <span class="o">}</span>
+Target <span class="m">0</span>: <span class="o">(</span>var_mut<span class="o">)</span> stopped.                                                                                           │Target <span class="m">0</span>: <span class="o">(</span>var_immut<span class="o">)</span> stopped.
+<span class="o">(</span>lldb<span class="o">)</span> frame v                                                                                                         │<span class="o">(</span>lldb<span class="o">)</span> frame v
+<span class="o">(</span>lldb<span class="o">)</span> s                                                                                                               │<span class="o">(</span>lldb<span class="o">)</span> s
+Process <span class="m">89402</span> stopped                                                                                                  │Process <span class="m">89331</span> stopped
+* thread <span class="c1">#1, queue = &#39;com.apple.main-thread&#39;, stop reason = step in                                                    │* thread #1, queue = &#39;com.apple.main-thread&#39;, stop reason = step in</span>
+    frame <span class="c1">#0: 0x00000001000012ac var_mut`var_mut::main::hbe57c58c6c7f6d8b at main.rs:3                                 │    frame #0: 0x000000010000124c var_immut`var_immut::main::hab4d3d25ce94e8b3 at main.rs:3</span>
+   <span class="m">1</span>    fn main<span class="o">()</span> <span class="o">{</span>                                                                                                    │   <span class="m">1</span>    fn main<span class="o">()</span> <span class="o">{</span>
+   <span class="m">2</span>        <span class="nb">let</span> mut <span class="nv">x</span> <span class="o">=</span> 0x100<span class="p">;</span>                                                                                         │   <span class="m">2</span>        <span class="nb">let</span> <span class="nv">x</span> <span class="o">=</span> 0x100<span class="p">;</span>
+-&gt; <span class="m">3</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>                                                                      │-&gt; <span class="m">3</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>
+   <span class="m">4</span>        <span class="nv">x</span> <span class="o">=</span> x + 0x100<span class="p">;</span>                                                                                             │   <span class="m">4</span>        <span class="nb">let</span> <span class="nv">x</span> <span class="o">=</span> x + 0x100<span class="p">;</span>
+   <span class="m">5</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>                                                                      │   <span class="m">5</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>
+   <span class="m">6</span>    <span class="o">}</span>                                                                                                              │   <span class="m">6</span>    <span class="o">}</span>
+Target <span class="m">0</span>: <span class="o">(</span>var_mut<span class="o">)</span> stopped.                                                                                           │Target <span class="m">0</span>: <span class="o">(</span>var_immut<span class="o">)</span> stopped.
+<span class="o">(</span>lldb<span class="o">)</span> frame v                                                                                                         │<span class="o">(</span>lldb<span class="o">)</span> frame v
+<span class="o">(</span>int<span class="o">)</span> <span class="nv">x</span> <span class="o">=</span> <span class="m">256</span>                                                                                                          │<span class="o">(</span>int<span class="o">)</span> <span class="nv">x</span> <span class="o">=</span> <span class="m">256</span>
+<span class="o">(</span>lldb<span class="o">)</span>                                                                                                                 │<span class="o">(</span>lldb<span class="o">)</span>
+<span class="o">(</span>int<span class="o">)</span> <span class="nv">x</span> <span class="o">=</span> <span class="m">256</span>                                                                                                          │<span class="o">(</span>int<span class="o">)</span> <span class="nv">x</span> <span class="o">=</span> <span class="m">256</span>
+<span class="o">(</span>lldb<span class="o">)</span> p <span class="p">&amp;</span>x                                                                                                            │<span class="o">(</span>lldb<span class="o">)</span> p <span class="p">&amp;</span>x
+<span class="o">(</span>int *<span class="o">)</span> <span class="nv">$0</span> <span class="o">=</span> 0x00007ffeefbff17c                                                                                        │<span class="o">(</span>int *<span class="o">)</span> <span class="nv">$0</span> <span class="o">=</span> 0x00007ffeefbff164
+<span class="o">(</span>lldb<span class="o">)</span> x/xw 0x00007ffeefbff17c                                                                                         │<span class="o">(</span>lldb<span class="o">)</span> x/xw 0x00007ffeefbff164
+0x7ffeefbff17c: 0x00000100                                                                                             │0x7ffeefbff164: 0x00000100
+<span class="o">(</span>lldb<span class="o">)</span> n                                                                                                               │<span class="o">(</span>lldb<span class="o">)</span> n
+The value of x is: <span class="m">256</span>                                                                                                 │The value of x is: <span class="m">256</span>
+Process <span class="m">89443</span> stopped                                                                                                  │Process <span class="m">89452</span> stopped
+* thread <span class="c1">#1, queue = &#39;com.apple.main-thread&#39;, stop reason = step over                                                  │* thread #1, queue = &#39;com.apple.main-thread&#39;, stop reason = step over</span>
+    frame <span class="c1">#0: 0x0000000100001341 var_mut`var_mut::main::hbe57c58c6c7f6d8b at main.rs:4                                 │    frame #0: 0x00000001000012e1 var_immut`var_immut::main::hab4d3d25ce94e8b3 at main.rs:4</span>
+   <span class="m">1</span>    fn main<span class="o">()</span> <span class="o">{</span>                                                                                                    │   <span class="m">1</span>    fn main<span class="o">()</span> <span class="o">{</span>
+   <span class="m">2</span>        <span class="nb">let</span> mut <span class="nv">x</span> <span class="o">=</span> 0x100<span class="p">;</span>                                                                                         │   <span class="m">2</span>        <span class="nb">let</span> <span class="nv">x</span> <span class="o">=</span> 0x100<span class="p">;</span>
+   <span class="m">3</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>                                                                      │   <span class="m">3</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>
+-&gt; <span class="m">4</span>        <span class="nv">x</span> <span class="o">=</span> x + 0x100<span class="p">;</span>                                                                                             │-&gt; <span class="m">4</span>        <span class="nb">let</span> <span class="nv">x</span> <span class="o">=</span> x + 0x100<span class="p">;</span>
+   <span class="m">5</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>                                                                      │   <span class="m">5</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>
+   <span class="m">6</span>    <span class="o">}</span>                                                                                                              │   <span class="m">6</span>    <span class="o">}</span>
+Target <span class="m">0</span>: <span class="o">(</span>var_mut<span class="o">)</span> stopped.                                                                                           │Target <span class="m">0</span>: <span class="o">(</span>var_immut<span class="o">)</span> stopped.
+<span class="o">(</span>lldb<span class="o">)</span> n                                                                                                               │<span class="o">(</span>lldb<span class="o">)</span> n
+Process <span class="m">89443</span> stopped                                                                                                  │Process <span class="m">89452</span> stopped
+* thread <span class="c1">#1, queue = &#39;com.apple.main-thread&#39;, stop reason = step over                                                  │* thread #1, queue = &#39;com.apple.main-thread&#39;, stop reason = step over</span>
+    frame <span class="c1">#0: 0x0000000100001371 var_mut`var_mut::main::hbe57c58c6c7f6d8b at main.rs:5                                 │    frame #0: 0x000000010000130e var_immut`var_immut::main::hab4d3d25ce94e8b3 at main.rs:5</span>
+   <span class="m">2</span>        <span class="nb">let</span> mut <span class="nv">x</span> <span class="o">=</span> 0x100<span class="p">;</span>                                                                                         │   <span class="m">2</span>        <span class="nb">let</span> <span class="nv">x</span> <span class="o">=</span> 0x100<span class="p">;</span>
+   <span class="m">3</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>                                                                      │   <span class="m">3</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>
+   <span class="m">4</span>        <span class="nv">x</span> <span class="o">=</span> x + 0x100<span class="p">;</span>                                                                                             │   <span class="m">4</span>        <span class="nb">let</span> <span class="nv">x</span> <span class="o">=</span> x + 0x100<span class="p">;</span>
+-&gt; <span class="m">5</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>                                                                      │-&gt; <span class="m">5</span>        println!<span class="o">(</span><span class="s2">&quot;The value of x is: {}&quot;</span>, x<span class="o">)</span><span class="p">;</span>
+   <span class="m">6</span>    <span class="o">}</span>                                                                                                              │   <span class="m">6</span>    <span class="o">}</span>
+Target <span class="m">0</span>: <span class="o">(</span>var_mut<span class="o">)</span> stopped.                                                                                           │Target <span class="m">0</span>: <span class="o">(</span>var_immut<span class="o">)</span> stopped.
+<span class="o">(</span>lldb<span class="o">)</span> frame v                                                                                                         │<span class="o">(</span>lldb<span class="o">)</span> frame v
+<span class="o">(</span>int<span class="o">)</span> <span class="nv">x</span> <span class="o">=</span> <span class="m">512</span>                                                                                                          │<span class="o">(</span>int<span class="o">)</span> <span class="nv">x</span> <span class="o">=</span> <span class="m">256</span>
+<span class="o">(</span>lldb<span class="o">)</span> p <span class="p">&amp;</span>x                                                                                                            │<span class="o">(</span>int<span class="o">)</span> <span class="nv">x</span> <span class="o">=</span> <span class="m">512</span>
+<span class="o">(</span>int *<span class="o">)</span> <span class="nv">$1</span> <span class="o">=</span> 0x00007ffeefbff17c                                                                                        │<span class="o">(</span>lldb<span class="o">)</span> p <span class="p">&amp;</span>x
+<span class="o">(</span>lldb<span class="o">)</span>                                                                                                                 │<span class="o">(</span>int *<span class="o">)</span> <span class="nv">$1</span> <span class="o">=</span> 0x00007ffeefbff1bc
+<span class="o">(</span>lldb<span class="o">)</span> x/xw 0x00007ffeefbff17c                                                                                         │<span class="o">(</span>lldb<span class="o">)</span> x/xw 0x00007ffeefbff1bc
+0x7ffeefbff17c: 0x00000200                                                                                             │0x7ffeefbff1bc: 0x00000200
+</pre></div>
+</div>
+
+            </div>
+            <div class="post_list">
+                <span>By </span>
+                <a href="http://sunisdown.me/author/sunisdown.html">@SunisDown</a>
+                <span> in </span>
+                <span class="post_category"><a href="http://sunisdown.me/category/articles.html" rel="bookmark"
+                                               title="Permalink to articles">[ articles ]</a></span>
+                <span class="post_date">Mon 14 January 2019</span>
+                <div><span>Tags : </span>
+                            <span><a href="http://sunisdown.me/tag/rust.html">#rust, </a></span>
+                </div>
+
+                <div class="entry-social">
+                    <span class="twitter"><a target="_blank" rel="nofollow"
+                                             onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;"
+                                             title="Twitter"
+                                             href="https://twitter.com/share?url=http://sunisdown.me/learning-rust-with-lldb.html&text=Learning Rust with LLDB&via="><img
+                            src="http://sunisdown.me/theme/images/icons/twitter-s.png"></a></span>
+
+                    <span class="gplus"><a target="_blank" title="Google +"
+                                           href="https://plus.google.com/share?url=http://sunisdown.me/learning-rust-with-lldb.html&hl=fr"
+                                           rel="nofollow"
+                                           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/google-s.png"></a></span>
+
+                    <span class="facebook"><a target="_blank" title="Facebook" rel="nofollow"
+                                              onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;"
+                                              href="https://www.facebook.com/sharer.php?u=http://sunisdown.me/learning-rust-with-lldb.html&t=Learning Rust with LLDB"><img
+                            src="http://sunisdown.me/theme/images/icons/facebook-s.png"></a></span>
+
+                    <a target="_blank" title="Linkedin"
+                       href="https://www.linkedin.com/shareArticle?mini=true&url=http://sunisdown.me/learning-rust-with-lldb.html&title=Learning Rust with LLDB"
+                       rel="nofollow"
+                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"><img
+                            src="http://sunisdown.me/theme/images/icons/linkedin-s.png"></a>
+
+                    <span class="mail"><a
+                            href="mailto:?subject=Learning Rust with LLDB&amp;body=Viens découvrir un article à propos de [Learning Rust with LLDB] sur le site de sunisdown. http://sunisdown.me/learning-rust-with-lldb.html"
+                            title="Share by Email" target="_blank"><img
+                            src="http://sunisdown.me/theme/images/icons/mail-s.png"></a></span>
+                </div>
+            </div>
+        </article>
+    </section>
+</article>
+
+<!-- Footer -->
+    <footer>
+        <p>
+            Blog powered by <a href="http://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a href="http://python.org">Python</a>.
+            Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a
+                href="https://parbhatpuri.com/">@parbhat</a>.
+        </p>
+    </footer>
+
+
+</body>
+</html>
