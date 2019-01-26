@@ -38,8 +38,8 @@ Thread，等到数据都被读取到内核态的时候，Thread
 被重新唤醒，然后将数据从内核态拷贝到用户态。 write 操作与 read
 有点类似，当调用 write 的时候，操作系统会把数据 copy 到 page cache
 里面，然后内核会在之后将数据刷入磁盘。调用过程如图&lt;/p&gt;
-&lt;p&gt;&lt;img alt="image0" src="linux_io/Untitled-ec4afb82-9185-4382-8a52-3f7161dd6627.png" /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img alt="image1" src="linux_io/Untitled-7c72faa5-f079-489b-882e-13f0a428b7af.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="image0" src="Untitled-ec4afb82-9185-4382-8a52-3f7161dd6627.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="image1" src="Untitled-7c72faa5-f079-489b-882e-13f0a428b7af.png" /&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;注意点：&lt;/p&gt;
@@ -70,7 +70,7 @@ read
 系统调用的区别是，一旦数据加载到内存中，线程可以直接读取内存中的数据，而不需要再多一次系统调用，也避免了从
 kernel 到用户空间的数据拷贝。如果数据没有被加载到内存里面，则于 read
 区别不大。过程如下：&lt;/p&gt;
-&lt;p&gt;&lt;img alt="image2" src="linux_io/Untitled-ca6c3240-9083-47c8-9cf2-c54107a464ea.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="image2" src="Untitled-ca6c3240-9083-47c8-9cf2-c54107a464ea.png" /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="driect-i-o-read-write"&gt;
@@ -87,7 +87,7 @@ I/O 读写在使用上跟普通的 read/write
 进去。在读的过程中，现场对用 O_DIRECT 打开的文件调用 read
 系统调用，然后这个线程直接休眠，磁盘寻址，读取数据，然后直接把数据传递给用户线程。中间不再需要
 kernel 中转一下。&lt;/p&gt;
-&lt;p&gt;&lt;img alt="image3" src="linux_io/Untitled-00751a29-6df2-4234-80e6-5dd9e18df05c.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="image3" src="Untitled-00751a29-6df2-4234-80e6-5dd9e18df05c.png" /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="asynchronous-direct-i-o"&gt;
 &lt;h2&gt;Asynchronous direct I/O&lt;/h2&gt;
@@ -96,7 +96,7 @@ kernel 中转一下。&lt;/p&gt;
 block。这个线程完全控制由用户控制。同时还可以用 io_getevents 来收集 I/O
 操作的结果。这些数据都不会被拷贝到 kernel page cache
 里面去，而是直接被拷贝到用户空间中&lt;/p&gt;
-&lt;p&gt;&lt;img alt="image4" src="linux_io/Untitled-97696516-69cf-4ab2-8f67-b007472ea819.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="image4" src="Untitled-97696516-69cf-4ab2-8f67-b007472ea819.png" /&gt;&lt;/p&gt;
 &lt;/div&gt;
 </content><category term="database"></category><category term="linux"></category><category term="system"></category></entry><entry><title>Learning Rust with LLDB</title><link href="http://sunisdown.me/learning-rust-with-lldb.html" rel="alternate"></link><published>2019-01-14T00:00:00+08:00</published><updated>2019-01-14T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2019-01-14:/learning-rust-with-lldb.html</id><summary type="html">&lt;p&gt;为什么要学习 &lt;cite&gt;Rust&lt;/cite&gt; 呢？因为 Go 自带的 GC 还不够强，同时 goroutine 的调度机制又导致 go 对 CPU 也没办法用的很充分。当需要写对 CPU 性能要求比较高的系统，就需要换一门新语言。同时因为不想写 Cpp，Rust 有媲美 Cpp 的性能，相对 Cpp 来讲更好维护的代码。学习一下没有毛病。&lt;/p&gt;
 &lt;div class="section" id="hello-hex"&gt;
