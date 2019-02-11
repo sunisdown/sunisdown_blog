@@ -1,5 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>SunisDown</title><link href="http://sunisdown.me/" rel="alternate"></link><link href="http://sunisdown.me/feeds/all.atom.xml" rel="self"></link><id>http://sunisdown.me/</id><updated>2019-01-26T00:00:00+08:00</updated><entry><title>Linux IO</title><link href="http://sunisdown.me/linux-io.html" rel="alternate"></link><published>2019-01-26T00:00:00+08:00</published><updated>2019-01-26T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2019-01-26:/linux-io.html</id><summary type="html">&lt;p&gt;这篇主要是从 scylla 的 &lt;a class="reference external" href="https://www.scylladb.com/2017/10/05/io-access-methods-scylla/"&gt;Blog&lt;/a&gt; 翻译过来的，同时也参考了数据库架构的这篇 &lt;a class="reference external" href="http://db.cs.berkeley.edu/papers/fntdb07-architecture.pdf"&gt;Paper&lt;/a&gt;&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>SunisDown</title><link href="http://sunisdown.me/" rel="alternate"></link><link href="http://sunisdown.me/feeds/all.atom.xml" rel="self"></link><id>http://sunisdown.me/</id><updated>2019-02-11T00:00:00+08:00</updated><entry><title>可扩展服务设计原则 checklist</title><link href="http://sunisdown.me/ke-kuo-zhan-fu-wu-she-ji-yuan-ze-checklist.html" rel="alternate"></link><published>2019-02-11T00:00:00+08:00</published><updated>2019-02-11T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2019-02-11:/ke-kuo-zhan-fu-wu-she-ji-yuan-ze-checklist.html</id><summary type="html">&lt;p&gt;这篇十多年之前写的论文基本包含设计一个可扩展服务的要点，我们现在玩的
+cloud-native 早在很多年前就已经被大佬们整理的很透彻了。 这个是基于 James
+Hamilton 的 paper 来总结的
+&lt;a class="reference external" href="http://mvdirona.com/jrh/talksandpapers/jamesrh_lisa.pdf"&gt;http://mvdirona.com/jrh/talksandpapers/jamesrh_lisa.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;基本原则&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;[ ] Expect failures
+硬盘可能会坏，网络会不稳定，系统设计的时候是不是能够优雅的处理各种异常？&lt;/li&gt;
+&lt;li&gt;[ ] Keep things simple
+复杂会导致更多的问题，简单的系统更容易正确的运行。去掉不必要的依赖等&lt;/li&gt;
+&lt;li&gt;[ ] Automate everything 使人都会犯错，把所有能够自动化的都自动化。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id2"&gt;
+&lt;h2&gt;整体设计&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;[ ] 发生故障的时候，系统能否在没有人工干预的情况下自动恢复&lt;/li&gt;
+&lt;li&gt;[ ] 故障恢复的路径需要经常被测试&lt;/li&gt;
+&lt;li&gt;[ ] 把各个不同的组件都文档化，而不是每次了解某一个部分都需要看代码&lt;/li&gt;
+&lt;li&gt;[ ] 是否只提供一个版本给用户（单一版本迭代成本更低&lt;/li&gt;
+&lt;li&gt;[ ] 多租户，是否需要在没有物理隔离的情况下提供多租户功能&lt;/li&gt;
+&lt;li&gt;[ ] health check 是否实现了自动且快速的故障检测&lt;/li&gt;
+&lt;li&gt;[ ] 当你依赖的系统有问题的时候，能否服务降级&lt;/li&gt;
+&lt;li&gt;[ ]
+相同那个的功能，只需要在一个应用里面实现 …&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;这篇十多年之前写的论文基本包含设计一个可扩展服务的要点，我们现在玩的
+cloud-native 早在很多年前就已经被大佬们整理的很透彻了。 这个是基于 James
+Hamilton 的 paper 来总结的
+&lt;a class="reference external" href="http://mvdirona.com/jrh/talksandpapers/jamesrh_lisa.pdf"&gt;http://mvdirona.com/jrh/talksandpapers/jamesrh_lisa.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;基本原则&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;[ ] Expect failures
+硬盘可能会坏，网络会不稳定，系统设计的时候是不是能够优雅的处理各种异常？&lt;/li&gt;
+&lt;li&gt;[ ] Keep things simple
+复杂会导致更多的问题，简单的系统更容易正确的运行。去掉不必要的依赖等&lt;/li&gt;
+&lt;li&gt;[ ] Automate everything 使人都会犯错，把所有能够自动化的都自动化。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id2"&gt;
+&lt;h2&gt;整体设计&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;[ ] 发生故障的时候，系统能否在没有人工干预的情况下自动恢复&lt;/li&gt;
+&lt;li&gt;[ ] 故障恢复的路径需要经常被测试&lt;/li&gt;
+&lt;li&gt;[ ] 把各个不同的组件都文档化，而不是每次了解某一个部分都需要看代码&lt;/li&gt;
+&lt;li&gt;[ ] 是否只提供一个版本给用户（单一版本迭代成本更低&lt;/li&gt;
+&lt;li&gt;[ ] 多租户，是否需要在没有物理隔离的情况下提供多租户功能&lt;/li&gt;
+&lt;li&gt;[ ] health check 是否实现了自动且快速的故障检测&lt;/li&gt;
+&lt;li&gt;[ ] 当你依赖的系统有问题的时候，能否服务降级&lt;/li&gt;
+&lt;li&gt;[ ]
+相同那个的功能，只需要在一个应用里面实现，没有必要实现多次，会增加维护成本。&lt;/li&gt;
+&lt;li&gt;[ ]
+服务需要能够单独运行，而不是必须要依赖于某个其他的服务才可以正常运行。&lt;/li&gt;
+&lt;li&gt;[ ] 针对少数需要人工干预的情况，需要准备好文档，脚本，测试方案等。&lt;/li&gt;
+&lt;li&gt;[ ]
+保持系统简单的架构，如果是为了优化性能而增加复杂度，则需要这个性能上的改进超过一个数量级，只有几个百分点的改进不值得增加系统复杂成都。&lt;/li&gt;
+&lt;li&gt;[ ] 所有层级的入口都应该有准入机制，比如 rate
+limit，防止量过大导致服务不可用&lt;/li&gt;
+&lt;li&gt;[ ] 能否拆分服务，拆分的是否合理&lt;/li&gt;
+&lt;li&gt;[ ] 分布式环境下，我们是否了解里面的网络拓扑，这个是否找网络方面专家
+review 过&lt;/li&gt;
+&lt;li&gt;[ ] 是否分析过吞吐量与延迟，是否有对应的扩容方案&lt;/li&gt;
+&lt;li&gt;[ ]
+对于这个服务给数据库/数据服务带来的流量是否有一个明确的理解，是否验证过。&lt;/li&gt;
+&lt;li&gt;[ ] 是否所有的系统，都是在同一套工具链下完成的，比如相同的 code
+review，测试环境等&lt;/li&gt;
+&lt;li&gt;[ ] 版本化，保留之前的版本，测试用例，万一需要回滚呢&lt;/li&gt;
+&lt;li&gt;[ ] 单点故障是不可接受的&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id3"&gt;
+&lt;h2&gt;自动化管理&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;[ ] 所有的服务都需要支持重启&lt;/li&gt;
+&lt;li&gt;[ ] 所有持久化的数据都需要备份&lt;/li&gt;
+&lt;li&gt;[ ]
+设计上需要支持跨数据中心部署（如果设计是不做，后面要实现就会比较麻烦）&lt;/li&gt;
+&lt;li&gt;[ ] 部署/配置自动化&lt;/li&gt;
+&lt;li&gt;[ ] 配置与代码需要一起交付，不要 version A的代码用了 version B
+的配置。&lt;/li&gt;
+&lt;li&gt;[ ] 线上的更改，需要有记录，what，when，whom，which servers
+，定时扫描线上版本，以免出现不一致的情况。&lt;/li&gt;
+&lt;li&gt;[ ] 按照角色来来管理服务，而不是面向服务来管理。&lt;/li&gt;
+&lt;li&gt;[ ] 系统出现多种故障的时候，服务是否能够正常工作&lt;/li&gt;
+&lt;li&gt;[ ] 重要的数据不要依赖于本地存储，很容易丢数据。&lt;/li&gt;
+&lt;li&gt;[ ] 部署过程是否简单？&lt;/li&gt;
+&lt;li&gt;[ ] chaos monkey 是个好东西&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id4"&gt;
+&lt;h2&gt;依赖管理&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;[ ] 能否容忍 latency 比较高的情况&lt;/li&gt;
+&lt;li&gt;[ ] 服务调用是否有超时机制&lt;/li&gt;
+&lt;li&gt;[ ] 超时重试是否有限制次数&lt;/li&gt;
+&lt;li&gt;[ ] 是否有CB 机制&lt;/li&gt;
+&lt;li&gt;[ ] 是否有快速失败机制&lt;/li&gt;
+&lt;li&gt;[ ] 依赖的组件是否可靠，验证过？&lt;/li&gt;
+&lt;li&gt;[ ] 跨服务的监控告警有吗&lt;/li&gt;
+&lt;li&gt;[ ] 依赖双方要有一直的设计目标&lt;/li&gt;
+&lt;li&gt;[ ] 模块解耦，依赖的组件挂了，也要能够服务（服务降级）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id5"&gt;
+&lt;h2&gt;发布周期与测试&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;[ ]
+是否频繁发布，发布频繁可以减少出错的机会，发布周期太长是很危险的（3个月）&lt;/li&gt;
+&lt;li&gt;[ ] 是否对用户体验定义了标准，是否有测试这些标准&lt;/li&gt;
+&lt;li&gt;[ ] 能否回滚到某一个指定版本&lt;/li&gt;
+&lt;li&gt;[ ] 可以在单节点上部署测试嘛？&lt;/li&gt;
+&lt;li&gt;[ ] 有压测嘛&lt;/li&gt;
+&lt;li&gt;[ ] 新版本发布之前的测试（性能，吞吐量，latency）&lt;/li&gt;
+&lt;li&gt;[ ] 可以使用 production 来测试嘛&lt;/li&gt;
+&lt;li&gt;[ ] 是否有跟生成环境完全一直的环境，并用相同的数据进行大规模测试&lt;/li&gt;
+&lt;li&gt;[ ] 有监控系统吗&lt;/li&gt;
+&lt;li&gt;[ ] 监控系统能明显的看出系统的各种重要指标嘛&lt;/li&gt;
+&lt;li&gt;[ ] 能否减少误报&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id6"&gt;
+&lt;h2&gt;硬件选择与标准化&lt;/h2&gt;
+&lt;p&gt;这个老哥在论文里面教了怎么购买硬件，怎么搞机柜。Google
+有一本更专业的书来说这个事儿，这里不总结了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id7"&gt;
+&lt;h2&gt;运维与容量规划。&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;[ ] devops, 谁开发，谁治理。&lt;/li&gt;
+&lt;li&gt;[ ] 只做软删除，要能够恢复被误删的数据&lt;/li&gt;
+&lt;li&gt;[ ] 跟踪资源分配&lt;/li&gt;
+&lt;li&gt;[ ]
+一次只做一项更改（排查问题是，一次只对应用做一次更改，方便溯源问题）&lt;/li&gt;
+&lt;li&gt;[ ]
+配置一切，如果可以通过更新配置来完成，而不是更改代码，这样会方便很多&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id8"&gt;
+&lt;h2&gt;审计，监控与告警&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;[ ] 监控一切&lt;/li&gt;
+&lt;li&gt;[ ] 统计有问题但是没有告警的情况，把这个比例降低到0&lt;/li&gt;
+&lt;li&gt;[ ] 分析数据，理解那些是正常的行为，避免误报。&lt;/li&gt;
+&lt;li&gt;[ ] 数据是最有价值的资源，帮助我们追溯问题。&lt;/li&gt;
+&lt;li&gt;[ ] 日志 Level是否可以配置，而不是重启，可配置的日志 Level
+可以在需要的时候，输出更详细的日志帮助排问题。&lt;/li&gt;
+&lt;li&gt;[ ]
+所有发现的错误都要及时处理，如果有错误但是没有处理手段，那这个错误就可能会被长期忽略，最终导致灾难发生&lt;/li&gt;
+&lt;li&gt;[ ] 快速定位线上问题&lt;/li&gt;
+&lt;li&gt;[ ] 能否镜像一个线上的系统，在镜像系统调试问题&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id9"&gt;
+&lt;h2&gt;优雅的降级与准入机制&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;[ ] 是否有 红按钮 机制，支持拒绝不重要的请求&lt;/li&gt;
+&lt;li&gt;[ ] 准入控制，拒绝部分请求&lt;/li&gt;
+&lt;li&gt;[ ] 渐入式准入控制，慢慢放开流量，以便系统能够优化恢复&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id10"&gt;
+&lt;h2&gt;客户沟通计划&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;[ ]
+针对大规模系统不可用，数据丢失或损坏，安全漏洞等，是否制定了沟通计划，想之前腾讯云那种情况，就是缺乏沟通导致的&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id11"&gt;
+&lt;h2&gt;客户自助&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;[ ] 客户自行配置可以降低成本，并提高满意度，支持客户自助也相对重要。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</content><category term="system"></category></entry><entry><title>Linux IO</title><link href="http://sunisdown.me/linux-io.html" rel="alternate"></link><published>2019-01-26T00:00:00+08:00</published><updated>2019-01-26T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2019-01-26:/linux-io.html</id><summary type="html">&lt;p&gt;这篇主要是从 scylla 的 &lt;a class="reference external" href="https://www.scylladb.com/2017/10/05/io-access-methods-scylla/"&gt;Blog&lt;/a&gt; 翻译过来的，同时也参考了数据库架构的这篇 &lt;a class="reference external" href="http://db.cs.berkeley.edu/papers/fntdb07-architecture.pdf"&gt;Paper&lt;/a&gt;&lt;/p&gt;
 &lt;div class="section" id="i-o"&gt;
 &lt;h2&gt;数据库存储管理之 I/O&lt;/h2&gt;
 &lt;p&gt;绝大多数的服务器开发在讨论 I/O 的时候，基本都是在讨论网络
