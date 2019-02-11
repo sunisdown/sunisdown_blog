@@ -105,11 +105,11 @@ block。这个线程完全控制由用户控制。同时还可以用 io_getevent
 
 |image4|
 
-.. |image0| image:: Untitled-ec4afb82-9185-4382-8a52-3f7161dd6627.png
-.. |image1| image:: Untitled-7c72faa5-f079-489b-882e-13f0a428b7af.png
-.. |image2| image:: Untitled-ca6c3240-9083-47c8-9cf2-c54107a464ea.png
-.. |image3| image:: Untitled-00751a29-6df2-4234-80e6-5dd9e18df05c.png
-.. |image4| image:: Untitled-97696516-69cf-4ab2-8f67-b007472ea819.png
+.. |image0| image:: images/Untitled-ec4afb82-9185-4382-8a52-3f7161dd6627.png
+.. |image1| image:: images/Untitled-7c72faa5-f079-489b-882e-13f0a428b7af.png
+.. |image2| image:: images/Untitled-ca6c3240-9083-47c8-9cf2-c54107a464ea.png
+.. |image3| image:: images/Untitled-00751a29-6df2-4234-80e6-5dd9e18df05c.png
+.. |image4| image:: images/Untitled-97696516-69cf-4ab2-8f67-b007472ea819.png
 
 
 .. _Blog: https://www.scylladb.com/2017/10/05/io-access-methods-scylla/
