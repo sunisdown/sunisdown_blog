@@ -2,15 +2,19 @@
 <feed xmlns="http://www.w3.org/2005/Atom"><title>SunisDown</title><link href="http://sunisdown.me/" rel="alternate"></link><link href="http://sunisdown.me/feeds/all.atom.xml" rel="self"></link><id>http://sunisdown.me/</id><updated>2019-03-06T00:00:00+08:00</updated><entry><title>The Good Part of Rust</title><link href="http://sunisdown.me/the-good-part-of-rust.html" rel="alternate"></link><published>2019-03-06T00:00:00+08:00</published><updated>2019-03-06T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2019-03-06:/the-good-part-of-rust.html</id><summary type="html">&lt;p&gt;Rust 语言中最有趣的两个特性分别是 ownership 和 borrowing，通过这两个特性，Rust 实现了他所谓的最安全的变成语言。&lt;/p&gt;
 &lt;div class="section" id="ownership"&gt;
 &lt;h2&gt;Ownership&lt;/h2&gt;
-&lt;p&gt;Each value in Rust has a variable that’s called its owner.
-There can only be one owner at a time.
-When the owner goes out of scope, the value will be dropped.&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Each value in Rust has a variable that’s called its owner.&lt;/li&gt;
+&lt;li&gt;There can only be one owner at a time.&lt;/li&gt;
+&lt;li&gt;When the owner goes out of scope, the value will be dropped.&lt;/li&gt;
+&lt;/ol&gt;
 &lt;p&gt;Rust 的 ownership 往前可以追溯到 Wadler 开发的一个函数式编程语言，这个语言也跟 Rust …&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;Rust 语言中最有趣的两个特性分别是 ownership 和 borrowing，通过这两个特性，Rust 实现了他所谓的最安全的变成语言。&lt;/p&gt;
 &lt;div class="section" id="ownership"&gt;
 &lt;h2&gt;Ownership&lt;/h2&gt;
-&lt;p&gt;Each value in Rust has a variable that’s called its owner.
-There can only be one owner at a time.
-When the owner goes out of scope, the value will be dropped.&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Each value in Rust has a variable that’s called its owner.&lt;/li&gt;
+&lt;li&gt;There can only be one owner at a time.&lt;/li&gt;
+&lt;li&gt;When the owner goes out of scope, the value will be dropped.&lt;/li&gt;
+&lt;/ol&gt;
 &lt;p&gt;Rust 的 ownership 往前可以追溯到 Wadler 开发的一个函数式编程语言，这个语言也跟 Rust 一样，没有 gc，但是也不需要手动管理内存。Wadler 主要是通过程序运行时，不断的复制数据做到这一点。在论文中可以这么实现，但是现实世界中做工程的时候，这种复制带来的性能损耗是无法接受的。Rust 的 ownership 简单来理解有点类似，但是 Rust 不是频繁的拷贝数据，而是复用内存里面的对象。
 在 Rust 中，每个值都有他自己的 owner，传递或者返回某一个值，就意味着从原本的 owner 把值给了新的 owner。
 我们通过下面的例子来看一下&lt;/p&gt;
@@ -110,9 +114,11 @@ When the owner goes out of scope, the value will be dropped.&lt;/p&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;上面的例子中，我们创建了一个独一无二的引用，而不是共享指针。在我们的代码里面，后面的 y，z 又像重复引用这个对象，这种时候会在编译时报错。这种报错跟我们在最开始的看 ownership 的时候有点类似。&lt;/p&gt;
-&lt;p&gt;简单来说，borrowing 有两种不同的形式，
-1. Immutable references，这种形式可以被共享，大家都可以来读，但是不可以写。
-2. Mutable references，这种形式可以被更新，但是不可以被共享。同一时间只有一个引用。&lt;/p&gt;
+&lt;p&gt;简单来说，borrowing 有两种不同的形式，&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Immutable references，这种形式可以被共享，大家都可以来读，但是不可以写。&lt;/li&gt;
+&lt;li&gt;Mutable references，这种形式可以被更新，但是不可以被共享。同一时间只有一个引用。&lt;/li&gt;
+&lt;/ol&gt;
 &lt;/div&gt;
 </content><category term="rust"></category></entry><entry><title>可扩展服务设计原则 checklist</title><link href="http://sunisdown.me/ke-kuo-zhan-fu-wu-she-ji-yuan-ze-checklist.html" rel="alternate"></link><published>2019-02-11T00:00:00+08:00</published><updated>2019-02-11T00:00:00+08:00</updated><author><name>SunisDown</name></author><id>tag:sunisdown.me,2019-02-11:/ke-kuo-zhan-fu-wu-she-ji-yuan-ze-checklist.html</id><summary type="html">&lt;p&gt;这篇十多年之前写的论文基本包含设计一个可扩展服务的要点，我们现在玩的
 cloud-native 早在很多年前就已经被大佬们整理的很透彻了。 这个是基于 James
